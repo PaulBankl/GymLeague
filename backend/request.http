@@ -1,0 +1,16 @@
+// Get Request
+GET http://localhost:8080/
+
+###
+
+GET http://localhost:8080/api/entry
+
+###
+
+POST http://localhost:8080/api/entry
+Content-Type: application/json
+
+{
+    "weight": 150.0,
+    "reps": 8
+}
