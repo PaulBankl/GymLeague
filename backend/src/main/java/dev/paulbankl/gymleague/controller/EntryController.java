@@ -1,6 +1,5 @@
 package dev.paulbankl.gymleague.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +12,7 @@ import dev.paulbankl.gymleague.model.Entry;
 import dev.paulbankl.gymleague.service.EntryService;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 

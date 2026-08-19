@@ -11,6 +11,6 @@ POST http://localhost:8080/api/entry
 Content-Type: application/json
 
 {
-    "weight": 150.0,
+    "weight": 250.0,
     "reps": 8
 }

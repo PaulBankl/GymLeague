@@ -1,55 +1,55 @@
-package dev.paulbankl.gymleague.model;
 
+package dev.paulbankl.gymleague.model;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 
+@Entity
 @Getter
 @NoArgsConstructor
-@Entity
-public class Entry {
-
-    public Entry(double weight, int reps) {
-        this.weight = weight;
-        this.reps = reps;
+public class User {
+    public User(String username,String email, String passwordHash) {
+        this.username = username;
+        this.displayName = username;
+        this.email = email;
+        this.passwordHash = passwordHash;
     }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Setter
+    @Column(nullable = false, unique = true)
+    private String username;
 
-    @ManyToOne
-    @JoinColumn(name = "exercise_id", nullable = false)
-    private Exercise exercise;
+    @Setter
+    @Column(nullable = false, unique = true)
+    private String displayName;
+
+    @Column(nullable = false, unique = true)
+    @Setter
+    private String email;
 
     @Setter
     @Column(nullable = false)
-    private double weight;
+    private String passwordHash;
 
-    @Setter
-    @Column(nullable = false)
-    private int reps;
-
-    private LocalDateTime date;
-
+    private LocalDateTime createdAt;
 
     @PrePersist
     public void prePersist() {
-        date = LocalDateTime.now();
+        createdAt = LocalDateTime.now();
     }
+
     @Override 
     public int hashCode() {
          return getClass().hashCode();
@@ -60,7 +60,7 @@ public class Entry {
             return true;
         if (obj == null || getClass() != obj.getClass())
             return false;
-        Entry other = (Entry) obj;
+        User other = (User) obj;
 
         return id != null && id.equals(other.id);
     }

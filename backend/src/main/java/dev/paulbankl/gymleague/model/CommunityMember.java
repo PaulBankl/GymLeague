@@ -4,24 +4,30 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 
 @Getter
 @NoArgsConstructor
+@Table(uniqueConstraints = {
+    @jakarta.persistence.UniqueConstraint(columnNames = {"user_id", "community_id"})
+})
 @Entity
-public class Entry {
-
-    public Entry(double weight, int reps) {
-        this.weight = weight;
-        this.reps = reps;
+public class CommunityMember {
+    public CommunityMember(User user, Community community, CommunityRole role) {
+        this.user = user;
+        this.community = community;
+        this.role = role;
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,23 +38,20 @@ public class Entry {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "exercise_id", nullable = false)
-    private Exercise exercise;
+    @JoinColumn(name = "community_id", nullable = false)
+    private Community community;
 
+    @Enumerated(EnumType.STRING)
     @Setter
     @Column(nullable = false)
-    private double weight;
+    private CommunityRole role;
 
-    @Setter
     @Column(nullable = false)
-    private int reps;
-
-    private LocalDateTime date;
-
+    private LocalDateTime joinedAt;
 
     @PrePersist
     public void prePersist() {
-        date = LocalDateTime.now();
+        joinedAt = LocalDateTime.now();
     }
     @Override 
     public int hashCode() {
@@ -60,7 +63,7 @@ public class Entry {
             return true;
         if (obj == null || getClass() != obj.getClass())
             return false;
-        Entry other = (Entry) obj;
+        CommunityMember other = (CommunityMember) obj;
 
         return id != null && id.equals(other.id);
     }
