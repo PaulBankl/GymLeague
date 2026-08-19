@@ -25,7 +25,7 @@ public class Community {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String CommunityId;
+    private Long CommunityId;
 
     @Column( unique = true, nullable = false)
     private String name;
