@@ -21,9 +21,11 @@ import jakarta.persistence.GenerationType;
 @Table(name = "entries")
 public class Entry {
 
-    public Entry(double weight, int reps) {
+    public Entry(double weight, int reps, User user, Exercise exercise) {
         this.weight = weight;
         this.reps = reps;
+        this.user = user;
+        this.exercise = exercise;
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

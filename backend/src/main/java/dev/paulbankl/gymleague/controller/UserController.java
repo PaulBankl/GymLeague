@@ -24,10 +24,7 @@ public class UserController {
     }
     @PostMapping("/register")
     public boolean registerUser(@RequestBody RegisterDTO registerDTO) {
-        if(registerDTO.getUsername() == null || registerDTO.getPassword() == null || registerDTO.getEmail() == null || registerDTO.getUsername().isBlank() ||registerDTO.getPassword().isBlank() ||registerDTO.getEmail().isBlank()) {
-            return false;
-        }
-        return userService.tryRegisterUser(registerDTO.getUsername(), registerDTO.getPassword(), registerDTO.getEmail());
+        return userService.tryRegisterUser(registerDTO);
     }
     
     @GetMapping("/{username}")
@@ -43,21 +40,12 @@ public class UserController {
     }
     @PostMapping("/login")
     public boolean loginUser(@RequestBody LoginDTO loginDTO) {
-        if(loginDTO.getUsername() == null || loginDTO.getPassword() == null) {
-            return false;
-        }
-        if(userService.existsByUsername(loginDTO.getUsername())) {
-            return userService.tryLoginUser(loginDTO.getUsername(), loginDTO.getPassword());
-        } else {
-            return false;
-        }
+        return userService.tryLoginUser(loginDTO);
     }
 
     @PostMapping("/updateDisplayName")
     public boolean updateDisplayName(@RequestBody UpdateDisplayNameDTO updateDisplayNameDTO) {
-        if(updateDisplayNameDTO.getUsername() == null || updateDisplayNameDTO.getDisplayName() == null) {
-            return false;}
-            return userService.updateDisplayName(updateDisplayNameDTO.getUsername(), updateDisplayNameDTO.getDisplayName());
+            return userService.updateDisplayName(updateDisplayNameDTO);
         }
 
     

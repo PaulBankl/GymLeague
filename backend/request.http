@@ -5,14 +5,16 @@ GET http://localhost:8080/
 
 GET http://localhost:8080/api/entry
 
-###
+### add Entry
 
-POST http://localhost:8080/api/entry
+POST http://localhost:8080/api/entry/add
 Content-Type: application/json
 
 {
     "weight": 250.0,
-    "reps": 8
+    "reps": 8,
+    username : "testuser",
+    exerciseName : "Bench Press"
 }
 
 ### Register

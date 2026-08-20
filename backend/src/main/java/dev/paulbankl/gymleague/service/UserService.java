@@ -5,6 +5,9 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import dev.paulbankl.gymleague.repository.UserRepository;
+import dev.paulbankl.gymleague.dto.LoginDTO;
+import dev.paulbankl.gymleague.dto.RegisterDTO;
+import dev.paulbankl.gymleague.dto.UpdateDisplayNameDTO;
 import dev.paulbankl.gymleague.model.User;
 
 @Service
@@ -19,20 +22,20 @@ public class UserService {
         return userRepository.existsByUsername(username);
     }
     //legt wenn der user nd existiert einen neuen an
-    public boolean tryRegisterUser(String username, String password, String email) {
-        if (userRepository.existsByUsername(username) || userRepository.existsByEmail(email)) {
+    public boolean tryRegisterUser(RegisterDTO registerDTO) {
+        if (userRepository.existsByUsername(registerDTO.getUsername()) || userRepository.existsByEmail(registerDTO.getEmail())) {
             return false;
         }
-        userRepository.save(new User(username, email, password));
+        userRepository.save(new User(registerDTO.getUsername(), registerDTO.getEmail(), registerDTO.getPassword()));
         return true;
     }
     //schaut ob user exisitert und ob das passwort stimmt
-    public boolean tryLoginUser(String username, String password) {
-        Optional <User> user = userRepository.findByUsername(username);
+    public boolean tryLoginUser(LoginDTO loginDTO) {
+        Optional <User> user = userRepository.findByUsername(loginDTO.getUsername());
         if (!user.isPresent()) {
             return false;
         }
-        return user.get().getPasswordHash().equals(password);
+        return user.get().getPasswordHash().equals(loginDTO.getPassword());
     }
     //returned den user wenn er existiert
     public User getUserByUsername(String username) {
@@ -40,7 +43,9 @@ public class UserService {
     }
 
     //updated den displayname des users
-    public boolean updateDisplayName(String username, String displayName) {
+    public boolean updateDisplayName(UpdateDisplayNameDTO updateDisplayNameDTO) {
+        String username = updateDisplayNameDTO.getUsername();
+        String displayName = updateDisplayNameDTO.getDisplayName();
 
         if (userRepository.existsByDisplayName(displayName)) {
             return false;
