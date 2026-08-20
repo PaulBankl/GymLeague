@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +16,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(name = "users")
 public class User {
     public User(String username,String email, String passwordHash) {
         this.username = username;
@@ -64,4 +66,5 @@ public class User {
 
         return id != null && id.equals(other.id);
     }
+    
 }

@@ -19,7 +19,7 @@ import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
-@Table(uniqueConstraints = {
+@Table(name = "community_members",uniqueConstraints = {
     @jakarta.persistence.UniqueConstraint(columnNames = {"user_id", "community_id"})
 })
 @Entity
