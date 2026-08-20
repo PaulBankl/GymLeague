@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import dev.paulbankl.gymleague.dto.EntryChangeDTO;
 import dev.paulbankl.gymleague.dto.EntryCreationDTO;
 import dev.paulbankl.gymleague.model.Entry;
 import dev.paulbankl.gymleague.repository.EntryRepository;
@@ -30,4 +31,19 @@ public class EntryService {
         return entryRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Entry with id " + id + " not found"));
     }
+    public boolean updateEntry(EntryChangeDTO entryChangeDTO) {
+        Entry entry = entryRepository.findById(entryChangeDTO.getId())
+            .orElseThrow(() -> new IllegalArgumentException("Entry with id " + entryChangeDTO.getId() + " not found"));
+        entry.setWeight(entryChangeDTO.getWeight());
+        entry.setReps(entryChangeDTO.getReps());
+        entryRepository.save(entry);
+        return true;
+}
+public boolean deleteEntry(Long id) {
+    if (!entryRepository.existsById(id)) {
+        return false;
+    }
+    entryRepository.deleteById(id);
+    return true;
+}
 }

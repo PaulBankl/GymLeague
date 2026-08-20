@@ -2,12 +2,15 @@ package dev.paulbankl.gymleague.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.paulbankl.gymleague.dto.EntryChangeDTO;
 import dev.paulbankl.gymleague.dto.EntryCreationDTO;
 import dev.paulbankl.gymleague.model.Entry;
 import dev.paulbankl.gymleague.service.EntryService;
@@ -38,6 +41,15 @@ public class EntryController {
 	@PostMapping("/add")
     public void addEntry(@RequestBody EntryCreationDTO entryDTO) {
 		EntryService.insertEntry(entryDTO);
+	}
+	@PutMapping("/change")
+	public boolean updateEntry(@RequestBody EntryChangeDTO entryChangeDTO) {
+		
+		return EntryService.updateEntry(entryChangeDTO);
+	}
+	@DeleteMapping("/{id}")
+	public boolean deleteEntry(@PathVariable Long id) {
+		return EntryService.deleteEntry(id);
 	}
 	
 }

@@ -13,9 +13,23 @@ Content-Type: application/json
 {
     "weight": 250.0,
     "reps": 8,
-    username : "testuser",
-    exerciseName : "Bench Press"
+    "username": "testuser",
+    "exerciseName": "Deadlift"
 }
+
+### change Entry
+PUT http://localhost:8080/api/entry/change
+Content-Type: application/json
+
+{
+    "id": 1,
+    "weight": 10000.0,
+    "reps": 8
+}
+
+### Delete Entry
+
+DELETE http://localhost:8080/api/entry/1
 
 ### Register
 
@@ -37,7 +51,7 @@ Content-Type: application/json
 }
 
 ### Update Display Name
-POST http://localhost:8080/api/users/updateDisplayName
+PUT http://localhost:8080/api/users/updateDisplayName
 Content-Type: application/json
 
 {
