@@ -58,3 +58,14 @@ Content-Type: application/json
     "username": "testuser",
     "displayName": "New Display Name"
 }
+
+###Create Community 
+POST http://localhost:8080/api/community/create
+Content-Type: application/json
+
+{
+    "name": "Test Community",
+    "description": "This is a test community.",
+    "isPrivate": false,
+    "username": "testuser"
+}

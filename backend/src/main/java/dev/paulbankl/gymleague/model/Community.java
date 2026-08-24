@@ -27,7 +27,7 @@ public class Community {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long CommunityId;
+    private Long id;
 
     @Column( unique = true, nullable = false)
     private String name;
@@ -60,6 +60,6 @@ public class Community {
             return false;
         Community other = (Community) obj;
 
-        return CommunityId != null && CommunityId.equals(other.CommunityId);
+        return id != null && id.equals(other.id);
     }
 }

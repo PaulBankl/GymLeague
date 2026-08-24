@@ -1,7 +1,10 @@
 package dev.paulbankl.gymleague.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
+import dev.paulbankl.gymleague.model.CommunityMember;
 import dev.paulbankl.gymleague.repository.CommunityMemberRepository;
 
 @Service
@@ -10,5 +13,8 @@ public class CommunityMemberService {
 
     public CommunityMemberService(CommunityMemberRepository communityMemberRepository) {
         this.communityMemberRepository = communityMemberRepository;
+    }
+    public List<CommunityMember> getAll() {
+        return communityMemberRepository.findAll();
     }
 }
