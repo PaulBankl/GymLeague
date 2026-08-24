@@ -1,26 +1,23 @@
 import { useState } from "react";
 import { register } from "../services/Userservice";
-
+import { useNavigate } from "react-router-dom";
 
 
 export default function RegisterPage() {
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [email, setEmail] = useState<string>("");
-    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    const navigate = useNavigate();
+
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        register(username, password, email)
-            .then(response => {
-                if (response.ok) {
-                    alert("User registered successfully!");
+        const success = await register(username, password, email);
+            
+                if (success) {
+                    navigate("/login");
                 } else {
                     alert("Failed to register user.");
                 }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("An error occurred while registering the user.");
-            });
         }
         return (
             <div>
