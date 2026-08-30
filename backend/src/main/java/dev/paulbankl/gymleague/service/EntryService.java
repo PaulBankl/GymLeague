@@ -46,4 +46,9 @@ public boolean deleteEntry(Long id) {
     entryRepository.deleteById(id);
     return true;
 }
+
+//Holt alle Einträge für einen bestimmten Benutzer und eine bestimmte Übung
+public List<Entry> getEntryforUserAndExercise(Long exerciseId, String username) {
+    return entryRepository.findByUserUsernameAndExerciseId(username, exerciseId);
+}
 }

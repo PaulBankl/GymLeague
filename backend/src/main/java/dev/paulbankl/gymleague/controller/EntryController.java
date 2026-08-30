@@ -2,6 +2,7 @@ package dev.paulbankl.gymleague.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,12 +17,15 @@ import dev.paulbankl.gymleague.model.Entry;
 import dev.paulbankl.gymleague.service.EntryService;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
 
 @RestController
 @RequestMapping("api/entry")
+@CrossOrigin(origins = "http://localhost:5173")
 public class EntryController {
 	private final EntryService EntryService;
     
@@ -40,6 +44,8 @@ public class EntryController {
 
 	@PostMapping("/add")
     public void addEntry(@RequestBody EntryCreationDTO entryDTO) {
+		System.out.println(entryDTO.getUsername());
+System.out.println(entryDTO.getExerciseName());
 		EntryService.insertEntry(entryDTO);
 	}
 	@PutMapping("/change")
@@ -51,5 +57,9 @@ public class EntryController {
 	public boolean deleteEntry(@PathVariable Long id) {
 		return EntryService.deleteEntry(id);
 	}
+	@GetMapping("/all/{exerciseid}")
+	public List<Entry> getMethodName( @PathVariable Long exerciseid, @RequestParam String username) {
+		return EntryService.getEntryforUserAndExercise(exerciseid, username);
 	
+}
 }

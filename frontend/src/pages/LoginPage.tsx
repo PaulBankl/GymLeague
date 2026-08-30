@@ -13,6 +13,8 @@ export default function LoginPage() {
         const success = await login(username, password);
             
                 if (success) {
+                    // Store the username in session storage, lösung für jz später austauschen
+                    sessionStorage.setItem("username", username);
                     navigate("/app");
                 } else {
                     alert("Failed to login user.");

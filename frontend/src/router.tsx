@@ -4,6 +4,9 @@ import { createBrowserRouter, Link, } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
+import ExerciseOverviewPage from "./pages/ExerciseOverviewPage";
+import DashboardPage from "./pages/DashboardPage";
+import ExerciseDetailPage from './pages/ExerciseDetailPage';
 
 
 export const router = createBrowserRouter([
@@ -16,20 +19,22 @@ export const router = createBrowserRouter([
     element: <RegisterPage />
   },
   {
-    path: "/app",
-    element: <div>
-      <h1>GymLeague</h1>
-    </div>,
-  },
-  {
     path: "/login",
     element: <LoginPage />
   },
   {
     path: "/app",
-    element: <div>
-      <h1>App</h1>
-    </div>
+    element: <DashboardPage />
+  },
+  {
+  },
+  {
+    path: "/exercises",
+    element: <ExerciseOverviewPage />
+  },
+  {
+    path: "/exercises/:id",
+    element: <ExerciseDetailPage/>
   }
 ]);
 

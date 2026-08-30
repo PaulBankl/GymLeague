@@ -17,6 +17,8 @@ import dev.paulbankl.gymleague.dto.LoginDTO;
 import dev.paulbankl.gymleague.dto.RegisterDTO;
 import dev.paulbankl.gymleague.dto.UpdateDisplayNameDTO;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("api/users")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -30,18 +32,23 @@ public class UserController {
     public boolean registerUser(@RequestBody RegisterDTO registerDTO) {
         return userService.tryRegisterUser(registerDTO);
     }
-    
-    @GetMapping("/{username}")
-    public String userExists(@PathVariable String username) {
-        if(username == null || username.isEmpty()) {
-            return "Username is empty";
-        }
-        if(userService.existsByUsername(username)) {
-            return "User exists. " + userService.getDisplayNameByUsername(username);
-        } else {
-            return "User does not exist";
-        }
+
+@GetMapping("/{username}")
+public Map<String, Object> userExists(@PathVariable String username) {
+
+    if (username == null || username.isEmpty()) {
+        return Map.of("exists", false);
     }
+
+    if (userService.existsByUsername(username)) {
+        return Map.of(
+            "exists", true,
+            "displayName", userService.getDisplayNameByUsername(username)
+        );
+    }
+
+    return Map.of("exists", false);
+}
     @PostMapping("/login")
     public boolean loginUser(@RequestBody LoginDTO loginDTO) {
         return userService.tryLoginUser(loginDTO);

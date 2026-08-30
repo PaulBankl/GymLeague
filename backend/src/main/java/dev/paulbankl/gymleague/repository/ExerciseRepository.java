@@ -5,4 +5,5 @@ import dev.paulbankl.gymleague.model.Exercise;
 
 public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
     java.util.Optional<Exercise> findByName(String name);
+    java.util.Optional<Exercise> findById(String id);
 }

@@ -39,3 +39,23 @@ export async function login(username: string, password: string) {
     }
     return await response.json();
 }
+
+export async function getUser(username: string | null) {
+    if (!username) {
+        console.error("Username is null");
+        return null;
+    }
+    const response = await fetch(`http://localhost:8080/api/users/${username}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+
+    if (!response.ok) {
+        console.error("Failed to fetch user data");
+        return null;
+    }
+
+    return await response.json();
+}
