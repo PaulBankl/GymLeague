@@ -10,13 +10,13 @@ export async function getEntriesByExerciseIdForUser(id: string, username: string
         });
 }
 
-export async function addEntryForUser( username: string, exerciseName: string, weight: number, reps: number): Promise<boolean> {
+export async function addEntryForUser( username: string, exerciseId: number, weight: number, reps: number): Promise<boolean> {
     const success = await fetch(`http://localhost:8080/api/entry/add`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, exerciseName, weight, reps }),
+        body: JSON.stringify({ username,  exerciseId, weight, reps }),
     });
     if (!success.ok) {
         throw new Error("Failed to add entry");

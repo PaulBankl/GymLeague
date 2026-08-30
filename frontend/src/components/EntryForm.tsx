@@ -2,10 +2,12 @@ import { useState } from "react";
 import * as Entryservice from "../services/Entryservice";
 
 type EntryFormProps = {
+    exerciseId: string;
     exerciseName: string;
+    onEntryAdded: () => void;
 };
 
-export default function EntryForm({  exerciseName }: EntryFormProps) {
+export default function EntryForm({  exerciseId, exerciseName, onEntryAdded }: EntryFormProps) {
     const username = sessionStorage.getItem("username");
     const [weight, setWeight] = useState("");
     const [reps, setReps] = useState("");
@@ -13,7 +15,6 @@ export default function EntryForm({  exerciseName }: EntryFormProps) {
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        console.log(exerciseName);
         const weightNumber = Number(weight);
         const repsNumber = Number(reps);
         if (weightNumber <= 0 || repsNumber <= 0) {
@@ -22,11 +23,12 @@ export default function EntryForm({  exerciseName }: EntryFormProps) {
         }
         if (username) {
             try {
-                const success = await Entryservice.addEntryForUser( username, exerciseName, weightNumber, repsNumber);
+                const success = await Entryservice.addEntryForUser( username, Number(exerciseId), weightNumber, repsNumber);
                 if (success) {
                     alert("Entry added successfully.");
                     setWeight("");
                     setReps("");
+                    onEntryAdded(); // Call the callback to refresh the entry list
                 } else {
                     alert("Failed to add entry.");
                 }

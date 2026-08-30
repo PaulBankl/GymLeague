@@ -18,6 +18,9 @@ export default function ExerciseDetailPage({ }) {
     const [entries, setEntries] = useState<Entry[] | null>(null);
     const [error, setError] = useState(false);
 
+    //damit die Liste automatisch rerendert
+    const [refresh, setRefresh] = useState(0);
+
     useEffect(() => {
         if (id) {
             Exerciseservice.getExerciseById(id)
@@ -54,8 +57,8 @@ export default function ExerciseDetailPage({ }) {
     return (
         <div>
             <h1>{exercise.name}</h1>
-            <EntryForm exerciseName={exercise.name}></EntryForm>
-            <EntryList exerciseId={id}></EntryList>
+            <EntryForm exerciseId={id} exerciseName={exercise.name} onEntryAdded={() => setRefresh(refresh + 1)}></EntryForm>
+            <EntryList exerciseId={id} refresh={refresh}></EntryList>
         </div>
     );
 }

@@ -24,7 +24,7 @@ public class EntryService {
         return entryRepository.findAll();
     }
     public void insertEntry(EntryCreationDTO entryDTO) {
-        Entry entry = new Entry(entryDTO.getWeight(), entryDTO.getReps(),userService.getUserByUsername(entryDTO.getUsername()), exerciseService.getExerciseByName(entryDTO.getExerciseName()));
+        Entry entry = new Entry(entryDTO.getWeight(), entryDTO.getReps(),userService.getUserByUsername(entryDTO.getUsername()), exerciseService.getExerciseById(entryDTO.getExerciseId()));
         entryRepository.save(entry);
     }
     public Entry getEntryById(Long id) {

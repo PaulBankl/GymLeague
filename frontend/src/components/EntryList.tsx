@@ -4,12 +4,13 @@ import * as Entryservice from "../services/Entryservice";
 
 type EntryListProps = {
     exerciseId: string;
+    refresh: number;
 };
 
 
 
 
-export default function EntryList({ exerciseId }: EntryListProps){
+export default function EntryList({ exerciseId, refresh }: EntryListProps){
     const username = sessionStorage.getItem("username");
     const [entries, setEntries] = useState<Entry[] | null>(null);
     const [error, setError] = useState(false);
@@ -23,7 +24,7 @@ export default function EntryList({ exerciseId }: EntryListProps){
                     setError(true);
                 });
         }
-    },[]);
+    },[exerciseId, refresh]);
 
     if(!exerciseId) {
         return <div>Invalid exercise.</div>;

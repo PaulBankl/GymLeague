@@ -44,8 +44,6 @@ public class EntryController {
 
 	@PostMapping("/add")
     public void addEntry(@RequestBody EntryCreationDTO entryDTO) {
-		System.out.println(entryDTO.getUsername());
-System.out.println(entryDTO.getExerciseName());
 		EntryService.insertEntry(entryDTO);
 	}
 	@PutMapping("/change")

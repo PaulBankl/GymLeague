@@ -1,10 +1,13 @@
-INSERT INTO exercises (name) VALUES ('Bench Press');
-INSERT INTO exercises (name) VALUES ('Squat');
-INSERT INTO exercises (name) VALUES ('Deadlift');
-INSERT INTO exercises (name) VALUES ('Overhead Press');
-INSERT INTO exercises (name) VALUES ('Pull-Up');
-INSERT INTO exercises (name) VALUES ('Barbell Row');
-INSERT INTO exercises (name) VALUES ('Incline Bench');
-INSERT INTO exercises (name) VALUES ('Lat Pulldown');
-INSERT INTO exercises (name) VALUES ('Leg Press');
-INSERT INTO exercises (name) VALUES ('Romanian Deadlift');
+INSERT INTO exercises (name)
+VALUES
+('Bench Press'),
+('Squat'),
+('Deadlift'),
+('Overhead Press'),
+('Pull-Up'),
+('Barbell Row'),
+('Incline Bench'),
+('Lat Pulldown'),
+('Leg Press'),
+('Romanian Deadlift')
+ON CONFLICT (name) DO NOTHING;

@@ -2,13 +2,13 @@ package dev.paulbankl.gymleague.dto;
 
 public class EntryCreationDTO {
     private String username;
-    private String exerciseName;
+    private Long exerciseId;
     private int weight;
     private int reps;
 
-    public EntryCreationDTO(String username, String exerciseName, int weight, int reps) {
+    public EntryCreationDTO(String username, Long exerciseId, int weight, int reps) {
         this.username = username;
-        this.exerciseName = exerciseName;
+        this.exerciseId = exerciseId;
         this.weight = weight;
         this.reps = reps;
     }
@@ -21,12 +21,12 @@ public class EntryCreationDTO {
         this.username = username;
     }
 
-    public String getExerciseName() {
-        return exerciseName;
+    public Long getExerciseId() {
+        return exerciseId;
     }
 
-    public void setExerciseName(String exerciseName) {
-        this.exerciseName = exerciseName;
+    public void setExerciseId(Long exerciseId) {
+        this.exerciseId = exerciseId;
     }
 
     public int getWeight() {
