@@ -10,7 +10,7 @@ export async function getEntriesByExerciseIdForUser(id: string, username: string
         });
 }
 
-export async function addEntryForUser(exerciseId: string, username: string, exerciseName: string, weight: number, reps: number): Promise<boolean> {
+export async function addEntryForUser( username: string, exerciseName: string, weight: number, reps: number): Promise<boolean> {
     const success = await fetch(`http://localhost:8080/api/entry/add`, {
         method: "POST",
         headers: {

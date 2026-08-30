@@ -5,6 +5,7 @@ import type { Entry } from "../types/Entry";
 import * as Entryservice from "../services/Entryservice";
 import { useParams } from "react-router-dom";
 import EntryForm from "../components/EntryForm";
+import EntryList from "../components/EntryList";
 
 
 
@@ -53,7 +54,8 @@ export default function ExerciseDetailPage({ }) {
     return (
         <div>
             <h1>{exercise.name}</h1>
-            <EntryForm exerciseId={id} exerciseName={exercise.name}></EntryForm>
+            <EntryForm exerciseName={exercise.name}></EntryForm>
+            <EntryList exerciseId={id}></EntryList>
         </div>
     );
 }
