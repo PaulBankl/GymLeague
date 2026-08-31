@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import dev.paulbankl.gymleague.model.Entry;
 
 public interface EntryRepository extends JpaRepository<Entry, Long> {
-    List<Entry> findByUserUsernameAndExerciseId(String userName, Long exerciseId);
+    List<Entry> findByUserUsernameAndExerciseIdOrderByDateDesc(String userName, Long exerciseId);
 }

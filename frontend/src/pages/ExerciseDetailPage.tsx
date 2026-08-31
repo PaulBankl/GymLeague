@@ -58,7 +58,7 @@ export default function ExerciseDetailPage({ }) {
         <div>
             <h1>{exercise.name}</h1>
             <EntryForm exerciseId={id} exerciseName={exercise.name} onEntryAdded={() => setRefresh(refresh + 1)}></EntryForm>
-            <EntryList exerciseId={id} refresh={refresh} onEntryDeleted={() => setRefresh(refresh + 1)}></EntryList>
+            <EntryList exerciseId={id} refresh={refresh} onRefresh={() => setRefresh(refresh + 1)}></EntryList>
         </div>
     );
 }
