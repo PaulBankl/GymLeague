@@ -3,7 +3,7 @@ import type { Exercise } from "../types/Exercise";
 import * as Exerciseservice from "../services/Exerciseservice";
 import type { Entry } from "../types/Entry";
 import * as Entryservice from "../services/Entryservice";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import EntryForm from "../components/EntryForm";
 import EntryList from "../components/EntryList";
 import ExerciseInfoCard from "../components/ExerciseInfoCard";
@@ -57,6 +57,7 @@ export default function ExerciseDetailPage({ }) {
 
     return (
         <div>
+            <Link to="/exercises">Back to Overview</Link>
             <h1>{exercise.name}</h1>
             <ExerciseInfoCard id={id} refresh={refresh}></ExerciseInfoCard>
             <EntryForm exerciseId={id} exerciseName={exercise.name} onEntryAdded={() => setRefresh(refresh + 1)}></EntryForm>

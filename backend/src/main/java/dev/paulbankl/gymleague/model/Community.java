@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -19,10 +21,11 @@ import lombok.Setter;
 @Table(name = "communities")
 public class Community {
 
-    public Community(String name, String description, boolean isPrivate) {
+    public Community(String name, String description, boolean isPrivate, User owner) {
         this.name = name;
         this.description = description;
         this.isPrivate = isPrivate;
+        this.owner = owner;
     }
 
     @Id
@@ -47,6 +50,11 @@ public class Community {
     public void prePersist() {
         createdAt = LocalDateTime.now();
     }
+
+    @ManyToOne
+    @Setter
+@JoinColumn(name = "owner_id", nullable = false)
+private User owner;
 
     @Override 
     public int hashCode() {

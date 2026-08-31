@@ -7,6 +7,7 @@ import LoginPage from "./pages/LoginPage";
 import ExerciseOverviewPage from "./pages/ExerciseOverviewPage";
 import DashboardPage from "./pages/DashboardPage";
 import ExerciseDetailPage from './pages/ExerciseDetailPage';
+import CommunityOverviewPage from './pages/CommunityOverviewPage';
 
 
 export const router = createBrowserRouter([
@@ -27,6 +28,8 @@ export const router = createBrowserRouter([
     element: <DashboardPage />
   },
   {
+    path: "/communities",
+    element: <CommunityOverviewPage />
   },
   {
     path: "/exercises",

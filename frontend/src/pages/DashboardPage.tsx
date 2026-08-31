@@ -12,6 +12,8 @@ export default function DashboardPage() {
             <h1>Welcome back {username}!</h1>
             <p>Welcome to the dashboard!</p>
             <Link to="/exercises">Go to Exercises</Link>
+            <br />
+            <Link to="/communities">Go to Communities</Link>
         </div>
     );
 }
