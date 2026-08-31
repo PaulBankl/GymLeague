@@ -60,4 +60,9 @@ public class EntryController {
 		return EntryService.getEntryforUserAndExercise(exerciseid, username);
 	
 }
+	@GetMapping("/best/{exerciseid}")
+	public Entry getBestEntry(@PathVariable Long exerciseid, @RequestParam String username) {
+		return EntryService.getBestEntryForUserAndExercise(exerciseid, username);
+	}
+
 }

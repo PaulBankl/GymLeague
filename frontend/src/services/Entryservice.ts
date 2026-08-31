@@ -46,3 +46,17 @@ export async function editEntry(id: number, weight: number, reps: number): Promi
     }
     return true;
 }
+
+export async function getBestEntryForExercise(exerciseId: number, username: string): Promise<Entry | null> {
+    const response = await fetch((`http://localhost:8080/api/entry/best/${exerciseId}?username=${username}`), {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    if (!response.ok) {
+        throw new Error("Failed to fetch best entry");
+    }
+    return await response.json();
+}
+

@@ -51,4 +51,28 @@ public boolean deleteEntry(Long id) {
 public List<Entry> getEntryforUserAndExercise(Long exerciseId, String username) {
     return entryRepository.findByUserUsernameAndExerciseIdOrderByDateDesc(username, exerciseId);
 }
+public Entry getBestEntryForUserAndExercise(Long exerciseId, String username) {
+
+    List<Entry> entries =
+        entryRepository.findByUserUsernameAndExerciseIdOrderByDateDesc(username, exerciseId);
+
+    Entry bestEntry = null;
+
+    for (Entry entry : entries) {
+
+        if (entry.getReps() > 12) {
+            continue;
+        }
+
+        if (bestEntry == null || estimateOneRm(entry) > estimateOneRm(bestEntry)) {
+            bestEntry = entry;
+        }
+    }
+
+    return bestEntry;
+}
+    //Helpfunction to calculate the 1RM based on the Epley formula
+    private double estimateOneRm(Entry entry) {
+    return entry.getWeight() * (1 + entry.getReps() / 30.0);
+}
 }
