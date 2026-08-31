@@ -23,3 +23,13 @@ export async function addEntryForUser( username: string, exerciseId: number, wei
     }
     return true;
 }
+
+export async function deleteEntry(entryId: number): Promise<boolean> {
+    const success = await fetch(`http://localhost:8080/api/entry/${entryId}`, {
+        method: "DELETE",
+    });
+    if (!success.ok) {
+        throw new Error("Failed to delete entry");
+    }
+    return true;
+}

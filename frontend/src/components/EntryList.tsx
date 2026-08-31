@@ -5,16 +5,18 @@ import * as Entryservice from "../services/Entryservice";
 type EntryListProps = {
     exerciseId: string;
     refresh: number;
+    onEntryDeleted: () => void; //Callback wenn exercise gelöscht wurde, um die Liste zu aktualisieren
 };
 
 
 
 
-export default function EntryList({ exerciseId, refresh }: EntryListProps){
+
+export default function EntryList({ exerciseId, refresh, onEntryDeleted }: EntryListProps) {
     const username = sessionStorage.getItem("username");
     const [entries, setEntries] = useState<Entry[] | null>(null);
     const [error, setError] = useState(false);
-    
+
     useEffect(() => {
         if (exerciseId && username) {
             Entryservice.getEntriesByExerciseIdForUser(exerciseId, username)
@@ -24,9 +26,9 @@ export default function EntryList({ exerciseId, refresh }: EntryListProps){
                     setError(true);
                 });
         }
-    },[exerciseId, refresh]);
+    }, [exerciseId, refresh, onEntryDeleted]); // Abhängigkeit von refresh und onEntryDeleted, damit die Liste aktualisiert wird, wenn ein Eintrag gelöscht wurde
 
-    if(!exerciseId) {
+    if (!exerciseId) {
         return <div>Invalid exercise.</div>;
     }
 
@@ -49,6 +51,14 @@ export default function EntryList({ exerciseId, refresh }: EntryListProps){
                     <p>Weight: {entry.weight}</p>
                     <p>Reps: {entry.reps}</p>
                     <p>Date: {new Date(entry.date).toLocaleDateString()}</p>
+                    <button onClick={ (async () => {
+                        try {
+                            await Entryservice.deleteEntry(entry.id);
+                            onEntryDeleted();
+                        } catch (error) {
+                            console.error("Error deleting entry:", error);
+                        }
+                    })}>Delete</button>
                 </div>
             ))}
         </div>
