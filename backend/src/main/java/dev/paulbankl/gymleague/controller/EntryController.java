@@ -2,6 +2,7 @@ package dev.paulbankl.gymleague.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,12 +58,16 @@ public class EntryController {
 	}
 	@GetMapping("/all/{exerciseid}")
 	public List<Entry> getMethodName( @PathVariable Long exerciseid, @RequestParam String username) {
-		return EntryService.getEntryforUserAndExercise(exerciseid, username);
+		return EntryService.getEntryForUserAndExercise(exerciseid, username);
 	
 }
 	@GetMapping("/best/{exerciseid}")
-	public Entry getBestEntry(@PathVariable Long exerciseid, @RequestParam String username) {
-		return EntryService.getBestEntryForUserAndExercise(exerciseid, username);
+	public ResponseEntity<Entry> getBestEntry(@PathVariable Long exerciseid, @RequestParam String username) {
+		Entry best= EntryService.getBestEntryForUserAndExercise(exerciseid, username);
+		if(best == null) {
+			return ResponseEntity.noContent().build();
+		}
+		return ResponseEntity.ok().body(best);
 	}
 
 }

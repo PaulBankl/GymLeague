@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.paulbankl.gymleague.dto.ResponseDTOs.ExerciseInfoDTO;
 import dev.paulbankl.gymleague.model.Exercise;
 import dev.paulbankl.gymleague.service.ExerciseService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,4 +33,9 @@ public class ExerciseController {
         return exerciseService.getExerciseById(id);
     }
 
+    @GetMapping("/info/{id}")
+    public ExerciseInfoDTO getMethodName(@PathVariable Long id, @RequestParam String username) {
+        return exerciseService.getExerciseInfoById(id, username);
+    }
+    
 }

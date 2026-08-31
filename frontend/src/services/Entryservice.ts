@@ -54,7 +54,9 @@ export async function getBestEntryForExercise(exerciseId: number, username: stri
             "Content-Type": "application/json",
         },
     });
-    if (!response.ok) {
+    if (response.status === 204) {
+        return null;
+    } if (!response.ok) {
         throw new Error("Failed to fetch best entry");
     }
     return await response.json();

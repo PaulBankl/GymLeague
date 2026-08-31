@@ -18,3 +18,14 @@ export async function getExerciseById(id: string): Promise<Exercise> {
             return response.json();
         });
 }
+
+export async function getExerciseInfoById(id: string, username: string): Promise<{ entryCount: number; bestEntry: Entry | null; progressPercent: number; progressOneRm: number }> {
+    return await fetch(`http://localhost:8080/api/exercises/info/${id}?username=${username}`, { method: "GET", headers: { "Content-Type": "application/json" } })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch exercise info");
+            }
+            return response.json();
+        });
+}
+

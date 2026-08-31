@@ -8,23 +8,24 @@ import dev.paulbankl.gymleague.dto.EntryChangeDTO;
 import dev.paulbankl.gymleague.dto.EntryCreationDTO;
 import dev.paulbankl.gymleague.model.Entry;
 import dev.paulbankl.gymleague.repository.EntryRepository;
+import dev.paulbankl.gymleague.repository.ExerciseRepository;
 
 @Service
 public class EntryService {
     private final EntryRepository entryRepository;
     private final UserService userService;
-    private final ExerciseService exerciseService;
+    private final ExerciseRepository exerciseRepository;
 
-    public EntryService(EntryRepository entryRepository, UserService userService, ExerciseService exerciseService) {
+    public EntryService(EntryRepository entryRepository, UserService userService, ExerciseRepository exerciseRepository) {
         this.entryRepository = entryRepository;
         this.userService = userService;
-        this.exerciseService = exerciseService;
+        this.exerciseRepository = exerciseRepository;
     }
     public List<Entry> getAllEntries() {
         return entryRepository.findAll();
     }
     public void insertEntry(EntryCreationDTO entryDTO) {
-        Entry entry = new Entry(entryDTO.getWeight(), entryDTO.getReps(),userService.getUserByUsername(entryDTO.getUsername()), exerciseService.getExerciseById(entryDTO.getExerciseId()));
+        Entry entry = new Entry(entryDTO.getWeight(), entryDTO.getReps(),userService.getUserByUsername(entryDTO.getUsername()), exerciseRepository.findById(entryDTO.getExerciseId()).orElse(null));
         entryRepository.save(entry);
     }
     public Entry getEntryById(Long id) {
@@ -48,7 +49,7 @@ public boolean deleteEntry(Long id) {
 }
 
 //Holt alle Einträge für einen bestimmten Benutzer und eine bestimmte Übung
-public List<Entry> getEntryforUserAndExercise(Long exerciseId, String username) {
+public List<Entry> getEntryForUserAndExercise(Long exerciseId, String username) {
     return entryRepository.findByUserUsernameAndExerciseIdOrderByDateDesc(username, exerciseId);
 }
 public Entry getBestEntryForUserAndExercise(Long exerciseId, String username) {
@@ -74,5 +75,8 @@ public Entry getBestEntryForUserAndExercise(Long exerciseId, String username) {
     //Helpfunction to calculate the 1RM based on the Epley formula
     private double estimateOneRm(Entry entry) {
     return entry.getWeight() * (1 + entry.getReps() / 30.0);
+}
+public Integer getEntryCount(Long exerciseId, String username) {
+    return entryRepository.countByUserUsernameAndExerciseId(username, exerciseId);
 }
 }

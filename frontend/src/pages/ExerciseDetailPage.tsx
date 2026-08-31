@@ -6,6 +6,7 @@ import * as Entryservice from "../services/Entryservice";
 import { useParams } from "react-router-dom";
 import EntryForm from "../components/EntryForm";
 import EntryList from "../components/EntryList";
+import ExerciseInfoCard from "../components/ExerciseInfoCard";
 
 
 
@@ -57,6 +58,7 @@ export default function ExerciseDetailPage({ }) {
     return (
         <div>
             <h1>{exercise.name}</h1>
+            <ExerciseInfoCard id={id} refresh={refresh}></ExerciseInfoCard>
             <EntryForm exerciseId={id} exerciseName={exercise.name} onEntryAdded={() => setRefresh(refresh + 1)}></EntryForm>
             <EntryList exerciseId={id} refresh={refresh} onRefresh={() => setRefresh(refresh + 1)}></EntryList>
         </div>
