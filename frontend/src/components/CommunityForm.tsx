@@ -19,15 +19,22 @@ export default function CommunityForm() {
             setError("User not logged in.");
             return;
         }
-        const response = await CommunityService.createCommunity(name.trim(), description.trim(), isPrivate, username);
-        if (response.error) {
-            setError(response.error);
-        } else {
+        try{
+            const response = await CommunityService.createCommunity(name.trim(), description.trim(), isPrivate, username);
+            if(!response) {
+                setError("Failed to create community. try a different name.");
+                return;
+            }
+        }
+        catch (error) {
+            setError("Error creating community. try a different name.");
+            console.error(error);
+            return;
+        }
             setError(null);
             setName("");
             setDescription("");
             setIsPrivate(false);
-        }
     };
 
     return (

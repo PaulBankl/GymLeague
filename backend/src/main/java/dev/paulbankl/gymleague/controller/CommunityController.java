@@ -40,7 +40,6 @@ public class CommunityController {
     }
     @PostMapping("create")
     public boolean postMethodName(@RequestBody CommunityCreationDTO dto) {
-        
         return communityService.createCommunity(dto);
     }
     @GetMapping("/all")
