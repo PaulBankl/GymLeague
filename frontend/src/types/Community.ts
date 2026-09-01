@@ -8,5 +8,6 @@ export type Community = {
     isPrivate: boolean;
     createdAt: string;
     owner: string;
+    memberCount: number;
 };
 

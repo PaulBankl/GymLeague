@@ -47,7 +47,8 @@ public class CommunityService {
                         community.getDescription(),
                         community.isPrivate(),
                         community.getCreatedAt().toString(),
-                        community.getOwner().getUsername()
+                        community.getOwner().getUsername(),
+                        CommunityMemberRepository.countByCommunityId(community.getId())
                 ))
                 .toList();
     }

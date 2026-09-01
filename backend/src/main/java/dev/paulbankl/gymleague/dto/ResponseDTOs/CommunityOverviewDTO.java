@@ -16,4 +16,5 @@ public class CommunityOverviewDTO{
     private boolean isPrivate;
     private String createdAt;
     private String owner;
+    private int memberCount;
 }

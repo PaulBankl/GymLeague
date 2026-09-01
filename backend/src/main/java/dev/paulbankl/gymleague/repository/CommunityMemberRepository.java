@@ -15,4 +15,5 @@ public interface CommunityMemberRepository extends JpaRepository<CommunityMember
         Long communityId,
         CommunityRole role
 );
+public int countByCommunityId(Long communityId);
 }
