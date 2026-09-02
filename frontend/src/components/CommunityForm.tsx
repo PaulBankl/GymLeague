@@ -1,7 +1,7 @@
 import { useState } from "react";
 import * as CommunityService from "../services/Communityservice";
 
-export default function CommunityForm() {
+export default function CommunityForm({ onCommunityCreated }: { onCommunityCreated: () => void }) {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [isPrivate, setIsPrivate] = useState(false);
@@ -35,6 +35,7 @@ export default function CommunityForm() {
             setName("");
             setDescription("");
             setIsPrivate(false);
+            onCommunityCreated();
     };
 
     return (

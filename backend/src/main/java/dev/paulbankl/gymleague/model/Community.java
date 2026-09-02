@@ -21,11 +21,11 @@ import lombok.Setter;
 @Table(name = "communities")
 public class Community {
 
-    public Community(String name, String description, boolean isPrivate, User owner) {
+    public Community(String name, String description, boolean isPrivate, User owner2) {
         this.name = name;
         this.description = description;
         this.isPrivate = isPrivate;
-        this.owner = owner;
+        this.owner = owner2;
     }
 
     @Id

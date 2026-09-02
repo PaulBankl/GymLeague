@@ -8,6 +8,7 @@ import ExerciseOverviewPage from "./pages/ExerciseOverviewPage";
 import DashboardPage from "./pages/DashboardPage";
 import ExerciseDetailPage from './pages/ExerciseDetailPage';
 import CommunityOverviewPage from './pages/CommunityOverviewPage';
+import CommunityDetailPage from './pages/CommunityDetailPage';
 
 
 export const router = createBrowserRouter([
@@ -28,7 +29,7 @@ export const router = createBrowserRouter([
     element: <DashboardPage />
   },
   {
-    path: "/communities",
+    path: "/community",
     element: <CommunityOverviewPage />
   },
   {
@@ -38,6 +39,10 @@ export const router = createBrowserRouter([
   {
     path: "/exercises/:id",
     element: <ExerciseDetailPage/>
+  },
+  {
+    path: "/community/:id",
+    element: <CommunityDetailPage/>
   }
 ]);
 

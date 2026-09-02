@@ -9,6 +9,7 @@ import dev.paulbankl.gymleague.service.CommunityService;
 import java.util.List;
 
 import dev.paulbankl.gymleague.dto.CommunityCreationDTO;
+import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityDetailDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityOverviewDTO;
 import dev.paulbankl.gymleague.model.Community;
 import dev.paulbankl.gymleague.model.CommunityMember;
@@ -46,5 +47,16 @@ public class CommunityController {
     public List<CommunityOverviewDTO> getAllCommunitiesForUser(@RequestParam String username) {       
         return communityService.getAllCommunitiesForUser(username);     
         }
+
+    @GetMapping("/{id}")
+    public CommunityDetailDTO getCommunityDetails(@PathVariable Long id) {
+        return  communityService.getCommunityDetails(id);
+    }
+    @GetMapping("/leave/{id}")
+    public boolean leaveCommunity(@PathVariable Long id, @RequestParam String username) {
+        return communityService.leaveCommunity(id, username);
+    }
+    
+    
          
 }

@@ -25,3 +25,29 @@ export async function createCommunity(name: string, description: string, isPriva
     }
     return await response.json();
 }
+
+export async function getCommunityDetails(id: number) {
+    const response = await fetch(`http://localhost:8080/api/community/${id}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    if (!response.ok) {
+        throw new Error("Failed to fetch community details");
+    }
+    return await response.json();
+}
+
+export async function leaveCommunity(id: number, username: string) {
+    const response = await fetch(`http://localhost:8080/api/community/leave/${id}?username=${username}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    if (!response.ok) {
+        throw new Error("Failed to leave community");
+    }
+    return await response.json();
+}

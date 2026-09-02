@@ -1,4 +1,4 @@
-import type { User } from "./User";
+
 import type { Exercise } from "./Exercise";
 
 export type Community = {

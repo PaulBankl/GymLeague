@@ -1,8 +1,9 @@
 package dev.paulbankl.gymleague.model;
 
 public enum CommunityRole {
-    USER,
-    MODERATOR,
+    OWNER,
     ADMIN,
-    OWNER
+    MODERATOR,
+    USER,
+
 }
