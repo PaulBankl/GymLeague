@@ -51,3 +51,29 @@ export async function leaveCommunity(id: number, username: string) {
     }
     return await response.json();
 }
+
+
+export async function getAllMembersOfCommunity(id: number) {
+    const response = await fetch(`http://localhost:8080/api/community/members/${id}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    if (!response.ok) {
+        throw new Error("Failed to fetch community members");
+    }
+    return await response.json();
+}
+
+export async function get10RandomCommunities() {
+    const response = await fetch(`http://localhost:8080/api/community/random`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+    );
+    return await response.json();
+}

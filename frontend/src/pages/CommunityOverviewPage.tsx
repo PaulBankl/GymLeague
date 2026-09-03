@@ -28,6 +28,8 @@ export default function CommunityOverviewPage() {
              <Link to="/app">Back to Dashboard</Link>
             <h1>Community Overview</h1>
             <p>Welcome to the community overview page!</p>
+            <Link to="/community/all">View All Communities</Link>
+            <br></br>
              <CommunityForm onCommunityCreated={() => setRefresh((prev) => prev + 1)} />
              {communities.length === 0 ? <p>No communities found.</p> : (communities.map((community) => (
                 <CommunityCard key={community.id} community={community} />

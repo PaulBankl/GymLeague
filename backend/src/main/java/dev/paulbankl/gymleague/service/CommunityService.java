@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import dev.paulbankl.gymleague.dto.CommunityCreationDTO;
+import dev.paulbankl.gymleague.dto.ResponseDTOs.ComMemberListDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityDetailDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityOverviewDTO;
 import dev.paulbankl.gymleague.model.Community;
@@ -113,4 +114,29 @@ private void findNewOwner(Long id, Community community){
     newOwner.setRole(CommunityRole.OWNER);
     community.setOwner(newOwner.getUser());
 }
+public List<ComMemberListDTO> getAllMembersOfCommunity(Long communityId) {
+    return communityMemberRepository.findByCommunityIdOrderByRoleDescJoinedAtAsc(communityId)
+            .stream()
+            .map(member -> new ComMemberListDTO(
+                    member.getUser().getUsername(),
+                    member.getRole(),
+                    member.getJoinedAt().toString()
+            ))
+            .toList();
 }
+public List<CommunityOverviewDTO> get10RandomCommunities() {
+    List<Community> communities = communityRepository.findTop10ByIsPrivateFalseOrderByCreatedAtDesc();
+    return communities.stream()
+            .map(community -> new CommunityOverviewDTO(
+                    community.getId(),
+                    community.getName(),
+                    community.getDescription(),
+                    community.isPrivate(),
+                    community.getCreatedAt().toString(),
+                    community.getOwner().getUsername(),
+                    communityMemberRepository.countByCommunityId(community.getId())
+            ))
+            .toList();
+}}
+    
+    

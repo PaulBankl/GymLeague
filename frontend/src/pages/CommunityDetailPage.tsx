@@ -9,6 +9,7 @@ export default function CommunityDetailPage() {
     const [community, setCommunity] = useState<Community | null>(null);
     const [error, setError] = useState(false);
     const navigate = useNavigate();
+    const [members, setMembers] = useState<{ username: string; role: string; joinedAt: string }[]>([]);
     if(!id) {
         return <div>Invalid community ID</div>;
     }
@@ -17,6 +18,11 @@ export default function CommunityDetailPage() {
             setCommunity(data);
         }).catch((error) => {
             setError(true);
+        });
+        Communityservice.getAllMembersOfCommunity(Number(id)).then((data) => {
+            setMembers(data);
+        }).catch((error) => {
+            console.error("Failed to fetch community members:", error);
         });
     }, [id]);
 
@@ -50,8 +56,19 @@ export default function CommunityDetailPage() {
             <p>{community.description}</p>
             <p>Owner: {community.owner}</p>
             <p>Members: {community.memberCount}</p>
-            <p>Created: {community.createdAt}</p>
+            <p>Created: {new Date(community.createdAt).toLocaleDateString()}</p>
             <p>Private: {community.isPrivate ? "Yes" : "No"}</p>
+            <h2>Members</h2>
+            <ul>
+                {members.map((member) => (
+                    <li key={member.username} className="member-item">
+                        {member.username} - {member.role} - Joined: {new Date(member.joinedAt).toLocaleDateString()}
+                    </li>
+                ))}
+            </ul>
+            <button onClick={() => navigate("/community")}>Back to Overview</button>
+            <br />
+            <br />
             <button onClick={buttonLeave}>Leave Community</button>
         </div>
     );
