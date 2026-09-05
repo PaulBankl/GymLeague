@@ -3,9 +3,13 @@ import * as Communityservice from "../services/Communityservice";
 import { useEffect, useState } from "react";
 import type { Community } from "../types/Community";
 import { useNavigate } from "react-router-dom";
+import CommunityEdit from "../components/CommunityEdit";
 
 export default function CommunityDetailPage() {
+    const username = sessionStorage.getItem("username");
+    const[editMode, setEditMode] = useState(false);
     const { id } = useParams<{ id: string }>();
+    const [refresh, setRefresh] = useState(0);
     const [community, setCommunity] = useState<Community | null>(null);
     const [error, setError] = useState(false);
     const navigate = useNavigate();
@@ -24,7 +28,7 @@ export default function CommunityDetailPage() {
         }).catch((error) => {
             console.error("Failed to fetch community members:", error);
         });
-    }, [id]);
+    }, [id, refresh]);
 
     function buttonLeave() {
         const username = sessionStorage.getItem("username");
@@ -58,6 +62,10 @@ export default function CommunityDetailPage() {
             <p>Members: {community.memberCount}</p>
             <p>Created: {new Date(community.createdAt).toLocaleDateString()}</p>
             <p>Private: {community.isPrivate ? "Yes" : "No"}</p>
+            {username === community.owner && (
+                <button onClick={() => setEditMode(!editMode)}>{editMode ? "Cancel" : "Edit Community"}</button>
+            )}
+            {editMode && <CommunityEdit community={community} onCommunityChange={() => {setRefresh(refresh + 1); setEditMode(false);}} />}
             <h2>Members</h2>
             <ul>
                 {members.map((member) => (

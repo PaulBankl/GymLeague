@@ -8,6 +8,7 @@ import dev.paulbankl.gymleague.service.CommunityService;
 
 import java.util.List;
 
+import dev.paulbankl.gymleague.dto.CommunityChangeDTO;
 import dev.paulbankl.gymleague.dto.CommunityCreationDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.ComMemberListDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityDetailDTO;
@@ -64,6 +65,12 @@ public class CommunityController {
     @GetMapping("/random")
     public List<CommunityOverviewDTO> getMethodName() {
         return communityService.get10RandomCommunities();
+    }
+    @PostMapping("/change")
+    public boolean changeCommunity(@RequestBody CommunityChangeDTO dto) {
+        //TODO: process POST request
+        
+        return false;
     }
     
     

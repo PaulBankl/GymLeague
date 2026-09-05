@@ -6,6 +6,4 @@ public record ComMemberListDTO(
     String username,
     CommunityRole role,
     String joinedAt
-) {
-    
-}
+) {}
