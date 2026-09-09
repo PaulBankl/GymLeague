@@ -9,5 +9,6 @@ export type Community = {
     createdAt: string;
     owner: string;
     memberCount: number;
+    exercises: Exercise[];
 };
 

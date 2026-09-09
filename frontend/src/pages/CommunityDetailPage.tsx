@@ -76,6 +76,16 @@ export default function CommunityDetailPage() {
                     </li>
                 ))}
             </ul>
+            {community.exercises.length > 0 && (
+                <>
+                    <h2>Exercises</h2>
+                    <ul>
+                        {community.exercises.map((exercise) => (
+                            <li key={exercise.id}>{exercise.name}</li>
+                        ))}
+                    </ul>
+                </>
+            )}
             <button onClick={() => navigate("/community")}>Back to Overview</button>
             <br />
             <br />

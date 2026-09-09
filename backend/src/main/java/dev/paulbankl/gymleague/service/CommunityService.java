@@ -15,6 +15,7 @@ import dev.paulbankl.gymleague.model.Community;
 import dev.paulbankl.gymleague.model.CommunityExercises;
 import dev.paulbankl.gymleague.model.CommunityMember;
 import dev.paulbankl.gymleague.model.CommunityRole;
+import dev.paulbankl.gymleague.model.Exercise;
 import dev.paulbankl.gymleague.repository.CommunityRepository;
 import dev.paulbankl.gymleague.repository.ExerciseRepository;
 import dev.paulbankl.gymleague.repository.UserRepository;
@@ -81,7 +82,8 @@ if (owner == null) {
                 .toList();
     }
     public CommunityDetailDTO getCommunityDetails(Long id) {
-
+    CommunityExercises [] communityExercises = communityExercisesRepository.findByCommunityId(id).toArray(new CommunityExercises[0]);
+    Exercise [] exercises = (communityExercises.length > 0) ? java.util.Arrays.stream(communityExercises).map(CommunityExercises::getExercise).toArray(Exercise[]::new) : new Exercise[0];
     Community community = communityRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("Community not found"));
     return new CommunityDetailDTO(
@@ -90,7 +92,8 @@ if (owner == null) {
             community.getOwner().getUsername(),
             communityMemberRepository.countByCommunityId(community.getId()),
             community.getCreatedAt(),
-            community.isPrivate()
+            community.isPrivate(),
+            exercises
     );
 }
 
