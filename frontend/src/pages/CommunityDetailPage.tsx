@@ -14,10 +14,12 @@ export default function CommunityDetailPage() {
     const [error, setError] = useState(false);
     const navigate = useNavigate();
     const [members, setMembers] = useState<{ username: string; role: string; joinedAt: string }[]>([]);
+
     if(!id) {
         return <div>Invalid community ID</div>;
     }
     useEffect(() => {
+        setCommunity(id ? null : community);
         Communityservice.getCommunityDetails(Number(id)).then((data) => {
             setCommunity(data);
         }).catch((error) => {

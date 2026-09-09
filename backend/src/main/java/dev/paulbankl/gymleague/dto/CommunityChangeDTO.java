@@ -1,7 +1,8 @@
 package dev.paulbankl.gymleague.dto;
 
 public record CommunityChangeDTO (
-    Long id,
+    String name,
     String description,
-    boolean isPrivate
+    boolean isPrivate,
+    String username
 ){}

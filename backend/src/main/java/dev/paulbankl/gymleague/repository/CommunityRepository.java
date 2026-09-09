@@ -9,7 +9,7 @@ import dev.paulbankl.gymleague.model.User;
 
 public interface CommunityRepository extends JpaRepository<Community, Long> {
     public boolean existsByName(String name);
-    public Community findByName(String name);
+    public Optional<Community> findByName(String name);
     public Optional<Community> findById(Long id);
     public List<Community> findTop10ByIsPrivateFalseOrderByCreatedAtDesc();
 

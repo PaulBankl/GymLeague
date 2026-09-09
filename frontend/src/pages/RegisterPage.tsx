@@ -12,7 +12,6 @@ export default function RegisterPage() {
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         const success = await register(username, password, email);
-            
                 if (success) {
                     navigate("/login");
                 } else {

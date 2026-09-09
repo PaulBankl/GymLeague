@@ -5,12 +5,14 @@ public class CommunityCreationDTO {
     private String description;
     private boolean isPrivate;
     private String username;
+    private Long[] exerciseIds;
 
     public CommunityCreationDTO(String name, String description, boolean isPrivate, String username) {
         this.name = name;
         this.description = description;
         this.isPrivate = isPrivate;
         this.username = username;
+
     }
 
     public String getName() {
@@ -40,4 +42,9 @@ public class CommunityCreationDTO {
     public void setUsername(String username) {
         this.username = username;
     }
+    public Long[] getExerciseIds() {
+        return exerciseIds;
+    }
+    public void setExerciseIds(Long[] exerciseIds) {
+        this.exerciseIds = exerciseIds;}
 }

@@ -6,16 +6,20 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import dev.paulbankl.gymleague.dto.CommunityChangeDTO;
 import dev.paulbankl.gymleague.dto.CommunityCreationDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.ComMemberListDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityDetailDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityOverviewDTO;
 import dev.paulbankl.gymleague.model.Community;
+import dev.paulbankl.gymleague.model.CommunityExercises;
 import dev.paulbankl.gymleague.model.CommunityMember;
 import dev.paulbankl.gymleague.model.CommunityRole;
 import dev.paulbankl.gymleague.repository.CommunityRepository;
+import dev.paulbankl.gymleague.repository.ExerciseRepository;
 import dev.paulbankl.gymleague.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import dev.paulbankl.gymleague.repository.CommunityExercisesRepository;
 import dev.paulbankl.gymleague.repository.CommunityMemberRepository;
 
 import dev.paulbankl.gymleague.model.User;
@@ -25,11 +29,15 @@ public class CommunityService {
     private final CommunityRepository communityRepository;
     private final CommunityMemberRepository communityMemberRepository;
     private final UserRepository userRepository;
+    private final CommunityExercisesRepository communityExercisesRepository;
+    private final ExerciseRepository exerciseRepository;
 
-    public CommunityService(CommunityRepository communityRepository, CommunityMemberRepository communityMemberRepository, UserRepository userRepository) {
+    public CommunityService(CommunityRepository communityRepository, CommunityMemberRepository communityMemberRepository, UserRepository userRepository, CommunityExercisesRepository communityExercisesRepository, ExerciseRepository exerciseRepository) {
         this.communityRepository = communityRepository;
         this.communityMemberRepository = communityMemberRepository;
         this.userRepository = userRepository;
+        this.communityExercisesRepository = communityExercisesRepository;
+        this.exerciseRepository = exerciseRepository;
     }
     @Transactional
     public boolean createCommunity(CommunityCreationDTO dto) {
@@ -51,6 +59,10 @@ if (owner == null) {
         //Community wird erschaffen und CommunityMember wird erschaffen und gespeichert
         communityRepository.save(community);
         communityMemberRepository.save(new CommunityMember(owner, community, CommunityRole.OWNER));
+        for(Long exerciseId : dto.getExerciseIds()) {
+            CommunityExercises communityExercise = new CommunityExercises(community, exerciseRepository.findById(exerciseId).orElseThrow());
+            communityExercisesRepository.save(communityExercise);
+        }
         return true;
     }
     public List<CommunityOverviewDTO> getAllCommunitiesForUser(String username) {
@@ -137,6 +149,21 @@ public List<CommunityOverviewDTO> get10RandomCommunities() {
                     communityMemberRepository.countByCommunityId(community.getId())
             ))
             .toList();
-}}
+}
+public boolean changeCommunity(CommunityChangeDTO dto){
+    Community community = communityRepository.findByName(dto.name())
+        .orElse(null);
+    if (community == null) {
+        return false;
+    }
+    if(!community.getOwner().getUsername().equals(dto.username())) {
+        return false;
+    }
+    community.setDescription(dto.description());
+    community.setPrivate(dto.isPrivate());
+    communityRepository.save(community);
+    return true;
+}
+}
     
     

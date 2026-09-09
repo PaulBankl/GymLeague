@@ -68,9 +68,7 @@ public class CommunityController {
     }
     @PostMapping("/change")
     public boolean changeCommunity(@RequestBody CommunityChangeDTO dto) {
-        //TODO: process POST request
-        
-        return false;
+       return communityService.changeCommunity(dto);
     }
     
     

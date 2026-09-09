@@ -14,7 +14,7 @@ export async function register(username: string, password: string, email: string
             email
         })
     });
-
+    
     if (!response.ok) {
         return false;
     }

@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as CommunityService from "../services/Communityservice";
+import type { Exercise } from "../types/Exercise";
+import * as Exerciseservice from "../services/Exerciseservice";
+import CommunityExerciseCard from "../components/CommunityExerciseCard";
 
 export default function CommunityForm({ onCommunityCreated }: { onCommunityCreated: () => void }) {
     const [name, setName] = useState("");
@@ -8,6 +11,26 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
     const username = sessionStorage.getItem("username");
     const [error, setError] = useState<string | null>(null);
     const [ShowForm, setShowForm] = useState(false);
+
+    const [exercises, setExercises] = useState<Exercise[]>([]);
+
+    const [checkedExercises, setCheckedExercises] = useState<number[]>([]);
+
+    const toggleExercise = (id: number) => {
+        setCheckedExercises(prev =>
+            prev.includes(id)
+                ? prev.filter(x => x !== id)
+                : [...prev, id]
+        );
+    };
+
+    useEffect(() => {
+        Exerciseservice.getExercises().then((data) => {
+            setExercises(data);
+        }).catch((error) => {
+            console.error("Failed to fetch exercises:", error);
+        });
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -19,9 +42,9 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
             setError("User not logged in.");
             return;
         }
-        try{
-            const response = await CommunityService.createCommunity(name.trim(), description.trim(), isPrivate, username);
-            if(!response) {
+        try {
+            const response = await CommunityService.createCommunity(name.trim(), description.trim(), isPrivate, username, checkedExercises);
+            if (!response) {
                 setError("Failed to create community. try a different name.");
                 return;
             }
@@ -31,16 +54,23 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
             console.error(error);
             return;
         }
-            setError(null);
-            setName("");
-            setDescription("");
-            setIsPrivate(false);
-            onCommunityCreated();
+        setError(null);
+        setName("");
+        setDescription("");
+        setIsPrivate(false);
+        onCommunityCreated();
     };
+    if(!username) {
+        return <div>Please log in to create a community.</div>;
+    }
+    if(exercises.length === 0 && ShowForm) {
+        return <div>Loading exercises... <br>
+        </br><h1>Then you can create a community.</h1></div>;
+    }
 
     return (
         <>
-            <button onClick={() => setShowForm(!ShowForm)}>{ShowForm ? "X" : "Create Community"}</button>
+            <button onClick={() => {if(ShowForm){setCheckedExercises([]);}setShowForm(!ShowForm)}}>{ShowForm ? "X" : "Create Community"}</button>
             {ShowForm && (
                 <form onSubmit={handleSubmit}>
                     <div>
@@ -72,6 +102,26 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
                         />
                     </div>
                     <button type="submit">Create Community</button>
+
+                {exercises.length > 0 && (
+                    <div>
+                        <h2>Select Exercises for the Community</h2>
+                        {exercises.map((exercise) => (
+                            <CommunityExerciseCard
+                                key={exercise.id}
+                                exercise={exercise}
+                                checked={checkedExercises.includes(exercise.id)}
+                                onChange={(checked : boolean) => {
+                                    if (checked) {
+                                        setCheckedExercises([...checkedExercises, exercise.id]);
+                                    } else {
+                                        setCheckedExercises(checkedExercises.filter((id) => id !== exercise.id));
+                                    }
+                                }}
+                            />
+                        ))}
+                    </div>
+                )}
                 </form>
             )}
             {error && <p className="error">{error}</p>}
