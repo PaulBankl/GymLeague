@@ -78,13 +78,13 @@ export async function get10RandomCommunities() {
     return await response.json();
 }
 
-export async function editCommunity(name: string, description: string, isPrivate: boolean, username: string) {
+export async function editCommunity(name: string, description: string, isPrivate: boolean, username: string, exerciseIds: number[]) {
     const response = await fetch(`http://localhost:8080/api/community/change`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, description, isPrivate, username }),
+        body: JSON.stringify({ name, description, isPrivate, username, exerciseIds }),
     })
     if (!response.ok) {
         throw new Error("Failed to edit community");

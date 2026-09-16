@@ -1,6 +1,7 @@
 package dev.paulbankl.gymleague.service;
 
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -155,6 +156,7 @@ public List<CommunityOverviewDTO> get10RandomCommunities() {
             ))
             .toList();
 }
+@Transactional 
 public boolean changeCommunity(CommunityChangeDTO dto){
     Community community = communityRepository.findByName(dto.name())
         .orElse(null);
@@ -166,7 +168,16 @@ public boolean changeCommunity(CommunityChangeDTO dto){
     }
     community.setDescription(dto.description());
     community.setPrivate(dto.isPrivate());
-    communityRepository.save(community);
+    communityExercisesRepository.deleteByCommunityId(community.getId());
+    List<Exercise> exercises = exerciseRepository.findAllById(
+    Arrays.asList(dto.exerciseIds())
+);
+
+for (Exercise exercise : exercises) {
+    communityExercisesRepository.save(
+        new CommunityExercises(community, exercise)
+    );
+}
     return true;
 }
 }
