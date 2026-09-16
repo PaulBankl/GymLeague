@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { Community } from "../types/Community";
 import { useNavigate } from "react-router-dom";
 import CommunityEdit from "../components/CommunityEdit";
+import CommunityDetailCard from "../components/CommunityDetailCard";
 
 export default function CommunityDetailPage() {
     const username = sessionStorage.getItem("username");
@@ -59,33 +60,13 @@ export default function CommunityDetailPage() {
     return (
         <div>
             <h1>{community.name}</h1>
-            <p>{community.description}</p>
-            <p>Owner: {community.owner}</p>
-            <p>Members: {community.memberCount}</p>
-            <p>Created: {new Date(community.createdAt).toLocaleDateString()}</p>
-            <p>Private: {community.isPrivate ? "Yes" : "No"}</p>
             {username === community.owner && (
                 <button onClick={() => setEditMode(!editMode)}>{editMode ? "Cancel" : "Edit Community"}</button>
             )}
             {editMode && <CommunityEdit community={community} onCommunityChange={() => {setRefresh(refresh + 1); setEditMode(false);}} />}
-            <h2>Members</h2>
-            <ul>
-                {members.map((member) => (
-                    <li key={member.username} className="member-item">
-                        {member.username} - {member.role} - Joined: {new Date(member.joinedAt).toLocaleDateString()}
-                    </li>
-                ))}
-            </ul>
-            {community.exercises.length > 0 && (
-                <>
-                    <h2>Exercises</h2>
-                    <ul>
-                        {community.exercises.map((exercise) => (
-                            <li key={exercise.id}>{exercise.name}</li>
-                        ))}
-                    </ul>
-                </>
-            )}
+            <CommunityDetailCard community={community} members={members} />
+            
+            
             <button onClick={() => navigate("/community")}>Back to Overview</button>
             <br />
             <br />

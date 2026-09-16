@@ -63,7 +63,7 @@ public class CommunityController {
         return communityService.getAllMembersOfCommunity(id);
     }
     @GetMapping("/random")
-    public List<CommunityOverviewDTO> getMethodName() {
+    public List<CommunityOverviewDTO> getrandomCommunities() {
         return communityService.get10RandomCommunities();
     }
     @PostMapping("/change")

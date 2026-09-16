@@ -10,6 +10,7 @@ import ExerciseDetailPage from './pages/ExerciseDetailPage';
 import CommunityOverviewPage from './pages/CommunityOverviewPage';
 import CommunityDetailPage from './pages/CommunityDetailPage';
 import AllCommunityPage from './pages/AllCommunityPage';
+import PublicCommunityDetailPage from './pages/PublicCommunityDetailPage';
 
 
 export const router = createBrowserRouter([
@@ -50,6 +51,10 @@ export const router = createBrowserRouter([
     element: <div>
       <AllCommunityPage />
     </div>
+  },
+  {
+    path: "/community/public/:id",
+    element: <PublicCommunityDetailPage />
   }
 ]);
 

@@ -1,7 +1,7 @@
 
-### CommunityExercises
 
-anpassen im edit mode
+### wo weitermachen:
+public communityoverviewpage machen mit component und join button
 
 
 
@@ -17,8 +17,6 @@ promoten
 Non-member community detail page
 Create a separate route such as /community/public/:id, link the cards on AllCommunityPage, and reuse the existing community-details endpoint. Show basic details and exercises, but omit edit, leave, and member-management controls.
 
-Editable community exercises
-Extend CommunityChangeDTO with exerciseIds, reuse the existing exercise-checkbox component, and—in one transaction—delete the community’s existing exercise relationships and recreate them from the submitted IDs. This is simpler and faster than calculating individual additions/removals.
 
 Password hashing
 Do this before JWT because JWT login should verify an encoded password from the beginning.

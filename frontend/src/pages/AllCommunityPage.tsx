@@ -34,6 +34,7 @@ export default function AllCommunityPage() {
                     <p>Members: {community.memberCount}</p>
                     <p>Created: {new Date(community.createdAt).toLocaleDateString()}</p>
                     <p>Private: {community.isPrivate ? "Yes" : "No"}</p>
+                    <Link to={`/community/public/${community.id}`}>View Community</Link>
                 </div>
             ))}
         </div>
