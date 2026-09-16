@@ -5,10 +5,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import dev.paulbankl.gymleague.dto.CommunityChangeDTO;
 import dev.paulbankl.gymleague.dto.CommunityCreationDTO;
+import dev.paulbankl.gymleague.dto.CommunityJoinDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.ComMemberListDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityDetailDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityOverviewDTO;
@@ -142,8 +145,8 @@ public List<ComMemberListDTO> getAllMembersOfCommunity(Long communityId) {
             ))
             .toList();
 }
-public List<CommunityOverviewDTO> get10RandomCommunities() {
-    List<Community> communities = communityRepository.findTop10ByIsPrivateFalseOrderByCreatedAtDesc();
+public List<CommunityOverviewDTO> get10RandomCommunities(String username) {
+    List<Community> communities = communityRepository.findDiscoverCommunities(username, PageRequest.of(0, 10));
     return communities.stream()
             .map(community -> new CommunityOverviewDTO(
                     community.getId(),
@@ -180,6 +183,23 @@ for (Exercise exercise : exercises) {
 }
     return true;
 }
+
+@Transactional
+    public boolean joinCommunity(CommunityJoinDTO dto) { 
+        User user = userRepository.findByUsername(dto.username()).orElse(null);
+        Community community = communityRepository.findById(dto.communityId()).orElse(null);
+        if (user == null || community == null) {return false; // User or community not found
+        }
+        if (community.isPrivate()) {
+    return false;
+}
+// Check if the user is already a member of the community
+        if (communityMemberRepository.existsByCommunityIdAndUserUsername((dto.communityId()), dto.username())) {
+            return false; // User is already a member
+        }  
+        communityMemberRepository.save(new CommunityMember(user, community, CommunityRole.USER));
+        return true;
+    }
 }
     
     

@@ -6,9 +6,10 @@ import * as CommunityService from "../services/Communityservice";
 export default function AllCommunityPage() {
     const [communities, setCommunities] = useState<Community[]>([]);
     const [error, setError] = useState(false);
+    const username = sessionStorage.getItem("username") || "";
 
     useEffect(() => {
-        CommunityService.get10RandomCommunities().then(setCommunities).catch((error) => {
+        CommunityService.get10RandomCommunities(username).then(setCommunities).catch((error) => {
             console.error("Error fetching communities:", error);
             setError(true);
         });

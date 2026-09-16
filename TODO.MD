@@ -1,7 +1,7 @@
 
 
 ### wo weitermachen:
-public communityoverviewpage machen mit component und join button
+public communityoverviewpage: join button
 
 
 

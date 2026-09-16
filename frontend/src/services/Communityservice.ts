@@ -66,8 +66,8 @@ export async function getAllMembersOfCommunity(id: number) {
     return await response.json();
 }
 
-export async function get10RandomCommunities() {
-    const response = await fetch(`http://localhost:8080/api/community/random`,
+export async function get10RandomCommunities(username: string) {
+    const response = await fetch(`http://localhost:8080/api/community/random?username=${username}`,
         {
             method: "GET",
             headers: {
@@ -90,4 +90,20 @@ export async function editCommunity(name: string, description: string, isPrivate
         throw new Error("Failed to edit community");
     }
     return await response.json();
+}
+
+export async function joinCommunity(communityId: number, username: string) {
+const response = await fetch(`http://localhost:8080/api/community/join`, {
+    headers: {
+        "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify({ communityId, username }),
+});
+if (!response.ok) {
+    throw new Error("Failed to join community");
+}
+return await response.json();
+
+
 }
