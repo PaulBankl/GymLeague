@@ -16,13 +16,7 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
 
     const [checkedExercises, setCheckedExercises] = useState<number[]>([]);
 
-    const toggleExercise = (id: number) => {
-        setCheckedExercises(prev =>
-            prev.includes(id)
-                ? prev.filter(x => x !== id)
-                : [...prev, id]
-        );
-    };
+    
 
     useEffect(() => {
         Exerciseservice.getExercises().then((data) => {
@@ -59,6 +53,7 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
         setDescription("");
         setIsPrivate(false);
         onCommunityCreated();
+        setShowForm(false);
     };
     if(!username) {
         return <div>Please log in to create a community.</div>;

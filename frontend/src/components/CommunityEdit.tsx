@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Community } from "../types/Community";
 import * as CommunityService from "../services/Communityservice";
+import type { Exercise } from "../types/Exercise";
+import * as Exerciseservice from "../services/Exerciseservice";
+import CommunityExerciseCard from "../components/CommunityExerciseCard";
 
 type EditCommunityProps = {
     community: Community | null;
@@ -12,6 +15,19 @@ export default function CommunityEdit({ community, onCommunityChange }: EditComm
     const [isPrivate, setIsPrivate] = useState(community?.isPrivate || false);
     const [error, setError] = useState<string | null>(null);
     const username = sessionStorage.getItem("username");
+
+    const [exercises, setExercises] = useState<Exercise[]>([]);
+    const [checkedExercises, setCheckedExercises] = useState<number[]>([]);
+
+    setCheckedExercises(community?.exercises.map(exercise => exercise.id) || []);
+
+    useEffect(() => {
+        Exerciseservice.getExercises().then((data) => {
+            setExercises(data);
+        }).catch((error) => {
+            console.error("Failed to fetch exercises:", error);
+        });
+    }, []);
 
 
     async function HandleChange(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -40,27 +56,39 @@ export default function CommunityEdit({ community, onCommunityChange }: EditComm
             setError(null);
         }
     }
-        return (
-            <div>
-                <h1>Edit Community</h1>
-                <p>Here you can edit your community details.</p>
-                {error && <p style={{ color: "red" }}>Failed to edit community. <br></br>Please try again.</p>}
-                <div className="edit-community-form">
-                    <form>
-                        <br />
-                        <label htmlFor="description">
-                            Description:
-                            <textarea defaultValue={community?.description} onChange={(e) => setDescription(e.target.value)}></textarea>
-                        </label>
-                        <br />
-                        <label htmlFor="isPrivate">
-                            Private:
-                            <input type="checkbox" defaultChecked={community?.isPrivate} onChange={(e) => setIsPrivate(e.target.checked)} />
-                        </label>
-                        <br />
-                        <button onClick={HandleChange}>Save Changes</button>
-                    </form>
-                </div>
+    return (
+        <div>
+            <h1>Edit Community</h1>
+            <p>Here you can edit your community details.</p>
+            {error && <p style={{ color: "red" }}>Failed to edit community. <br></br>Please try again.</p>}
+            <div className="edit-community-form">
+                <form>
+                    <br />
+                    <label htmlFor="description">
+                        Description:
+                        <textarea defaultValue={community?.description} onChange={(e) => setDescription(e.target.value)}></textarea>
+                    </label>
+                    <br />
+                    <label htmlFor="isPrivate">
+                        Private:
+                        <input type="checkbox" defaultChecked={community?.isPrivate} onChange={(e) => setIsPrivate(e.target.checked)} />
+                    </label>
+                    <br />
+                    {exercises.map((exercise) => (
+                        <CommunityExerciseCard
+                            key={exercise.id}
+                            exercise={exercise} checked={checkedExercises.includes(exercise.id)} onChange={(checked: boolean) => {
+                                if (checked) {
+                                    setCheckedExercises([...checkedExercises, exercise.id]);
+                                } else {
+                                    setCheckedExercises(checkedExercises.filter((id) => id !== exercise.id));
+                                }
+                            }} />
+                    ))}
+                    <br />
+                    <button onClick={HandleChange}>Save Changes</button>
+                </form>
             </div>
-        );
-    }
+        </div>
+    );
+}
