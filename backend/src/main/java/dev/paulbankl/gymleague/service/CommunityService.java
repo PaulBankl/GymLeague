@@ -99,7 +99,8 @@ if (owner == null) {
 
 @Transactional
 public boolean leaveCommunity(Long id, String username){
-   if (!userRepository.existsByUsername(username)) {
+   User user = userRepository.findByUsername(username).orElse(null);
+if (user == null) {
     return false;
 }
 Community community = communityRepository.findById(id)
@@ -114,8 +115,9 @@ if (community == null) {
             return communityMemberRepository.deleteByCommunityIdAndUserUsername(id, username) > 0;
         }
         
+        communityExercisesRepository.deleteByCommunityId(id);
         communityMemberRepository.deleteByCommunityIdAndUserUsername(id, username);
-        communityRepository.deleteById(id);
+        communityRepository.delete(community);
         return true;
     }
     return communityMemberRepository.deleteByCommunityIdAndUserUsername(id, username) > 0;

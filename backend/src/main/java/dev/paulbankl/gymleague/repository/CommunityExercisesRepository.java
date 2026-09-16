@@ -7,4 +7,6 @@ import dev.paulbankl.gymleague.model.CommunityExercises;
 
 public interface CommunityExercisesRepository extends JpaRepository<CommunityExercises, Long> {
     List<CommunityExercises> findByCommunityId(Long communityId);
+
+    long deleteByCommunityId(Long communityId);
 }
