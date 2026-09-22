@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import dev.paulbankl.gymleague.dto.CommunityChangeDTO;
 import dev.paulbankl.gymleague.dto.CommunityCreationDTO;
 import dev.paulbankl.gymleague.dto.CommunityJoinDTO;
+import dev.paulbankl.gymleague.dto.CommunityKickDTO;
+import dev.paulbankl.gymleague.dto.RoleChangeDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.ComMemberListDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityDetailDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityOverviewDTO;
@@ -91,6 +93,7 @@ if (owner == null) {
     Community community = communityRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("Community not found"));
     return new CommunityDetailDTO(
+            community.getId(),
             community.getName(),
             community.getDescription(),
             community.getOwner().getUsername(),
@@ -200,6 +203,57 @@ for (Exercise exercise : exercises) {
         communityMemberRepository.save(new CommunityMember(user, community, CommunityRole.USER));
         return true;
     }
+
+    @Transactional 
+    public boolean kickMember(CommunityKickDTO dto){
+        if(dto.ownerName().equals(dto.username())){
+            return false; // Owner cannot kick themselves
+        }
+        Community community = communityRepository.findById(dto.communityId()).orElse(null);
+        if (community == null || !community.getOwner().getUsername().equals(dto.ownerName())) {
+            return false; // Community not found or user is not the owner
+        }
+        return communityMemberRepository.deleteByCommunityIdAndUserUsername(dto.communityId(), dto.username()) > 0;
+        }
+
+        @Transactional 
+        public boolean promoteMember(RoleChangeDTO dto){
+            Community community = communityRepository.findById(dto.communityId()).orElse(null);
+            if (community == null || !community.getOwner().getUsername().equals(dto.ownerName())) {
+                return false; // Community not found or user is not the owner
+            }
+            CommunityMember member = communityMemberRepository.findByCommunityIdAndUserUsername(dto.communityId(), dto.username()).orElse(null);
+            if (member == null || member.getRole() == CommunityRole.OWNER) {
+                return false; // Member not found or already an owner
+            }
+            switch (member.getRole()) {
+                case USER -> member.setRole(CommunityRole.MODERATOR);
+                case MODERATOR -> member.setRole(CommunityRole.ADMIN);
+                case ADMIN, OWNER -> {
+                    return false;
+            }
+            }
+            return true;
+        }
+
+        @Transactional 
+        public boolean demoteMember(RoleChangeDTO dto){
+            Community community = communityRepository.findById(dto.communityId()).orElse(null);
+            if (community == null || !community.getOwner().getUsername().equals(dto.ownerName())) {
+                return false; // Community not found or user is not the owner
+            }
+            CommunityMember member = communityMemberRepository.findByCommunityIdAndUserUsername(dto.communityId(), dto.username()).orElse(null);
+            if (member == null || member.getRole() == CommunityRole.OWNER) {
+                return false; // Member not found or already an owner
+            }
+            switch (member.getRole()) {
+                case MODERATOR -> member.setRole(CommunityRole.USER);
+                case ADMIN -> member.setRole(CommunityRole.MODERATOR);
+                case USER, OWNER -> {
+                    return false;
+                }
+            }
+            return true;}
 }
     
     

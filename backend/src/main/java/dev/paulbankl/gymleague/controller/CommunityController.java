@@ -11,6 +11,8 @@ import java.util.List;
 import dev.paulbankl.gymleague.dto.CommunityChangeDTO;
 import dev.paulbankl.gymleague.dto.CommunityCreationDTO;
 import dev.paulbankl.gymleague.dto.CommunityJoinDTO;
+import dev.paulbankl.gymleague.dto.CommunityKickDTO;
+import dev.paulbankl.gymleague.dto.RoleChangeDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.ComMemberListDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityDetailDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityOverviewDTO;
@@ -29,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("api/community")
-@CrossOrigin(origins = "http://localhost:5173")
 public class CommunityController {
     private final CommunityService communityService;
     private final CommunityMemberService communityMemberService;
@@ -73,10 +74,21 @@ public class CommunityController {
     }
     @PostMapping("/join")
     public boolean joinCommunity(@RequestBody CommunityJoinDTO dto) {
-        //TODO: process POST request
-        
         return communityService.joinCommunity(dto);
     }
+    @PostMapping("/kick")
+    public boolean kickMember(@RequestBody CommunityKickDTO dto) {
+        return communityService.kickMember(dto);
+    }
+    @PostMapping("/promote")
+    public boolean promoteMember(@RequestBody RoleChangeDTO dto) {
+        return communityService.promoteMember(dto);
+    }
+    @PostMapping("/demote")
+    public boolean demoteMember(@RequestBody RoleChangeDTO dto) {
+        return communityService.demoteMember(dto);
+    }
+    
     
     
     

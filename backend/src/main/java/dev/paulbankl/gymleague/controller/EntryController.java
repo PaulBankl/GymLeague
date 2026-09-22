@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("api/entry")
-@CrossOrigin(origins = "http://localhost:5173")
 public class EntryController {
 	private final EntryService EntryService;
     

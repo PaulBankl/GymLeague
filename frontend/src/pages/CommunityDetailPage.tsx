@@ -64,7 +64,7 @@ export default function CommunityDetailPage() {
                 <button onClick={() => setEditMode(!editMode)}>{editMode ? "Cancel" : "Edit Community"}</button>
             )}
             {editMode && <CommunityEdit community={community} onCommunityChange={() => {setRefresh(refresh + 1); setEditMode(false);}} />}
-            <CommunityDetailCard community={community} members={members} />
+            <CommunityDetailCard community={community} members={members} refresh={() => setRefresh(refresh + 1)} />
             
             
             <button onClick={() => navigate("/community")}>Back to Overview</button>

@@ -21,22 +21,7 @@ public class UserService {
     public boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
-    //legt wenn der user nd existiert einen neuen an
-    public boolean tryRegisterUser(RegisterDTO registerDTO) {
-        if (userRepository.existsByUsername(registerDTO.getUsername()) || userRepository.existsByEmail(registerDTO.getEmail())) {
-            return false;
-        }
-        userRepository.save(new User(registerDTO.getUsername(), registerDTO.getEmail(), registerDTO.getPassword()));
-        return true;
-    }
-    //schaut ob user exisitert und ob das passwort stimmt
-    public boolean tryLoginUser(LoginDTO loginDTO) {
-        Optional <User> user = userRepository.findByUsername(loginDTO.getUsername());
-        if (!user.isPresent()) {
-            return false;
-        }
-        return user.get().getPasswordHash().equals(loginDTO.getPassword());
-    }
+    
     //returned den user wenn er existiert
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username).get();

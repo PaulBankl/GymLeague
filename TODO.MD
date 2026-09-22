@@ -1,21 +1,7 @@
 
 
-### wo weitermachen:
-public communityoverviewpage: join button
-
-
-
-### Communities
-auf der all communities page eine extra detail page machen für non member
-rechte
-kicken
-promoten
-
-
 
 ### Upgrades:
-Non-member community detail page
-Create a separate route such as /community/public/:id, link the cards on AllCommunityPage, and reuse the existing community-details endpoint. Show basic details and exercises, but omit edit, leave, and member-management controls.
 
 
 Password hashing
@@ -34,7 +20,7 @@ bessere https responses
 
 ranking
 
-join requests
+join code für private communities
 
 community search function
 

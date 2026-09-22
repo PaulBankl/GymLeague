@@ -8,6 +8,7 @@ export async function register(username: string, password: string, email: string
         headers: {
             "Content-Type": "application/json"
         },
+         credentials: "include",
         body: JSON.stringify({
             username,
             password,
@@ -28,16 +29,14 @@ export async function login(username: string, password: string) {
             headers: {
                 "Content-Type": "application/json"
             },
+             credentials: "include",
             body: JSON.stringify({
                 username,
                 password
             })
         }
     );
-    if(!response.ok) {
-        return false;
-    }
-    return await response.json();
+   return response.ok;
 }
 
 export async function getUser(username: string | null) {
@@ -49,7 +48,8 @@ export async function getUser(username: string | null) {
         method: "GET",
         headers: {
             "Content-Type": "application/json"
-        }
+        },
+         credentials: "include"
     });
 
     if (!response.ok) {

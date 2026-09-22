@@ -1,11 +1,14 @@
 import type { Community } from "../types/Community";
+import MemberActionsButton from "./MemberActionsButton";
 
 type CommunityDetailCardProps = {
     community: Community;
     members: { username: string; role: string; joinedAt: string }[];
+    refresh?: () => void;
 };
 
-export default function CommunityDetailCard({ community, members }: CommunityDetailCardProps) {
+export default function CommunityDetailCard({ community, members, refresh }: CommunityDetailCardProps) {
+    const username = sessionStorage.getItem("username");
     return (
         <div>
             <p>{community.description}</p>
@@ -18,7 +21,10 @@ export default function CommunityDetailCard({ community, members }: CommunityDet
             <ul>
                 {members.map((member) => (
                     <li key={member.username} className="member-item">
-                        {member.username} - {member.role} - Joined: {new Date(member.joinedAt).toLocaleDateString()}
+                        {member.username} - {member.role} - Joined: {new Date(member.joinedAt).toLocaleDateString()} 
+                        {community.owner === username && member.username !== username && community.id && <MemberActionsButton communityId={community.id} memberUsername={member.username} action="kick" onSuccess={refresh} />}
+                        {community.owner === username && member.username !== username && community.id && member.role !== "ADMIN" && <MemberActionsButton communityId={community.id} memberUsername={member.username} action="promote" onSuccess={refresh} />}
+                        {community.owner === username && member.username !== username && community.id && member.role !== "USER"  && <MemberActionsButton communityId={community.id} memberUsername={member.username} action="demote" onSuccess={refresh} />}
                     </li>
                 ))}
             </ul>

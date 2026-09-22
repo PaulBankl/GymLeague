@@ -4,8 +4,19 @@ import dev.paulbankl.gymleague.repository.UserRepository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.paulbankl.gymleague.service.AuthService;
 import dev.paulbankl.gymleague.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,17 +32,28 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("api/users")
-@CrossOrigin(origins = "http://localhost:5173")
 public class UserController {
     private final UserService userService;
+    private final AuthService authService;
+    private final AuthenticationManager authenticationManager;
+    private final SecurityContextRepository securityContextRepository =
+        new HttpSessionSecurityContextRepository();
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AuthService authService, AuthenticationManager authenticationManager) {
         this.userService = userService;
+        this.authService = authService;
+        this.authenticationManager = authenticationManager;
     }
     @PostMapping("/register")
-    public boolean registerUser(@RequestBody RegisterDTO registerDTO) {
-        return userService.tryRegisterUser(registerDTO);
+public ResponseEntity<Void> registerUser(@RequestBody RegisterDTO registerDTO) {
+    boolean success = authService.tryRegisterUser(registerDTO);
+
+    if (!success) {
+        return ResponseEntity.status(409).build();
     }
+
+    return ResponseEntity.status(201).build();
+}
 
 @GetMapping("/{username}")
 public Map<String, Object> userExists(@PathVariable String username) {
@@ -50,9 +72,21 @@ public Map<String, Object> userExists(@PathVariable String username) {
     return Map.of("exists", false);
 }
     @PostMapping("/login")
-    public boolean loginUser(@RequestBody LoginDTO loginDTO) {
-        return userService.tryLoginUser(loginDTO);
-    }
+public ResponseEntity<Void> login(@RequestBody LoginDTO loginDTO, HttpServletRequest request,
+        HttpServletResponse response) {
+    Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                    loginDTO.getUsername(),
+                    loginDTO.getPassword()
+            )
+    );
+
+    SecurityContext context = SecurityContextHolder.createEmptyContext();
+context.setAuthentication(authentication);
+SecurityContextHolder.setContext(context);
+securityContextRepository.saveContext(context, request, response);
+    return ResponseEntity.ok().build();
+}
 
     @PutMapping("/updateDisplayName")
     public boolean updateDisplayName(@RequestBody UpdateDisplayNameDTO updateDisplayNameDTO) {
