@@ -3,6 +3,7 @@ package dev.paulbankl.gymleague.controller;
 import java.util.List;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -37,8 +38,8 @@ public class ExerciseController {
     }
 
     @GetMapping("/info/{id}")
-    public ExerciseInfoDTO getMethodName(@PathVariable Long id, @RequestParam String username) {
-        return exerciseService.getExerciseInfoById(id, username);
+    public ExerciseInfoDTO getMethodName(@PathVariable Long id, Authentication authentication) {
+        return exerciseService.getExerciseInfoById(id, authentication.getName());
     }
     
 }

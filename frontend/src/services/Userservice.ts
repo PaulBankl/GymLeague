@@ -39,12 +39,9 @@ export async function login(username: string, password: string) {
    return response.ok;
 }
 
-export async function getUser(username: string | null) {
-    if (!username) {
-        console.error("Username is null");
-        return null;
-    }
-    const response = await fetch(`http://localhost:8080/api/users/${username}`, {
+export async function getUser() {
+    
+    const response = await fetch(`http://localhost:8080/api/users/me`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json"
