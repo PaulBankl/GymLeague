@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import type { Community } from "../types/Community";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import * as CommunityService from "../services/Communityservice";
+import { AuthContext } from "../App";
 
 export default function AllCommunityPage() {
     const [communities, setCommunities] = useState<Community[]>([]);
@@ -13,6 +14,12 @@ export default function AllCommunityPage() {
             setError(true);
         });
     }, []);
+    
+    const username = useContext(AuthContext);
+
+    if(!username) {
+        return (<><p>You need to be logged in to view this page.</p><br></br><Link to="/login">Go to Login</Link></>);
+    }
 
     if (error) {
         return(<><p>Server Error</p><br></br><Link to="/community">Back to Community</Link></>);

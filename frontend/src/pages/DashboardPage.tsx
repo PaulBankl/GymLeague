@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { LogoutButton } from "../components/LogoutButton";
 
+
 export default function DashboardPage() {
     const [username, setUsername] = useState<string | null>(null);
     useEffect(() => {
