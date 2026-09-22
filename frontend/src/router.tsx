@@ -11,16 +11,21 @@ import CommunityOverviewPage from './pages/CommunityOverviewPage';
 import CommunityDetailPage from './pages/CommunityDetailPage';
 import AllCommunityPage from './pages/AllCommunityPage';
 import PublicCommunityDetailPage from './pages/PublicCommunityDetailPage';
+import ProtectedRoute from './ProtectedRoute';
 
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomePage />
+    element:
+    <ProtectedRoute>
+     <HomePage />
+     </ProtectedRoute>
   },
   {
     path: "/register",
-    element: <RegisterPage />
+    element:
+     <RegisterPage />
   },
   {
     path: "/login",
@@ -28,33 +33,51 @@ export const router = createBrowserRouter([
   },
   {
     path: "/app",
-    element: <DashboardPage />
+    element:
+     <ProtectedRoute>
+       <DashboardPage />
+     </ProtectedRoute>
   },
   {
     path: "/community",
-    element: <CommunityOverviewPage />
+    element: 
+    <ProtectedRoute>
+      <CommunityOverviewPage />
+    </ProtectedRoute>
   },
   {
     path: "/exercises",
-    element: <ExerciseOverviewPage />
+    element: 
+    <ProtectedRoute>
+      <ExerciseOverviewPage />
+    </ProtectedRoute>
   },
   {
     path: "/exercises/:id",
-    element: <ExerciseDetailPage/>
+    element:
+     <ProtectedRoute>
+       <ExerciseDetailPage/>
+     </ProtectedRoute>
   },
   {
     path: "/community/:id",
-    element: <CommunityDetailPage/>
+    element: 
+    <ProtectedRoute>
+      <CommunityDetailPage/>
+    </ProtectedRoute>
   },
   {
     path: "/community/all",
-    element: <div>
-      <AllCommunityPage />
-    </div>
+    element:<ProtectedRoute>
+     <AllCommunityPage/>
+    </ProtectedRoute>
   },
+  
   {
     path: "/community/public/:id",
-    element: <PublicCommunityDetailPage />
+    element: <ProtectedRoute>
+      <PublicCommunityDetailPage />
+    </ProtectedRoute>
   }
 ]);
 

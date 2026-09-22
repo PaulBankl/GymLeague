@@ -16,10 +16,7 @@ export async function register(username: string, password: string, email: string
         })
     });
     
-    if (!response.ok) {
-        return false;
-    }
-    return await response.json();
+   return response.ok;
 }
 
 export async function login(username: string, password: string) {
@@ -54,7 +51,7 @@ export async function getUser() {
         return null;
     }
 
-    return await response.json();
+    return await response.text();
 }
 
 export async function logout(): Promise<boolean> {

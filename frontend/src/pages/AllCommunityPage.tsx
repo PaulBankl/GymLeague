@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import type { Community } from "../types/Community";
 import { useEffect, useState, useContext } from "react";
 import * as CommunityService from "../services/Communityservice";
-import { AuthContext } from "../App";
+import { AuthContext } from "../context/AuthContext";
 
 export default function AllCommunityPage() {
     const [communities, setCommunities] = useState<Community[]>([]);
