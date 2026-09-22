@@ -2,12 +2,16 @@ package dev.paulbankl.gymleague.controller;
 
 import java.util.List;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.paulbankl.gymleague.dto.ResponseDTOs.ExerciseInfoDTO;
 import dev.paulbankl.gymleague.model.Exercise;
+import dev.paulbankl.gymleague.service.AuthService;
 import dev.paulbankl.gymleague.service.ExerciseService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

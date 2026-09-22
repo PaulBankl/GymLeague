@@ -12,7 +12,7 @@ export default function CommunityOverviewPage() {
     useEffect(() => {
         const username = sessionStorage.getItem("username");
         if (username) {
-            CommunityService.getAllCommunitiesForUser(username)
+            CommunityService.getAllCommunitiesForUser()
                 .then(setCommunities)
                 .catch((error) => {
                     setError(true);

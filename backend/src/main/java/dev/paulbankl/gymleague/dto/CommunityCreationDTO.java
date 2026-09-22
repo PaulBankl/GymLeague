@@ -7,11 +7,10 @@ public class CommunityCreationDTO {
     private String username;
     private Long[] exerciseIds;
 
-    public CommunityCreationDTO(String name, String description, boolean isPrivate, String username) {
+    public CommunityCreationDTO(String name, String description, boolean isPrivate) {
         this.name = name;
         this.description = description;
         this.isPrivate = isPrivate;
-        this.username = username;
 
     }
 

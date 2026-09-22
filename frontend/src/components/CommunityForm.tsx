@@ -37,7 +37,7 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
             return;
         }
         try {
-            const response = await CommunityService.createCommunity(name.trim(), description.trim(), isPrivate, username, checkedExercises);
+            const response = await CommunityService.createCommunity(name.trim(), description.trim(), isPrivate, checkedExercises);
             if (!response) {
                 setError("Failed to create community. try a different name.");
                 return;

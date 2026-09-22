@@ -46,7 +46,7 @@ export default function CommunityEdit({ community, onCommunityChange }: EditComm
                 setError("No username found.");
                 return;
             }
-            const response = await CommunityService.editCommunity(community.name, description, isPrivate, username, checkedExercises);
+            const response = await CommunityService.editCommunity(community.name, description, isPrivate, checkedExercises);
             if (!response) {
                 console.error("Failed to edit community.");
                 setError("Failed to edit community.");

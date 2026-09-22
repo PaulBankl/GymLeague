@@ -27,7 +27,7 @@ export default function PublicCommunityDetailPage() {
             return;
         }
         try {
-            const success = await CommunityService.joinCommunity(Number(id), username);
+            const success = await CommunityService.joinCommunity(Number(id));
             if (success) {
                 navigate(`/community/${id}`);
             } else {

@@ -39,7 +39,7 @@ export default function CommunityDetailPage() {
             console.error("No username found in session storage.");
             return;
         }
-        Communityservice.leaveCommunity(Number(id), username).then((success) => {
+        Communityservice.leaveCommunity(Number(id)).then((success) => {
             if (success) {
                 navigate("/community");
             } else {

@@ -3,6 +3,7 @@ package dev.paulbankl.gymleague.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.paulbankl.gymleague.service.AuthService;
 import dev.paulbankl.gymleague.service.CommunityMemberService;
 import dev.paulbankl.gymleague.service.CommunityService;
 
@@ -19,6 +20,10 @@ import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityOverviewDTO;
 import dev.paulbankl.gymleague.model.Community;
 import dev.paulbankl.gymleague.model.CommunityMember;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,12 +49,12 @@ public class CommunityController {
         return communityMemberService.getAll();
     }
     @PostMapping("create")
-    public boolean postMethodName(@RequestBody CommunityCreationDTO dto) {
-        return communityService.createCommunity(dto);
+    public boolean postMethodName(@RequestBody CommunityCreationDTO dto, Authentication authentication) {
+        return communityService.createCommunity(dto, authentication.getName());
     }
     @GetMapping("/all")
-    public List<CommunityOverviewDTO> getAllCommunitiesForUser(@RequestParam String username) {       
-        return communityService.getAllCommunitiesForUser(username);     
+    public List<CommunityOverviewDTO> getAllCommunitiesForUser(Authentication authentication) {       
+        return communityService.getAllCommunitiesForUser(authentication.getName());     
         }
 
     @GetMapping("/{id}")
@@ -57,36 +62,36 @@ public class CommunityController {
         return  communityService.getCommunityDetails(id);
     }
     @GetMapping("/leave/{id}")
-    public boolean leaveCommunity(@PathVariable Long id, @RequestParam String username) {
-        return communityService.leaveCommunity(id, username);
+    public boolean leaveCommunity(@PathVariable Long id, Authentication authentication) {
+        return communityService.leaveCommunity(id, authentication.getName());
     }
     @GetMapping("/members/{id}")
     public List<ComMemberListDTO> getAllMembersOfCommunity(@PathVariable Long id) {
         return communityService.getAllMembersOfCommunity(id);
     }
     @GetMapping("/random")
-    public List<CommunityOverviewDTO> getrandomCommunities(@RequestParam String username) {
-        return communityService.get10RandomCommunities(username);
+    public List<CommunityOverviewDTO> getrandomCommunities(Authentication authentication) {
+        return communityService.get10RandomCommunities(authentication.getName());
     }
     @PostMapping("/change")
-    public boolean changeCommunity(@RequestBody CommunityChangeDTO dto) {
-       return communityService.changeCommunity(dto);
+    public boolean changeCommunity(@RequestBody CommunityChangeDTO dto, Authentication authentication) {
+       return communityService.changeCommunity(dto, authentication.getName());
     }
     @PostMapping("/join")
-    public boolean joinCommunity(@RequestBody CommunityJoinDTO dto) {
-        return communityService.joinCommunity(dto);
+    public boolean joinCommunity(@RequestBody CommunityJoinDTO dto, Authentication authentication) {
+        return communityService.joinCommunity(dto, authentication.getName());
     }
     @PostMapping("/kick")
-    public boolean kickMember(@RequestBody CommunityKickDTO dto) {
-        return communityService.kickMember(dto);
+    public boolean kickMember(@RequestBody CommunityKickDTO dto, Authentication authentication) {
+        return communityService.kickMember(dto, authentication.getName());
     }
     @PostMapping("/promote")
-    public boolean promoteMember(@RequestBody RoleChangeDTO dto) {
-        return communityService.promoteMember(dto);
+    public boolean promoteMember(@RequestBody RoleChangeDTO dto, Authentication authentication) {
+        return communityService.promoteMember(dto, authentication.getName());
     }
     @PostMapping("/demote")
-    public boolean demoteMember(@RequestBody RoleChangeDTO dto) {
-        return communityService.demoteMember(dto);
+    public boolean demoteMember(@RequestBody RoleChangeDTO dto, Authentication authentication) {
+        return communityService.demoteMember(dto, authentication.getName());
     }
     
     

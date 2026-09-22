@@ -30,7 +30,7 @@ export default function MemberActionsButton({ communityId, memberUsername, actio
         try {
             switch (action) {
                 case "kick":
-                    const success = await CommunityService.kickMember(communityId, username, memberUsername);
+                    const success = await CommunityService.kickMember(communityId, memberUsername);
                     if (success) {
                         onSuccess?.();
                     } else {
@@ -38,7 +38,7 @@ export default function MemberActionsButton({ communityId, memberUsername, actio
                     }
                     break;
                 case "promote":
-                    const promoteSuccess = await CommunityService.promoteMember(communityId, username, memberUsername);
+                    const promoteSuccess = await CommunityService.promoteMember(communityId,  memberUsername);
                     if (promoteSuccess) {
                         onSuccess?.();
                     } else {
@@ -46,7 +46,7 @@ export default function MemberActionsButton({ communityId, memberUsername, actio
                     }
                     break;
                 case "demote":
-                    const demoteSuccess = await CommunityService.demoteMember(communityId, username, memberUsername);
+                    const demoteSuccess = await CommunityService.demoteMember(communityId, memberUsername);
                     if (demoteSuccess) {
                         onSuccess?.();
                     } else {

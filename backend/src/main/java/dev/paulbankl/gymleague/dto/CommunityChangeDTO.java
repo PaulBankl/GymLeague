@@ -4,6 +4,5 @@ public record CommunityChangeDTO (
     String name,
     String description,
     boolean isPrivate,
-    String username,
     Long []exerciseIds
 ){}

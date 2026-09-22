@@ -1,6 +1,6 @@
 
-export async function getAllCommunitiesForUser(username: string) {
-    const response = await fetch(`http://localhost:8080/api/community/all?username=${username}`, {
+export async function getAllCommunitiesForUser() {
+    const response = await fetch(`http://localhost:8080/api/community/all`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -14,14 +14,14 @@ export async function getAllCommunitiesForUser(username: string) {
 }
 
 
-export async function createCommunity(name: string, description: string, isPrivate: boolean, username: string, exerciseIds: number[]) {
+export async function createCommunity(name: string, description: string, isPrivate: boolean, exerciseIds: number[]) {
     const response = await fetch("http://localhost:8080/api/community/create", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
          credentials: "include",
-        body: JSON.stringify({ name, description, isPrivate, username, exerciseIds }),
+        body: JSON.stringify({ name, description, isPrivate, exerciseIds }),
     });
     if (!response.ok) {
         throw new Error("Failed to create community");
@@ -43,8 +43,8 @@ export async function getCommunityDetails(id: number) {
     return await response.json();
 }
 
-export async function leaveCommunity(id: number, username: string) {
-    const response = await fetch(`http://localhost:8080/api/community/leave/${id}?username=${username}`, {
+export async function leaveCommunity(id: number) {
+    const response = await fetch(`http://localhost:8080/api/community/leave/${id}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -82,8 +82,8 @@ export async function getAllMembersOfCommunity(id: number) {
         return members;
 }
 
-export async function get10RandomCommunities(username: string) {
-    const response = await fetch(`http://localhost:8080/api/community/random?username=${username}`,
+export async function get10RandomCommunities() {
+    const response = await fetch(`http://localhost:8080/api/community/random`,
         {
             method: "GET",
             headers: {
@@ -95,14 +95,14 @@ export async function get10RandomCommunities(username: string) {
     return await response.json();
 }
 
-export async function editCommunity(name: string, description: string, isPrivate: boolean, username: string, exerciseIds: number[]) {
+export async function editCommunity(name: string, description: string, isPrivate: boolean,exerciseIds: number[]) {
     const response = await fetch(`http://localhost:8080/api/community/change`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
          credentials: "include",
-        body: JSON.stringify({ name, description, isPrivate, username, exerciseIds }),
+        body: JSON.stringify({ name, description, isPrivate, exerciseIds }),
     })
     if (!response.ok) {
         throw new Error("Failed to edit community");
@@ -110,14 +110,14 @@ export async function editCommunity(name: string, description: string, isPrivate
     return await response.json();
 }
 
-export async function joinCommunity(communityId: number, username: string) {
+export async function joinCommunity(communityId: number) {
     const response = await fetch(`http://localhost:8080/api/community/join`, {
         headers: {
             "Content-Type": "application/json",
         },
         method: "POST",
          credentials: "include",
-        body: JSON.stringify({ communityId, username }),
+        body: JSON.stringify({ communityId }),
     });
     if (!response.ok) {
         throw new Error("Failed to join community");
@@ -127,28 +127,28 @@ export async function joinCommunity(communityId: number, username: string) {
 
 }
 
-export async function kickMember(communityId: number, ownerName: string, username: string) {
+export async function kickMember(communityId: number, ownerName: string) {
     const response = await fetch(`http://localhost:8080/api/community/kick`, {
         headers: {
             "Content-Type": "application/json",
         },
         method: "POST",
          credentials: "include",
-        body: JSON.stringify({ communityId, ownerName, username }),
+        body: JSON.stringify({ communityId, ownerName }),
     });
     if (!response.ok) {
         throw new Error("Failed to kick member");
     }
     return await response.json();
 }
-export async function promoteMember(communityId: number, ownerName: string, username: string) {
+export async function promoteMember(communityId: number, ownerName: string) {
     const response = await fetch(`http://localhost:8080/api/community/promote`, {
         headers: {
             "Content-Type": "application/json",
         },
         method: "POST",
          credentials: "include",
-        body: JSON.stringify({ communityId, ownerName, username }),
+        body: JSON.stringify({ communityId, ownerName}),
     });
     if (!response.ok) {
         throw new Error("Failed to promote member");
@@ -156,14 +156,14 @@ export async function promoteMember(communityId: number, ownerName: string, user
     return await response.json();
 }
 
-export async function demoteMember(communityId: number, ownerName: string, username: string) {
+export async function demoteMember(communityId: number, username: string) {
     const response = await fetch(`http://localhost:8080/api/community/demote`, {
         headers: {
             "Content-Type": "application/json",
         },
         method: "POST",
          credentials: "include",
-        body: JSON.stringify({ communityId, ownerName, username }),
+        body: JSON.stringify({ communityId,username }),
     });
     if (!response.ok) {
         throw new Error("Failed to demote member");
