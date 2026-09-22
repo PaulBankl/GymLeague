@@ -44,8 +44,8 @@ public class EntryController {
 	}
 
 	@PostMapping("/add")
-    public void addEntry(@RequestBody EntryCreationDTO entryDTO, Authentication authentication) {
-		EntryService.insertEntry(entryDTO, authentication.getName());
+    public boolean addEntry(@RequestBody EntryCreationDTO entryDTO, Authentication authentication) {
+		return EntryService.insertEntry(entryDTO, authentication.getName());
 	}
 	
 	@PutMapping("/change")

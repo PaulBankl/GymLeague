@@ -21,6 +21,16 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()
                 .anyRequest().authenticated())
+                .logout(logout -> logout
+        .logoutUrl("/api/users/logout")
+        .invalidateHttpSession(true)
+        .deleteCookies("JSESSIONID")
+        .clearAuthentication(true)
+        .logoutSuccessHandler((request, response, authentication) -> {
+            response.setStatus(200);
+        })
+        .permitAll()
+)
                 .build();
     }
     @Bean

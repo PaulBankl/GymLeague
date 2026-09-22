@@ -51,14 +51,13 @@ public class CommunityService {
         if(communityRepository.existsByName(dto.getName())) {
             return false;
         }
-        User owner = userRepository.findByUsername(dto.getUsername())
-    .orElse(null);
+        User owner = userRepository.findByUsername(username).orElse(null);
 
 if (owner == null) {
     return false;
 }
         Community community = new Community(
-        username,
+        dto.getName(),
         dto.getDescription(),
         dto.isPrivate(),
         owner

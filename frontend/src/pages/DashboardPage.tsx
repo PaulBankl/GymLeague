@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { Link } from "react-router-dom";
+import { LogoutButton } from "../components/LogoutButton";
 
 export default function DashboardPage() {
     const [username, setUsername] = useState<string | null>(null);
@@ -36,6 +37,9 @@ export default function DashboardPage() {
             <Link to="/exercises">Go to Exercises</Link>
             <br />
             <Link to="/community">Go to Communities</Link>
+            <br>
+            </br>
+            <LogoutButton />
         </div>
     );
 }

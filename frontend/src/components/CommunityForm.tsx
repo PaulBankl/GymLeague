@@ -68,6 +68,7 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
             <button onClick={() => {if(ShowForm){setCheckedExercises([]);}setShowForm(!ShowForm)}}>{ShowForm ? "X" : "Create Community"}</button>
             {ShowForm && (
                 <form onSubmit={handleSubmit}>
+                    {error && <p className="error">{error}</p>}
                     <div>
                         <label htmlFor="name">Name:</label>
                         <input
@@ -119,7 +120,6 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
                 )}
                 </form>
             )}
-            {error && <p className="error">{error}</p>}
         </>
     );
 }

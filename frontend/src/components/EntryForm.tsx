@@ -23,7 +23,7 @@ export default function EntryForm({  exerciseId, exerciseName, onEntryAdded }: E
         }
         if (username) {
             try {
-                const success = await Entryservice.addEntryForUser( username, Number(exerciseId), weightNumber, repsNumber);
+                const success = await Entryservice.addEntryForUser(Number(exerciseId), weightNumber, repsNumber);
                 if (success) {
                     alert("Entry added successfully.");
                     setWeight("");

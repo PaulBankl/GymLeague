@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 import dev.paulbankl.gymleague.dto.EntryChangeDTO;
 import dev.paulbankl.gymleague.dto.EntryCreationDTO;
 import dev.paulbankl.gymleague.model.Entry;
+import dev.paulbankl.gymleague.model.Exercise;
 import dev.paulbankl.gymleague.repository.EntryRepository;
 import dev.paulbankl.gymleague.repository.ExerciseRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class EntryService {
@@ -24,14 +26,25 @@ public class EntryService {
     public List<Entry> getAllEntries() {
         return entryRepository.findAll();
     }
-    public void insertEntry(EntryCreationDTO entryDTO, String username) {
+    @Transactional
+    public boolean insertEntry(EntryCreationDTO entryDTO, String username) {
+        Exercise exercise = exerciseRepository
+            .findById(entryDTO.getExerciseId())
+            .orElse(null);
+
+    if (exercise == null) {
+            return false;
+    }
         Entry entry = new Entry(entryDTO.getWeight(), entryDTO.getReps(),userService.getUserByUsername(username), exerciseRepository.findById(entryDTO.getExerciseId()).orElse(null));
+        
         entryRepository.save(entry);
+        return true;
     }
     public Entry getEntryById(Long id) {
         return entryRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Entry with id " + id + " not found"));
     }
+    @Transactional
     public boolean updateEntry(EntryChangeDTO entryChangeDTO, String username) {
         Entry entry = entryRepository.findById(entryChangeDTO.getId())
             .orElseThrow(() -> new IllegalArgumentException("Entry with id " + entryChangeDTO.getId() + " not found"));
@@ -43,6 +56,7 @@ public class EntryService {
         entryRepository.save(entry);
         return true;
 }
+@Transactional
 public boolean deleteEntry(Long id, String username) {
     if (!entryRepository.existsById(id) || !entryRepository.findById(id).get().getUser().getUsername().equals(username)) {
         return false;

@@ -56,3 +56,12 @@ export async function getUser() {
 
     return await response.json();
 }
+
+export async function logout(): Promise<boolean> {
+    const response = await fetch("http://localhost:8080/api/users/logout", {
+        method: "POST",
+        credentials: "include",
+    });
+
+    return response.ok;
+}
