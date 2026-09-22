@@ -13,6 +13,7 @@ export async function getAllCommunitiesForUser(username: string) {
     return await response.json();
 }
 
+
 export async function createCommunity(name: string, description: string, isPrivate: boolean, username: string, exerciseIds: number[]) {
     const response = await fetch("http://localhost:8080/api/community/create", {
         method: "POST",

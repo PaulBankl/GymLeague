@@ -54,6 +54,10 @@ public ResponseEntity<Void> registerUser(@RequestBody RegisterDTO registerDTO) {
 
     return ResponseEntity.status(201).build();
 }
+@GetMapping("/me")
+public ResponseEntity<String> me(Authentication authentication) {
+    return ResponseEntity.ok(authentication.getName());
+}
 
 @GetMapping("/{username}")
 public Map<String, Object> userExists(@PathVariable String username) {

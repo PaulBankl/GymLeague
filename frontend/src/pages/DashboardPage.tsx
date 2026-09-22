@@ -1,12 +1,34 @@
-import { useEffect } from "react";
-import {getUser} from "../services/Userservice";
+import { useEffect, useState } from "react";
+
 import { Link } from "react-router-dom";
 
 export default function DashboardPage() {
-    const username = sessionStorage.getItem("username");
+    const [username, setUsername] = useState<string | null>(null);
     useEffect(() => {
-    getUser(username);
-}, []);
+        const fetchUsername = async () => {
+            try {
+                const response = await fetch("http://localhost:8080/api/users/me", {
+                    credentials: "include",
+                });
+
+                if (!response.ok) {
+                    setUsername(null);
+                    return;
+                }
+
+                const username = await response.text();
+                setUsername(username);
+            } catch (error) {
+                console.error("Failed to fetch username:", error);
+                setUsername(null);
+            }
+        };
+
+        fetchUsername();
+    }, []);
+    if (!username) {
+        return <div>Loading...</div>;
+    }
     return (
         <div>
             <h1>Welcome back {username}!</h1>
