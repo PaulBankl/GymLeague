@@ -32,7 +32,7 @@ export default function ExerciseDetailPage({ }) {
                 });
         }
         if (id && username) {
-            Entryservice.getEntriesByExerciseIdForUser(id, username)
+            Entryservice.getEntriesByExerciseIdForUser(id)
                 .then(setEntries)
                 .catch((error: Error) => {
                     console.error("Error fetching entries:", error);

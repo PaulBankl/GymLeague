@@ -61,7 +61,7 @@ public class CommunityController {
     public CommunityDetailDTO getCommunityDetails(@PathVariable Long id) {
         return  communityService.getCommunityDetails(id);
     }
-    @GetMapping("/leave/{id}")
+    @PostMapping("/leave/{id}")
     public boolean leaveCommunity(@PathVariable Long id, Authentication authentication) {
         return communityService.leaveCommunity(id, authentication.getName());
     }

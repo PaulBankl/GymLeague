@@ -45,7 +45,7 @@ export async function getCommunityDetails(id: number) {
 
 export async function leaveCommunity(id: number) {
     const response = await fetch(`http://localhost:8080/api/community/leave/${id}`, {
-        method: "GET",
+        method: "POST",
         headers: {
             "Content-Type": "application/json",
         },

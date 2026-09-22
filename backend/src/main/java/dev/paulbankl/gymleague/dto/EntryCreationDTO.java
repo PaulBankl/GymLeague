@@ -1,25 +1,17 @@
 package dev.paulbankl.gymleague.dto;
 
 public class EntryCreationDTO {
-    private String username;
     private Long exerciseId;
     private int weight;
     private int reps;
 
-    public EntryCreationDTO(String username, Long exerciseId, int weight, int reps) {
-        this.username = username;
+    public EntryCreationDTO( Long exerciseId, int weight, int reps) {
+        
         this.exerciseId = exerciseId;
         this.weight = weight;
         this.reps = reps;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public Long getExerciseId() {
         return exerciseId;

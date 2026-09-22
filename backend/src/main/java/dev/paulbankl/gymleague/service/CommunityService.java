@@ -197,7 +197,7 @@ for (Exercise exercise : exercises) {
     return false;
 }
 // Check if the user is already a member of the community
-        if (communityMemberRepository.existsByCommunityIdAndUserUsername((dto.communityId()), dto.username())) {
+        if (communityMemberRepository.existsByCommunityIdAndUserUsername((dto.communityId()), username)) {
             return false; // User is already a member
         }  
         communityMemberRepository.save(new CommunityMember(user, community, CommunityRole.USER));

@@ -1,7 +1,7 @@
 import type { Entry } from "../types/Entry";
 
-export async function getEntriesByExerciseIdForUser(id: string, username: string): Promise<Entry[]> {
-    return await fetch(`http://localhost:8080/api/entry/all/${id}?username=${username}`, { method: "GET", headers: { "Content-Type": "application/json" } ,credentials: "include" })
+export async function getEntriesByExerciseIdForUser(id: string): Promise<Entry[]> {
+    return await fetch(`http://localhost:8080/api/entry/all/${id}`, { method: "GET", headers: { "Content-Type": "application/json" } ,credentials: "include" })
         .then((response) => {
             if (!response.ok) {
                 throw new Error("Failed to fetch exercise");
@@ -10,14 +10,14 @@ export async function getEntriesByExerciseIdForUser(id: string, username: string
         });
 }
 
-export async function addEntryForUser(username: string, exerciseId: number, weight: number, reps: number): Promise<boolean> {
+export async function addEntryForUser(exerciseId: number, weight: number, reps: number): Promise<boolean> {
     const success = await fetch(`http://localhost:8080/api/entry/add`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
          credentials: "include",
-        body: JSON.stringify({ username, exerciseId, weight, reps }),
+        body: JSON.stringify({  exerciseId, weight, reps }),
     });
     if (!success.ok) {
         throw new Error("Failed to add entry");
@@ -50,8 +50,8 @@ export async function editEntry(id: number, weight: number, reps: number): Promi
     return true;
 }
 
-export async function getBestEntryForExercise(exerciseId: number, username: string): Promise<Entry | null> {
-    const response = await fetch((`http://localhost:8080/api/entry/best/${exerciseId}?username=${username}`), {
+export async function getBestEntryForExercise(exerciseId: number): Promise<Entry | null> {
+    const response = await fetch((`http://localhost:8080/api/entry/best/${exerciseId}`), {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

@@ -24,24 +24,27 @@ public class EntryService {
     public List<Entry> getAllEntries() {
         return entryRepository.findAll();
     }
-    public void insertEntry(EntryCreationDTO entryDTO) {
-        Entry entry = new Entry(entryDTO.getWeight(), entryDTO.getReps(),userService.getUserByUsername(entryDTO.getUsername()), exerciseRepository.findById(entryDTO.getExerciseId()).orElse(null));
+    public void insertEntry(EntryCreationDTO entryDTO, String username) {
+        Entry entry = new Entry(entryDTO.getWeight(), entryDTO.getReps(),userService.getUserByUsername(username), exerciseRepository.findById(entryDTO.getExerciseId()).orElse(null));
         entryRepository.save(entry);
     }
     public Entry getEntryById(Long id) {
         return entryRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Entry with id " + id + " not found"));
     }
-    public boolean updateEntry(EntryChangeDTO entryChangeDTO) {
+    public boolean updateEntry(EntryChangeDTO entryChangeDTO, String username) {
         Entry entry = entryRepository.findById(entryChangeDTO.getId())
             .orElseThrow(() -> new IllegalArgumentException("Entry with id " + entryChangeDTO.getId() + " not found"));
+        if (!entry.getUser().getUsername().equals(username)) {
+            return false;
+        }
         entry.setWeight(entryChangeDTO.getWeight());
         entry.setReps(entryChangeDTO.getReps());
         entryRepository.save(entry);
         return true;
 }
-public boolean deleteEntry(Long id) {
-    if (!entryRepository.existsById(id)) {
+public boolean deleteEntry(Long id, String username) {
+    if (!entryRepository.existsById(id) || !entryRepository.findById(id).get().getUser().getUsername().equals(username)) {
         return false;
     }
     entryRepository.deleteById(id);
