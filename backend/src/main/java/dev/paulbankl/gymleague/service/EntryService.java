@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import dev.paulbankl.gymleague.dto.EntryChangeDTO;
 import dev.paulbankl.gymleague.dto.EntryCreationDTO;
+import dev.paulbankl.gymleague.dto.ResponseDTOs.EntryDTO;
 import dev.paulbankl.gymleague.model.Entry;
 import dev.paulbankl.gymleague.model.Exercise;
 import dev.paulbankl.gymleague.repository.EntryRepository;
@@ -23,36 +24,52 @@ public class EntryService {
         this.userService = userService;
         this.exerciseRepository = exerciseRepository;
     }
-    public List<Entry> getAllEntries() {
-        return entryRepository.findAll();
+    public List<EntryDTO> getAllEntries() {
+        return entryRepository.findAll().stream().map(entry -> new EntryDTO(
+            entry.getId(),
+            entry.getWeight(),
+            entry.getReps(),
+            entry.getUser().getUsername(),
+            entry.getExercise().getName(),
+            entry.getDate().toString()
+        )).toList();
     }
     @Transactional
     public boolean insertEntry(EntryCreationDTO entryDTO, String username) {
         Exercise exercise = exerciseRepository
-            .findById(entryDTO.getExerciseId())
+            .findById(entryDTO.exerciseId())
             .orElse(null);
 
     if (exercise == null) {
             return false;
     }
-        Entry entry = new Entry(entryDTO.getWeight(), entryDTO.getReps(),userService.getUserByUsername(username), exerciseRepository.findById(entryDTO.getExerciseId()).orElse(null));
+        Entry entry = new Entry(entryDTO.weight(), entryDTO.reps(),userService.getUserByUsername(username), exerciseRepository.findById(entryDTO.exerciseId()).orElse(null));
         
         entryRepository.save(entry);
         return true;
     }
-    public Entry getEntryById(Long id) {
-        return entryRepository.findById(id)
+    public EntryDTO getEntryById(Long id) {
+        Entry entry = entryRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Entry with id " + id + " not found"));
+        EntryDTO entryDTO = new EntryDTO(
+            entry.getId(),
+            entry.getWeight(),
+            entry.getReps(),
+            entry.getUser().getUsername(),
+            entry.getExercise().getName(),
+            entry.getDate().toString()
+        );
+        return entryDTO;
     }
     @Transactional
     public boolean updateEntry(EntryChangeDTO entryChangeDTO, String username) {
-        Entry entry = entryRepository.findById(entryChangeDTO.getId())
-            .orElseThrow(() -> new IllegalArgumentException("Entry with id " + entryChangeDTO.getId() + " not found"));
+        Entry entry = entryRepository.findById(entryChangeDTO.id())
+            .orElseThrow(() -> new IllegalArgumentException("Entry with id " + entryChangeDTO.id() + " not found"));
         if (!entry.getUser().getUsername().equals(username)) {
             return false;
         }
-        entry.setWeight(entryChangeDTO.getWeight());
-        entry.setReps(entryChangeDTO.getReps());
+        entry.setWeight(entryChangeDTO.weight());
+        entry.setReps(entryChangeDTO.reps());
         entryRepository.save(entry);
         return true;
 }
@@ -69,6 +86,19 @@ public boolean deleteEntry(Long id, String username) {
 public List<Entry> getEntryForUserAndExercise(Long exerciseId, String username) {
     return entryRepository.findByUserUsernameAndExerciseIdOrderByDateDesc(username, exerciseId);
 }
+public List<EntryDTO> getEntryDTOForUserAndExercise(Long exerciseId, String username) {
+    List<Entry> entries = entryRepository.findByUserUsernameAndExerciseIdOrderByDateDesc(username, exerciseId);
+    return entries.stream().map(entry -> new EntryDTO(
+        entry.getId(),
+        entry.getWeight(),
+        entry.getReps(),
+        entry.getUser().getUsername(),
+        entry.getExercise().getName(),
+        entry.getDate().toString()
+    )).toList();
+}
+
+
 public Entry getBestEntryForUserAndExercise(Long exerciseId, String username) {
 
     List<Entry> entries =

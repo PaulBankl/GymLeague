@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.paulbankl.gymleague.dto.EntryChangeDTO;
 import dev.paulbankl.gymleague.dto.EntryCreationDTO;
+import dev.paulbankl.gymleague.dto.ResponseDTOs.EntryDTO;
 import dev.paulbankl.gymleague.model.Entry;
 import dev.paulbankl.gymleague.service.EntryService;
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,22 +36,22 @@ public class EntryController {
 		this.EntryService = entryService;
 	}
 	@GetMapping()
-	public List<Entry> getEntries() {
+	public List<EntryDTO> getEntries() {
 		return EntryService.getAllEntries();
 	}
 
 	@GetMapping("/{id}")
-	public Entry getEntryById(@PathVariable Long id) {
+	public EntryDTO getEntryById(@PathVariable Long id) {
 		return EntryService.getEntryById(id);
 	}
 
 	@PostMapping("/add")
-    public boolean addEntry(@RequestBody EntryCreationDTO entryDTO, Authentication authentication) {
+    public boolean addEntry(@Valid @RequestBody EntryCreationDTO entryDTO, Authentication authentication) {
 		return EntryService.insertEntry(entryDTO, authentication.getName());
 	}
 	
 	@PutMapping("/change")
-	public boolean updateEntry(@RequestBody EntryChangeDTO entryChangeDTO, Authentication authentication) {
+	public boolean updateEntry(@Valid @RequestBody EntryChangeDTO entryChangeDTO, Authentication authentication) {
 		
 		return EntryService.updateEntry(entryChangeDTO, authentication.getName());
 	}
@@ -58,17 +60,17 @@ public class EntryController {
 		return EntryService.deleteEntry(id, authentication.getName());
 	}
 	@GetMapping("/all/{exerciseid}")
-	public List<Entry> getMethodName( @PathVariable Long exerciseid, Authentication authentication) {
-		return EntryService.getEntryForUserAndExercise(exerciseid, authentication.getName());
+	public List<EntryDTO> getMethodName( @PathVariable Long exerciseid, Authentication authentication) {
+		return EntryService.getEntryDTOForUserAndExercise(exerciseid, authentication.getName());
 	
 }
 	@GetMapping("/best/{exerciseid}")
-	public ResponseEntity<Entry> getBestEntry(@PathVariable Long exerciseid, Authentication authentication) {
+	public ResponseEntity<EntryDTO> getBestEntry(@PathVariable Long exerciseid, Authentication authentication) {
 		Entry best= EntryService.getBestEntryForUserAndExercise(exerciseid, authentication.getName());
 		if(best == null) {
 			return ResponseEntity.noContent().build();
 		}
-		return ResponseEntity.ok().body(best);
+		return ResponseEntity.ok().body(EntryService.getEntryById(best.getId()));
 	}
 
 }

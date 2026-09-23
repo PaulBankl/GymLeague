@@ -36,6 +36,10 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
             setError("User not logged in.");
             return;
         }
+        if(name.length < 3) {
+            setError("Name must be at least 3 characters long.");
+            return;
+        }
         if(name.length > 50) {
             setError("Name cannot exceed 50 characters.");
             return;
@@ -93,7 +97,6 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
                             id="description"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
-                            required
                         />
                     </div>
                     <div>

@@ -1,31 +1,21 @@
 package dev.paulbankl.gymleague.dto;
 
-public class EntryChangeDTO {
-    private Long id;
-    private Double weight;
-    private Integer reps;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
-    public EntryChangeDTO(Long id, Double weight, Integer reps) {
-        this.id = id;
-        this.weight = weight;
-        this.reps = reps;
-    }
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public Double getWeight() {
-        return weight;  
-    }
-    public void setWeight(Double weight) {
-        this.weight = weight;
-    }
-    public Integer getReps() {
-        return reps;
-    }
-    public void setReps(Integer reps) {
-        this.reps = reps;
-    }
+public record EntryChangeDTO(
+
+    @Positive (message = "ID must be positive")
+    @NotNull (message = "ID cannot be null")
+    Long id,
+
+    @Positive (message = "weight must be positive")
+    @NotNull (message = "weight cannot be null")
+    Double weight,
+
+    @Positive (message = "Reps must be positive")
+    @NotNull (message = "Reps cannot be null")
+    Integer reps
+) {
+
 }

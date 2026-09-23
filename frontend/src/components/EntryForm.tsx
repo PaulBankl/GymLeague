@@ -25,7 +25,6 @@ export default function EntryForm({  exerciseId, exerciseName, onEntryAdded }: E
             try {
                 const success = await Entryservice.addEntryForUser(Number(exerciseId), weightNumber, repsNumber);
                 if (success) {
-                    alert("Entry added successfully.");
                     setWeight("");
                     setReps("");
                     onEntryAdded(); // Call the callback to refresh the entry list
