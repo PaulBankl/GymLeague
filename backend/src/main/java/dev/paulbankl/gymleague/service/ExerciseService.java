@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import dev.paulbankl.gymleague.dto.ResponseDTOs.ExerciseDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.ExerciseInfoDTO;
 import dev.paulbankl.gymleague.model.Entry;
 import dev.paulbankl.gymleague.model.Exercise;
@@ -22,12 +23,16 @@ public class ExerciseService {
         return exerciseRepository.findByName(name)
             .orElseThrow(() -> new IllegalArgumentException("Exercise with name " + name + " not found"));
     }
-    public List<Exercise> getAllExercises() {
-        return exerciseRepository.findAll();
+    public List<ExerciseDTO> getAllExercises() {
+        List<Exercise> exercises = exerciseRepository.findAll();
+        return exercises.stream()
+            .map(exercise -> new ExerciseDTO(exercise.getId(), exercise.getName()))
+            .toList();
     }
-    public Exercise getExerciseById(Long id) {
-        return exerciseRepository.findById(id)
+    public ExerciseDTO getExerciseById(Long id) {
+        Exercise exercise = exerciseRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Exercise with id " + id + " not found"));
+        return new ExerciseDTO(exercise.getId(), exercise.getName());
     }
     public ExerciseInfoDTO getExerciseInfoById(Long id, String username) {
         List<Entry> entries = entryService.getEntryForUserAndExercise(id, username);
