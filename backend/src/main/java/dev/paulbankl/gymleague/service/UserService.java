@@ -2,6 +2,7 @@ package dev.paulbankl.gymleague.service;
 
 import java.util.Optional;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import dev.paulbankl.gymleague.repository.UserRepository;
@@ -26,8 +27,8 @@ public class UserService {
     }
 
     //updated den displayname des users
-    public boolean updateDisplayName(UpdateDisplayNameDTO updateDisplayNameDTO) {
-        String username = updateDisplayNameDTO.username();
+    public boolean updateDisplayName(UpdateDisplayNameDTO updateDisplayNameDTO, Authentication auth) {
+        String username = auth.getName();
         String displayName = updateDisplayNameDTO.displayName();
 
         if (userRepository.existsByDisplayName(displayName)) {

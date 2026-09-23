@@ -95,8 +95,8 @@ securityContextRepository.saveContext(context, request, response);
 }
 
     @PutMapping("/updateDisplayName")
-    public boolean updateDisplayName(@Valid @RequestBody UpdateDisplayNameDTO updateDisplayNameDTO) {
-            return userService.updateDisplayName(updateDisplayNameDTO);
+    public boolean updateDisplayName(@Valid @RequestBody UpdateDisplayNameDTO updateDisplayNameDTO, Authentication authentication) {
+            return userService.updateDisplayName(updateDisplayNameDTO, authentication);
         }
 
         @GetMapping("/csrf")
