@@ -1,8 +1,9 @@
 import type { Entry } from "../types/Entry";
 import type { Exercise } from "../types/Exercise";
+import { apiFetch } from "./api";
 
 export async function getExercises(): Promise<Exercise[]> {
-    const response = await fetch("http://localhost:8080/api/exercises/all", { method: "GET", headers: { "Content-Type": "application/json" }, credentials: "include" });
+    const response = await apiFetch("/api/exercises/all", { method: "GET", headers: { "Content-Type": "application/json" }});
     if (!response.ok) {
         throw new Error("Failed to fetch exercises");
     }
@@ -10,7 +11,7 @@ export async function getExercises(): Promise<Exercise[]> {
 }
 
 export async function getExerciseById(id: string): Promise<Exercise> {
-    return await fetch(`http://localhost:8080/api/exercises/${id}`, { method: "GET", headers: { "Content-Type": "application/json" } ,  credentials: "include"})
+    return await apiFetch(`/api/exercises/${id}`, { method: "GET", headers: { "Content-Type": "application/json" } })
         .then((response) => {
             if (!response.ok) {
                 throw new Error("Failed to fetch exercise");
@@ -20,7 +21,7 @@ export async function getExerciseById(id: string): Promise<Exercise> {
 }
 
 export async function getExerciseInfoById(id: string): Promise<{ entryCount: number; bestEntry: Entry | null; progressPercent: number; progressOneRm: number }> {
-    return await fetch(`http://localhost:8080/api/exercises/info/${id}`, { method: "GET", headers: { "Content-Type": "application/json" } , credentials: "include"})
+    return await apiFetch(`/api/exercises/info/${id}`, { method: "GET", headers: { "Content-Type": "application/json" } })
         .then((response) => {
             if (!response.ok) {
                 throw new Error("Failed to fetch exercise info");

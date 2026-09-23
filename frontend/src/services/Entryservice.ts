@@ -1,7 +1,8 @@
 import type { Entry } from "../types/Entry";
+import { apiFetch } from "./api";
 
 export async function getEntriesByExerciseIdForUser(id: string): Promise<Entry[]> {
-    return await fetch(`http://localhost:8080/api/entry/all/${id}`, { method: "GET", headers: { "Content-Type": "application/json" } ,credentials: "include" })
+    return await apiFetch(`/api/entry/all/${id}`, { method: "GET", headers: { "Content-Type": "application/json" } })
         .then((response) => {
             if (!response.ok) {
                 throw new Error("Failed to fetch exercise");
@@ -11,12 +12,11 @@ export async function getEntriesByExerciseIdForUser(id: string): Promise<Entry[]
 }
 
 export async function addEntryForUser(exerciseId: number, weight: number, reps: number): Promise<boolean> {
-    const success = await fetch(`http://localhost:8080/api/entry/add`, {
+    const success = await apiFetch(`/api/entry/add`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-         credentials: "include",
         body: JSON.stringify({  exerciseId, weight, reps }),
     });
     if (!success.ok) {
@@ -26,9 +26,8 @@ export async function addEntryForUser(exerciseId: number, weight: number, reps: 
 }
 
 export async function deleteEntry(entryId: number): Promise<boolean> {
-    const success = await fetch(`http://localhost:8080/api/entry/${entryId}`, {
+    const success = await apiFetch(`/api/entry/${entryId}`, {
         method: "DELETE",
-         credentials: "include",
     });
     if (!success.ok) {
         throw new Error("Failed to delete entry");
@@ -36,12 +35,11 @@ export async function deleteEntry(entryId: number): Promise<boolean> {
     return true;
 }
 export async function editEntry(id: number, weight: number, reps: number): Promise<boolean> {
-    const success = await fetch('http://localhost:8080/api/entry/change', {
+    const success = await apiFetch('/api/entry/change', {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
         },
-         credentials: "include",
         body: JSON.stringify({ id, weight, reps }),
     });
     if (!success.ok) {
@@ -51,12 +49,11 @@ export async function editEntry(id: number, weight: number, reps: number): Promi
 }
 
 export async function getBestEntryForExercise(exerciseId: number): Promise<Entry | null> {
-    const response = await fetch((`http://localhost:8080/api/entry/best/${exerciseId}`), {
+    const response = await apiFetch(`/api/entry/best/${exerciseId}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
         },
-         credentials: "include"
     });
     if (response.status === 204) {
         return null;

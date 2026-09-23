@@ -15,18 +15,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [username, setUsername] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     useEffect(() => {
-        async function fetchUser() {
-            try {
-                const username = await Userservice.getUser();
-                setUsername(username);
-            } catch (error) {
-                console.error("Failed to fetch user:", error);
-                setUsername(null);
-            }
-            finally { setLoading(false); }
-
-        }
-        fetchUser();
+        refreshUser();
     }, []);
 
     async function refreshUser() {

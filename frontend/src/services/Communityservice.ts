@@ -1,11 +1,11 @@
+import { apiFetch } from "./api";
 
 export async function getAllCommunitiesForUser() {
-    const response = await fetch(`http://localhost:8080/api/community/all`, {
+    const response = await apiFetch(`/api/community/all`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
         },
-        credentials: "include"
     })
     if (!response.ok) {
         throw new Error("Failed to fetch communities");
@@ -15,12 +15,11 @@ export async function getAllCommunitiesForUser() {
 
 
 export async function createCommunity(name: string, description: string, isPrivate: boolean, exerciseIds: number[]) {
-    const response = await fetch("http://localhost:8080/api/community/create", {
+    const response = await apiFetch(`/api/community/create`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-         credentials: "include",
         body: JSON.stringify({ name, description, isPrivate, exerciseIds }),
     });
     if (!response.ok) {
@@ -30,12 +29,11 @@ export async function createCommunity(name: string, description: string, isPriva
 }
 
 export async function getCommunityDetails(id: number) {
-    const response = await fetch(`http://localhost:8080/api/community/${id}`, {
+    const response = await apiFetch(`/api/community/${id}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
         },
-         credentials: "include"
     });
     if (!response.ok) {
         throw new Error("Failed to fetch community details");
@@ -44,12 +42,11 @@ export async function getCommunityDetails(id: number) {
 }
 
 export async function leaveCommunity(id: number) {
-    const response = await fetch(`http://localhost:8080/api/community/leave/${id}`, {
+    const response = await apiFetch(`/api/community/leave/${id}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-         credentials: "include"
     });
     if (!response.ok) {
         throw new Error("Failed to leave community");
@@ -60,12 +57,11 @@ export async function leaveCommunity(id: number) {
 
 export async function getAllMembersOfCommunity(id: number) {
     
-        const response = await fetch(`http://localhost:8080/api/community/members/${id}`, {
+        const response = await apiFetch(`/api/community/members/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
             },
-             credentials: "include"
         });
         if (!response.ok) {
             throw new Error("Failed to fetch community members");
@@ -83,25 +79,23 @@ export async function getAllMembersOfCommunity(id: number) {
 }
 
 export async function get10RandomCommunities() {
-    const response = await fetch(`http://localhost:8080/api/community/random`,
+    const response = await apiFetch(`/api/community/random`,
         {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
             },
-             credentials: "include"
         }
     );
     return await response.json();
 }
 
 export async function editCommunity(name: string, description: string, isPrivate: boolean,exerciseIds: number[]) {
-    const response = await fetch(`http://localhost:8080/api/community/change`, {
+    const response = await apiFetch(`/api/community/change`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-         credentials: "include",
         body: JSON.stringify({ name, description, isPrivate, exerciseIds }),
     })
     if (!response.ok) {
@@ -111,12 +105,11 @@ export async function editCommunity(name: string, description: string, isPrivate
 }
 
 export async function joinCommunity(communityId: number) {
-    const response = await fetch(`http://localhost:8080/api/community/join`, {
+    const response = await apiFetch(`/api/community/join`, {
         headers: {
             "Content-Type": "application/json",
         },
         method: "POST",
-         credentials: "include",
         body: JSON.stringify({ communityId }),
     });
     if (!response.ok) {
@@ -128,12 +121,11 @@ export async function joinCommunity(communityId: number) {
 }
 
 export async function kickMember(communityId: number, ownerName: string) {
-    const response = await fetch(`http://localhost:8080/api/community/kick`, {
+    const response = await apiFetch(`/api/community/kick`, {
         headers: {
             "Content-Type": "application/json",
         },
         method: "POST",
-         credentials: "include",
         body: JSON.stringify({ communityId, ownerName }),
     });
     if (!response.ok) {
@@ -142,12 +134,11 @@ export async function kickMember(communityId: number, ownerName: string) {
     return await response.json();
 }
 export async function promoteMember(communityId: number, ownerName: string) {
-    const response = await fetch(`http://localhost:8080/api/community/promote`, {
+    const response = await apiFetch(`/api/community/promote`, {
         headers: {
             "Content-Type": "application/json",
         },
         method: "POST",
-         credentials: "include",
         body: JSON.stringify({ communityId, ownerName}),
     });
     if (!response.ok) {
@@ -157,12 +148,11 @@ export async function promoteMember(communityId: number, ownerName: string) {
 }
 
 export async function demoteMember(communityId: number, username: string) {
-    const response = await fetch(`http://localhost:8080/api/community/demote`, {
+    const response = await apiFetch(`/api/community/demote`, {
         headers: {
             "Content-Type": "application/json",
         },
         method: "POST",
-         credentials: "include",
         body: JSON.stringify({ communityId,username }),
     });
     if (!response.ok) {

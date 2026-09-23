@@ -15,11 +15,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
             .cors(cors -> {})
-            .csrf(csrf -> csrf.disable())
+            .csrf(csrf -> csrf.spa())
             .formLogin(form -> form.disable())
             .httpBasic(basic -> basic.disable())
             .authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/users/csrf").permitAll()
                 .anyRequest().authenticated())
                 .logout(logout -> logout
         .logoutUrl("/api/users/logout")

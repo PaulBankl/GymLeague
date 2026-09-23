@@ -44,10 +44,7 @@ public class CommunityController {
         this.communityService = communityService;
         this.communityMemberService = communityMemberService;
     }
-    @GetMapping("")
-    public List<CommunityMember> getMembers() {
-        return communityMemberService.getAll();
-    }
+
     @PostMapping("create")
     public boolean postMethodName(@RequestBody CommunityCreationDTO dto, Authentication authentication) {
         return communityService.createCommunity(dto, authentication.getName());

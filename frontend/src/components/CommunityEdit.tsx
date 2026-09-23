@@ -41,6 +41,10 @@ export default function CommunityEdit({ community, onCommunityChange }: EditComm
                 setError("No community data available.");
                 return;
             }
+            if(description.length > 255) {
+                setError("Description cannot exceed 255 characters.");
+                return;
+            }
             if (!username) {
                 console.error("No username found");
                 setError("No username found.");

@@ -1,14 +1,14 @@
+import {apiFetch} from "./api";
 
 
 
 
 export async function register(username: string, password: string, email: string): Promise<boolean> {
-    const response = await fetch("http://localhost:8080/api/users/register", {
+    const response = await apiFetch("/api/users/register", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-         credentials: "include",
         body: JSON.stringify({
             username,
             password,
@@ -20,13 +20,12 @@ export async function register(username: string, password: string, email: string
 }
 
 export async function login(username: string, password: string) {
-    const response = await fetch("http://localhost:8080/api/users/login", 
+    const response = await apiFetch("/api/users/login", 
         {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-             credentials: "include",
             body: JSON.stringify({
                 username,
                 password
@@ -38,26 +37,22 @@ export async function login(username: string, password: string) {
 
 export async function getUser() {
     
-    const response = await fetch(`http://localhost:8080/api/users/me`, {
+    const response = await apiFetch(`/api/users/me`, {
         method: "GET",
-        headers: {
-            "Content-Type": "application/json"
-        },
-         credentials: "include"
     });
 
     if (!response.ok) {
-        console.error("Failed to fetch user data");
+        
         return null;
+    
     }
 
     return await response.text();
 }
 
 export async function logout(): Promise<boolean> {
-    const response = await fetch("http://localhost:8080/api/users/logout", {
+    const response = await apiFetch("/api/users/logout", {
         method: "POST",
-        credentials: "include",
     });
 
     return response.ok;

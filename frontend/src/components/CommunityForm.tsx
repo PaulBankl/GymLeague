@@ -28,12 +28,20 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (name.trim() === "" || description.trim() === "") {
-            setError("Name and description cannot be empty.");
+        if (name.trim() === "") {
+            setError("Name cannot be empty.");
             return;
         }
         if (!username) {
             setError("User not logged in.");
+            return;
+        }
+        if(name.length > 50) {
+            setError("Name cannot exceed 50 characters.");
+            return;
+        }
+        if(description.length > 255) {
+            setError("Description cannot exceed 255 characters.");
             return;
         }
         try {
@@ -80,7 +88,7 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
                         />
                     </div>
                     <div>
-                        <label htmlFor="description">Description:</label>
+                        <label htmlFor="description">Description: max 255 characters</label>
                         <textarea
                             id="description"
                             value={description}

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-
+import dev.paulbankl.gymleague.dto.ResponseDTOs.ComMemberListDTO;
 import dev.paulbankl.gymleague.model.CommunityMember;
 
 import dev.paulbankl.gymleague.repository.CommunityMemberRepository;
@@ -20,10 +20,7 @@ public class CommunityMemberService {
     public CommunityMemberService(CommunityMemberRepository communityMemberRepository) {
         this.communityMemberRepository = communityMemberRepository;
     }
-    public List<CommunityMember> getAll() {
-        return communityMemberRepository.findAll();
-    }
-
+   
     
 
 }
