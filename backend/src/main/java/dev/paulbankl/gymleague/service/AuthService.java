@@ -20,18 +20,18 @@ public class AuthService {
     }
     //legt wenn der user nd existiert einen neuen an
     public boolean tryRegisterUser(RegisterDTO registerDTO) {
-        if (userRepository.existsByUsername(registerDTO.getUsername()) || userRepository.existsByEmail(registerDTO.getEmail())) {
+        if (userRepository.existsByUsername(registerDTO.username()) || userRepository.existsByEmail(registerDTO.email())) {
             return false;
         }
-        userRepository.save(new User(registerDTO.getUsername(), registerDTO.getEmail(), passwordEncoder.encode(registerDTO.getPassword())));
+        userRepository.save(new User(registerDTO.username(), registerDTO.email(), passwordEncoder.encode(registerDTO.password())));
         return true;
     }
     //schaut ob user exisitert und ob das passwort stimmt
     public boolean tryLoginUser(LoginDTO loginDTO) {
-        Optional <User> user = userRepository.findByUsername(loginDTO.getUsername());
+        Optional <User> user = userRepository.findByUsername(loginDTO.username());
         if (!user.isPresent()) {
             return false;
         }
-        return passwordEncoder.matches(loginDTO.getPassword(), user.get().getPasswordHash());
+        return passwordEncoder.matches(loginDTO.password(), user.get().getPasswordHash());
     }
 }

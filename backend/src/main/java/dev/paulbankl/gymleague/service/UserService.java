@@ -5,8 +5,6 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import dev.paulbankl.gymleague.repository.UserRepository;
-import dev.paulbankl.gymleague.dto.LoginDTO;
-import dev.paulbankl.gymleague.dto.RegisterDTO;
 import dev.paulbankl.gymleague.dto.UpdateDisplayNameDTO;
 import dev.paulbankl.gymleague.model.User;
 
@@ -29,8 +27,8 @@ public class UserService {
 
     //updated den displayname des users
     public boolean updateDisplayName(UpdateDisplayNameDTO updateDisplayNameDTO) {
-        String username = updateDisplayNameDTO.getUsername();
-        String displayName = updateDisplayNameDTO.getDisplayName();
+        String username = updateDisplayNameDTO.username();
+        String displayName = updateDisplayNameDTO.displayName();
 
         if (userRepository.existsByDisplayName(displayName)) {
             return false;

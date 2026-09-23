@@ -10,6 +10,22 @@ export default function RegisterPage() {
     const navigate = useNavigate();
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+        if(username.trim() === "" || password.trim() === "" || email.trim() === "") {
+            alert("All fields are required.");
+            return;
+        }
+        if(username.length < 3 || username.length > 20) {
+            alert("Username must be between 3 and 20 characters long.");
+            return;
+        }
+        if(password.length < 5 || password.length > 100) {
+            alert("Password must be between 5 and 100 characters long.");
+            return;
+        }
+        if(email.length === 0) {
+            alert("Email is required.");
+            return;
+        }
         event.preventDefault();
         const success = await register(username, password, email);
                 if (success) {

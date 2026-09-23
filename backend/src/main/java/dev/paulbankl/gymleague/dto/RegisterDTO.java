@@ -1,40 +1,22 @@
 package dev.paulbankl.gymleague.dto;
 
-public class RegisterDTO {
-    private String username;
-    private String password;
-    private String email;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
-    public RegisterDTO() {
-    }
+public record RegisterDTO(
+    @NotBlank(message = "Username cannot be blank")
+    @Size(min = 3, max = 30, message = "Username must be between 3 and 30 characters")
+    String username,
 
-    public RegisterDTO(String username, String password, String email) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-    }
+    @NotBlank(message = "Password cannot be blank")
+    @Size(min = 5, max = 100, message = "Password must be between 5 and 100 characters")
+    String password,
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    @Email 
+    @NotBlank (message = "Email cannot be blank")
+    String email
+) {
 }
+    
+

@@ -8,6 +8,7 @@ import dev.paulbankl.gymleague.service.AuthService;
 import dev.paulbankl.gymleague.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -46,7 +47,7 @@ public class UserController {
         this.authenticationManager = authenticationManager;
     }
     @PostMapping("/register")
-public ResponseEntity<Void> registerUser(@RequestBody RegisterDTO registerDTO) {
+public ResponseEntity<Void> registerUser(@Valid @RequestBody RegisterDTO registerDTO) {
     boolean success = authService.tryRegisterUser(registerDTO);
 
     if (!success) {
@@ -77,12 +78,12 @@ public Map<String, Object> userExists(@PathVariable String username) {
     return Map.of("exists", false);
 }
     @PostMapping("/login")
-public ResponseEntity<Void> login(@RequestBody LoginDTO loginDTO, HttpServletRequest request,
+public ResponseEntity<Void> login(@Valid @RequestBody LoginDTO loginDTO, HttpServletRequest request,
         HttpServletResponse response) {
     Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
-                    loginDTO.getUsername(),
-                    loginDTO.getPassword()
+                    loginDTO.username(),
+                    loginDTO.password()
             )
     );
 
@@ -94,7 +95,7 @@ securityContextRepository.saveContext(context, request, response);
 }
 
     @PutMapping("/updateDisplayName")
-    public boolean updateDisplayName(@RequestBody UpdateDisplayNameDTO updateDisplayNameDTO) {
+    public boolean updateDisplayName(@Valid @RequestBody UpdateDisplayNameDTO updateDisplayNameDTO) {
             return userService.updateDisplayName(updateDisplayNameDTO);
         }
 
