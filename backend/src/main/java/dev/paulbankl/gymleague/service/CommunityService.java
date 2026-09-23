@@ -48,7 +48,7 @@ public class CommunityService {
     }
     @Transactional
     public boolean createCommunity(CommunityCreationDTO dto, String username) {
-        if(communityRepository.existsByName(dto.getName())) {
+        if(communityRepository.existsByName(dto.name())) {
             return false;
         }
         User owner = userRepository.findByUsername(username).orElse(null);
@@ -57,15 +57,15 @@ if (owner == null) {
     return false;
 }
         Community community = new Community(
-        dto.getName(),
-        dto.getDescription(),
+        dto.name(),
+        dto.description(),
         dto.isPrivate(),
         owner
         );
         //Community wird erschaffen und CommunityMember wird erschaffen und gespeichert
         communityRepository.save(community);
         communityMemberRepository.save(new CommunityMember(owner, community, CommunityRole.OWNER));
-        for(Long exerciseId : dto.getExerciseIds()) {
+        for(Long exerciseId : dto.exerciseIds()) {
             CommunityExercises communityExercise = new CommunityExercises(community, exerciseRepository.findById(exerciseId).orElseThrow());
             communityExercisesRepository.save(communityExercise);
         }
@@ -174,9 +174,7 @@ public boolean changeCommunity(CommunityChangeDTO dto , String username) {
     community.setDescription(dto.description());
     community.setPrivate(dto.isPrivate());
     communityExercisesRepository.deleteByCommunityId(community.getId());
-    List<Exercise> exercises = exerciseRepository.findAllById(
-    Arrays.asList(dto.exerciseIds())
-);
+    List<Exercise> exercises = exerciseRepository.findAllById(dto.exerciseIds());
 
 for (Exercise exercise : exercises) {
     communityExercisesRepository.save(
@@ -221,7 +219,7 @@ for (Exercise exercise : exercises) {
             if (community == null || !community.getOwner().getUsername().equals(username)) {
                 return false; // Community not found or user is not the owner
             }
-            CommunityMember member = communityMemberRepository.findByCommunityIdAndUserUsername(dto.communityId(), dto.changeUsername()).orElse(null);
+            CommunityMember member = communityMemberRepository.findByCommunityIdAndUserUsername(dto.communityId(), dto.targetUsername()).orElse(null);
             if (member == null || member.getRole() == CommunityRole.OWNER) {
                 return false; // Member not found or already an owner
             }
@@ -241,7 +239,7 @@ for (Exercise exercise : exercises) {
             if (community == null || !community.getOwner().getUsername().equals(username)) {
                 return false; // Community not found or user is not the owner
             }
-            CommunityMember member = communityMemberRepository.findByCommunityIdAndUserUsername(dto.communityId(), dto.changeUsername()).orElse(null);
+            CommunityMember member = communityMemberRepository.findByCommunityIdAndUserUsername(dto.communityId(), dto.targetUsername()).orElse(null);
             if (member == null || member.getRole() == CommunityRole.OWNER) {
                 return false; // Member not found or already an owner
             }

@@ -120,26 +120,26 @@ export async function joinCommunity(communityId: number) {
 
 }
 
-export async function kickMember(communityId: number, ownerName: string) {
+export async function kickMember(communityId: number, kickUsername: string) {
     const response = await apiFetch(`/api/community/kick`, {
         headers: {
             "Content-Type": "application/json",
         },
         method: "POST",
-        body: JSON.stringify({ communityId, ownerName }),
+        body: JSON.stringify({ communityId, kickUsername }),
     });
     if (!response.ok) {
         throw new Error("Failed to kick member");
     }
     return await response.json();
 }
-export async function promoteMember(communityId: number, ownerName: string) {
+export async function promoteMember(communityId: number, targetUsername: string) {
     const response = await apiFetch(`/api/community/promote`, {
         headers: {
             "Content-Type": "application/json",
         },
         method: "POST",
-        body: JSON.stringify({ communityId, ownerName}),
+        body: JSON.stringify({ communityId, targetUsername }),
     });
     if (!response.ok) {
         throw new Error("Failed to promote member");
@@ -147,13 +147,13 @@ export async function promoteMember(communityId: number, ownerName: string) {
     return await response.json();
 }
 
-export async function demoteMember(communityId: number, username: string) {
+export async function demoteMember(communityId: number, targetUsername: string) {
     const response = await apiFetch(`/api/community/demote`, {
         headers: {
             "Content-Type": "application/json",
         },
         method: "POST",
-        body: JSON.stringify({ communityId,username }),
+        body: JSON.stringify({ communityId,targetUsername }),
     });
     if (!response.ok) {
         throw new Error("Failed to demote member");

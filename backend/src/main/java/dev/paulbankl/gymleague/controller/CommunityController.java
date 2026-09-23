@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import dev.paulbankl.gymleague.service.AuthService;
 import dev.paulbankl.gymleague.service.CommunityMemberService;
 import dev.paulbankl.gymleague.service.CommunityService;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -17,19 +18,14 @@ import dev.paulbankl.gymleague.dto.RoleChangeDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.ComMemberListDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityDetailDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityOverviewDTO;
-import dev.paulbankl.gymleague.model.Community;
-import dev.paulbankl.gymleague.model.CommunityMember;
 
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.security.web.context.SecurityContextRepository;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -46,7 +42,7 @@ public class CommunityController {
     }
 
     @PostMapping("create")
-    public boolean postMethodName(@RequestBody CommunityCreationDTO dto, Authentication authentication) {
+    public boolean postMethodName(@Valid @RequestBody CommunityCreationDTO dto, Authentication authentication) {
         return communityService.createCommunity(dto, authentication.getName());
     }
     @GetMapping("/all")
@@ -71,23 +67,23 @@ public class CommunityController {
         return communityService.get10RandomCommunities(authentication.getName());
     }
     @PostMapping("/change")
-    public boolean changeCommunity(@RequestBody CommunityChangeDTO dto, Authentication authentication) {
+    public boolean changeCommunity(@Valid @RequestBody CommunityChangeDTO dto, Authentication authentication) {
        return communityService.changeCommunity(dto, authentication.getName());
     }
     @PostMapping("/join")
-    public boolean joinCommunity(@RequestBody CommunityJoinDTO dto, Authentication authentication) {
+    public boolean joinCommunity(@Valid @RequestBody CommunityJoinDTO dto, Authentication authentication) {
         return communityService.joinCommunity(dto, authentication.getName());
     }
     @PostMapping("/kick")
-    public boolean kickMember(@RequestBody CommunityKickDTO dto, Authentication authentication) {
+    public boolean kickMember(@Valid @RequestBody CommunityKickDTO dto, Authentication authentication) {
         return communityService.kickMember(dto, authentication.getName());
     }
     @PostMapping("/promote")
-    public boolean promoteMember(@RequestBody RoleChangeDTO dto, Authentication authentication) {
+    public boolean promoteMember(@Valid @RequestBody RoleChangeDTO dto, Authentication authentication) {
         return communityService.promoteMember(dto, authentication.getName());
     }
     @PostMapping("/demote")
-    public boolean demoteMember(@RequestBody RoleChangeDTO dto, Authentication authentication) {
+    public boolean demoteMember(@Valid @RequestBody RoleChangeDTO dto, Authentication authentication) {
         return communityService.demoteMember(dto, authentication.getName());
     }
     

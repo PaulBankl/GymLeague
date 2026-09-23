@@ -1,42 +1,21 @@
 package dev.paulbankl.gymleague.dto;
+import java.util.List;
 
-public class CommunityCreationDTO {
-    private String name;
-    private String description;
-    private boolean isPrivate;
-    private Long[] exerciseIds;
+import jakarta.validation.constraints.*;
 
-    public CommunityCreationDTO(String name, String description, boolean isPrivate) {
-        this.name = name;
-        this.description = description;
-        this.isPrivate = isPrivate;
+public record CommunityCreationDTO (
 
-    }
+    @NotBlank 
+     @Size(min = 3, max = 50, message = "Name must be between 3 and 50 characters")
+    String name,
 
-    public String getName() {
-        return name;
-    }
+    @Size (max = 255, message = "Description cannot exceed 255 characters")
+    String description,
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    boolean isPrivate,
 
-    public String getDescription() {
-        return description;
-    }
+    List<@NotNull(message = "Exercise IDs cannot be null")
+    @Positive(message = "Exercise IDs must be positive") Long>
+     exerciseIds
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    public boolean isPrivate() {
-        return isPrivate;
-    }
-    public void setPrivate(boolean isPrivate) {
-        this.isPrivate = isPrivate;
-    }
-    public Long[] getExerciseIds() {
-        return exerciseIds;
-    }
-    public void setExerciseIds(Long[] exerciseIds) {
-        this.exerciseIds = exerciseIds;}
-}
+){}
