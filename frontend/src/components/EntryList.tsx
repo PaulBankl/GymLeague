@@ -23,7 +23,7 @@ export default function EntryList({ exerciseId, refresh, onRefresh }: EntryListP
 
     useEffect(() => {
         if (exerciseId && username) {
-            Entryservice.getEntriesByExerciseIdForUser(exerciseId, username)
+            Entryservice.getEntriesByExerciseIdForUser(exerciseId)
                 .then(setEntries)
                 .catch((error: Error) => {
                     console.error("Error fetching entries:", error);

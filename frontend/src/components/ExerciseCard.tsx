@@ -19,7 +19,7 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
         return weight * (1 + reps / 30);
     }
     useEffect(() => {
-        Entryservice.getBestEntryForExercise(exercise.id, username).then((entry) => {
+        Entryservice.getBestEntryForExercise(exercise.id).then((entry) => {
             setBestEntry(entry);
         });
     }, [exercise.id, username]);

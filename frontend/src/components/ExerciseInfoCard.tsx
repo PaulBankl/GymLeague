@@ -7,22 +7,18 @@ export default function ExerciseInfoCard({ id, refresh }: { id: string, refresh:
     const [error, setError] = useState<string | null>(null);
     const [info, setInfo] = useState<{ entryCount: number; bestEntry: Entry | null; progressPercent: number; progressOneRm: number } | null>(null);
 
-    const username = sessionStorage.getItem("username");
 
-    if (!username) {
-        return (<div>Please log in to view exercise stats.</div>);
-    }
     if (!id) {
         return (<div>Invalid exercise.</div>);
     }
     useEffect(() => {
-        Exerciseservice.getExerciseInfoById(id, username)
+        Exerciseservice.getExerciseInfoById(id)
             .then(setInfo)
             .catch((error: Error) => {
                 console.error("Error fetching exercise info:", error);
                 setError(error.message);
             });
-    }, [id, username, refresh]);
+    }, [id,  refresh]);
     if (error) {
         return (<div>Error Loading stats</div>);
     }

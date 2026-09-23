@@ -6,6 +6,6 @@ public record EntryDTO(
     int reps,
     String username,
     String exercisename,
-    String createdAt
+    String date
 ) {
 }

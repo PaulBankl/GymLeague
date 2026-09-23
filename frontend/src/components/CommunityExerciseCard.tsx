@@ -1,10 +1,5 @@
 import type { Exercise } from "../types/Exercise";
 
-type Props = {
-    exercise: Exercise;
-    checked: boolean;
-    onChange: (checked: boolean) => void;
-};
 
 export default function CommunityExerciseCard({ exercise,checked,onChange }: { exercise: Exercise; checked: boolean; onChange: (checked: boolean) => void }) {
     return (
