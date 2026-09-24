@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { register } from "../services/Userservice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 export default function RegisterPage() {
@@ -18,12 +18,8 @@ export default function RegisterPage() {
             alert("Username must be between 3 and 20 characters long.");
             return;
         }
-        if(password.length < 5 || password.length > 100) {
-            alert("Password must be between 5 and 100 characters long.");
-            return;
-        }
-        if(email.length === 0) {
-            alert("Email is required.");
+        if(password.length < 5 || password.length > 50) {
+            alert("Password must be at least 5 characters long.");
             return;
         }
         event.preventDefault();
@@ -35,11 +31,11 @@ export default function RegisterPage() {
                 }
         }
         return (
-            <div>
-                <h1>Register</h1>
-                <form onSubmit={handleSubmit}>
+            <div className="flex  flex-col items-center h-screen">
+                <h1 className="text-3xl font-bold mb-4 mt-[10vw] text-[clamp(48px,10vw,72px)]">Register</h1>
+                <form onSubmit={handleSubmit} className="flex items-center flex-col items-center h-screen">
 
-                    <label htmlFor="username">
+                    <label htmlFor="username" className="mb-2 block font-body text-[13px] font-medium text-muted self-start">
                         Username
                     </label>
 
@@ -47,10 +43,10 @@ export default function RegisterPage() {
                         id="username"
                         type="text"
                         value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        onChange={(e) => setUsername(e.target.value)} className="bg-surface-2 border-border rounded-md p-2 mb-4 w-[80vw] md:w-[35vw] "
                     />
 
-                    <label htmlFor="password">
+                    <label htmlFor="password" className="mb-2 block font-body text-[13px] font-medium text-muted self-start" >
                         Password
                     </label>
 
@@ -58,9 +54,9 @@ export default function RegisterPage() {
                         id="password"
                         type="password"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) => setPassword(e.target.value)} className="bg-surface-2 border border-border rounded-md p-2 mb-4 w-[80vw] md:w-[35vw]"
                     />
-                    <label htmlFor="email">
+                    <label htmlFor="email" className="mb-2 block font-body text-[13px] font-medium text-muted self-start">
                         Email
                     </label>
 
@@ -68,13 +64,15 @@ export default function RegisterPage() {
                         id="email"
                         type="email"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => setEmail(e.target.value)} className="bg-surface-2 border border-border rounded-md p-2 mb-4 w-[80vw] md:w-[35vw]"
                     />
 
-                    <button type="submit">
+                    <button type="submit" className="bg-accent border border-border rounded-md p-2 mb-4 w-[80vw] hover:bg-accent-dim md:w-[35vw] " >
                         Register
                     </button>
-
+                    <Link to="/login" className="">
+                        Already have an account? Login
+                    </Link>
                 </form>
             </div>
         );
