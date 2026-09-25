@@ -6,7 +6,7 @@ export default function CommunityCard({ community }: { community: Community }) {
     return (
         <div className="flex flex-col items-center bg-surface rounded-md border border-border p-4 mb-4 w-[90%] md:w-[80%] mt-5" onClick={() => navigate(`/community/${community.id}`)}>
             <h2 className="text-lg font-heading text-[clamp(20px,2vw,50px)] font-bold mb-2">{community.name}</h2>
-            <p className="text-muted">{community.description}</p>
+            <p className="max-w-[80%] whitespace-normal break-words text-center text-muted">{community.description}</p>
             <div className="flex flex-col items-start justify-between mt-2 md:flex-row">
                 <div className="flex flex-row mr-4">
                     <p className="text-muted mr-2">Owner: </p>
