@@ -56,9 +56,9 @@ export default function ExerciseDetailPage({ }) {
     }
 
     return (
-        <div>
-            <Link to="/exercises">Back to Overview</Link>
-            <h1>{exercise.name}</h1>
+        <div className="flex flex-col items-center mx-auto h-screen mt-[2vw] w-[80vw] md:w-[50vw]">
+            <Link to="/exercises" className="text-accent underline underline-offset-4 self-start">Back to Overview</Link>
+            <h1 className="font-heading text-[clamp(22px,10vw,72px)] text-center font-black tracking-[-2px]">{exercise.name}</h1>
             <ExerciseInfoCard id={id} refresh={refresh}></ExerciseInfoCard>
             <EntryForm exerciseId={id} exerciseName={exercise.name} onEntryAdded={() => setRefresh(refresh + 1)}></EntryForm>
             <EntryList exerciseId={id} refresh={refresh} onRefresh={() => setRefresh(refresh + 1)}></EntryList>

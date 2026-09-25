@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import "../styles/ExerciseInfoCard.css";
 import type { Entry } from "../types/Entry";
 import * as Exerciseservice from "../services/Exerciseservice";
 
@@ -23,16 +22,28 @@ export default function ExerciseInfoCard({ id, refresh }: { id: string, refresh:
         return (<div>Error Loading stats</div>);
     }
     return (
-        <div className="exercise-info-card">
-            Exercise Stats
+        <div className="bg-surface border border-border items-center flex flex-col rounded-md p-2 mb-4 w-[80vw] md:w-[50vw]">
+            <h1 className="font-heading self-center mb-3">EXERCISE STATS</h1>
             {info && (
-                <div>
-                    <p>Entries: {info.entryCount}</p>
-                    {info.bestEntry && (
-                        <p>Best Entry: {info.bestEntry.weight} kg x {info.bestEntry.reps} reps</p>
-                    )}
-                    <p>Progress: {info.progressPercent.toFixed(2)}%</p>
-                    <p>1RM Progress: {info.progressOneRm.toFixed(2)} kg</p>
+                <div className="grid w-full  grid-cols-1 gap-6 text-center text-xl font-semibold md:grid-cols-4">
+                    <div className="flex flex-col items-center">
+                        <p className="font-heading text-muted text-sm">Entries: </p>
+                        <p className="font-heading text-sm mt-1 mb-4">{info.entryCount}</p>
+                    </div>
+                    
+                    
+                        <div className="flex flex-col items-center">
+                        <p className="font-heading text-muted text-sm">Best Entry:  </p>
+                        {(info.bestEntry ?<p className="font-heading text-sm mt-1">{info.bestEntry.weight} kg x {info.bestEntry.reps} reps</p> : <p className="font-heading text-sm mt-1">N/A</p>)}
+                    </div>
+                      <div>
+                        <p className="font-heading text-muted text-sm">Progress: </p>
+                        <p className="font-heading text-sm mt-1 mb-4">{info.progressPercent.toFixed(2)}%</p>
+                      </div>
+                    <div className="flex flex-col items-center">
+                        <p className="font-heading text-muted text-sm">1RM Progress: </p>
+                        <p className="font-heading text-sm mt-1 mb-4">{info.progressOneRm.toFixed(2)} kg</p>
+                    </div>
                 </div>
             )}
         </div>

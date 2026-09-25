@@ -45,7 +45,7 @@ export default function EntryList({ exerciseId, refresh, onRefresh }: EntryListP
     }
 
     if (entries.length === 0) {
-        return <div>No entries found for this exercise.</div>;
+        return <div className="text-muted">No entries found for this exercise.</div>;
     }
     async function handleEditSubmit(entry: Entry, event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -71,42 +71,50 @@ export default function EntryList({ exerciseId, refresh, onRefresh }: EntryListP
             console.error(error);
         }
     }
-    return (
+    return (<>
+        <h2 className="text-heading text-xl font-bold my-4 self-center">Entries</h2>
         <div>
-            <h2>Entries</h2>
+
             {entries.map((entry) => (
-                <div key={entry.id}>
-                    <p>Weight: {entry.weight}</p>
-                    <p>Reps: {entry.reps}</p>
-                    <p>Date: {new Date(entry.date).toLocaleDateString()}</p>
-                    <button onClick={async () => {
-                        try {
-                            await Entryservice.deleteEntry(entry.id);
-                            onRefresh();
-                        } catch (error) {
-                            console.error("Error deleting entry:", error);
-                        }
-                    }}>Delete</button>
-                    <button onClick={() => {
-                        if (EditFormid === entry.id) {
-                            setEditFormid(null);
-                            setEditWeight("");
-                            setEditReps("");
-                        } else {
-                            setEditFormid(entry.id);
-                            setEditWeight(entry.weight.toString());
-                            setEditReps(entry.reps.toString());
-                        }
-                    }}>{EditFormid === entry.id ? "X" : "Edit"}</button>
-                    {EditFormid === entry.id && <form onSubmit={(event) => handleEditSubmit(entry, event)}>
-                        <label htmlFor="editWeight">Weight</label>
-                        <input id="editWeight" type="number" value={editWeight} onChange={(e) => setEditWeight(e.target.value)} />
-                        <label htmlFor="editReps">Reps</label>
-                        <input id="editReps" type="number" value={editReps} onChange={(e) => setEditReps(e.target.value)} />
-                        <button type="submit">Submit</button>
+                <div key={entry.id} className="flex flex-col bg-surface rounded-md p-2 mb-4 border border-border">
+                    <div className="flex flex-col items-center  md:grid md:grid-cols-3 md:gap-4 md:place-items-center md:mx-auto md:w-[50vw]">
+                        <div><p className="text-muted">Weight: </p> <p className="font-heading text-sm mt-1 text-center">{entry.weight}</p></div>
+                        <div><p className="text-muted">Reps: </p> <p className="font-heading text-sm mt-1 text-center ">{entry.reps}</p></div>
+                        <div><p className="text-muted">Date: </p> <p className="font-heading text-sm mt-1 text-center">{new Date(entry.date).toLocaleDateString()}</p></div>
+                    </div>
+                    <div className="flex flex-row items-center self-center mt-2">
+                        <button onClick={() => {
+                            if (EditFormid === entry.id) {
+                                setEditFormid(null);
+                                setEditWeight("");
+                                setEditReps("");
+                            } else {
+                                setEditFormid(entry.id);
+                                setEditWeight(entry.weight.toString());
+                                setEditReps(entry.reps.toString());
+                            }
+                        }} className="bg-accent border border-border rounded-md p-2 pl-4 pr-4 hover:bg-accent-dim ">{EditFormid === entry.id ? "X" : "Edit"}</button>
+                        <button onClick={async () => {
+                            try {
+                                await Entryservice.deleteEntry(entry.id);
+                                onRefresh();
+                            } catch (error) {
+                                console.error("Error deleting entry:", error);
+                            }
+                        }} className="text-accent border border-accent rounded-md p-2 pl-4 pr-4 hover:bg-accent-dim ml-4">Delete</button>
+                    </div>
+                    {EditFormid === entry.id && <h1 className="text-xl font-heading self-center mt-4">Edit-Menu:</h1>}
+                    {EditFormid === entry.id && <form onSubmit={(event) => handleEditSubmit(entry, event)} className="flex flex-col items-center mt-4 md:flex-row justify-center md:gap-4">
+
+                        <label htmlFor="editWeight" className="text-muted">Weight</label>
+                        <input id="editWeight" type="number" value={editWeight} onChange={(e) => setEditWeight(e.target.value)} className="bg-red-950 border border-border max-w-[70%] rounded-md p-2 mb-4" />
+                        <label htmlFor="editReps" className="text-muted">Reps</label>
+                        <input id="editReps" type="number" value={editReps} onChange={(e) => setEditReps(e.target.value)} className="bg-red-950 border border-border max-w-[70%] rounded-md p-2 mb-4" />
+                        <button type="submit" className="bg-accent border border-border rounded-md p-2 mb-4  hover:bg-accent-dim  min-w-[100px] ">Confirm</button>
                     </form>}
                 </div>
             ))}
         </div>
+    </>
     );
 }

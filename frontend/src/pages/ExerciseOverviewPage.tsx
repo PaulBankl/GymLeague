@@ -17,9 +17,9 @@ export default function ExerciseOverviewPage() {
             return <div>Server Error</div>;
         }
     return (
-        <div>
-            <Link to="/app">Back to Dashboard</Link>
-            <h1>Exercise Overview</h1>
+        <div className="flex flex-col items-center mx-auto h-screen mt-[2vw] w-[80vw] md:w-[50vw]">
+            <Link to="/app" className="text-accent underline underline-offset-4 self-start">Back to Dashboard</Link>
+            <h1 className="font-heading text-[clamp(22px,10vw,72px)] text-center font-black tracking-[-2px]">Exercise Overview</h1>
             {exercises.length === 0 ? <p>No exercises found.</p> : (exercises.map((exercise) => (
                 <ExerciseCard key={exercise.id} exercise={exercise} />
             )))}

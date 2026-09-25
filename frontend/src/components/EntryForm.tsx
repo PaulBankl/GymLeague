@@ -7,7 +7,7 @@ type EntryFormProps = {
     onEntryAdded: () => void;
 };
 
-export default function EntryForm({  exerciseId, exerciseName, onEntryAdded }: EntryFormProps) {
+export default function EntryForm({ exerciseId, exerciseName, onEntryAdded }: EntryFormProps) {
     const username = sessionStorage.getItem("username");
     const [weight, setWeight] = useState("");
     const [reps, setReps] = useState("");
@@ -40,14 +40,23 @@ export default function EntryForm({  exerciseId, exerciseName, onEntryAdded }: E
         }
     }
     return (<div>
-        <button onClick={() => { setShowForm(!showForm) }}>{showForm ? "X" : "Add Entry"}</button>
-        {showForm && <form onSubmit={handleSubmit}>
-            <p>Add Entry for {exerciseName}</p>
-            <label htmlFor="weight">Weight</label>
-            <input id="weight" type="number" value={weight} onChange={(e) => setWeight(e.target.value)} />
-            <label htmlFor="reps">Reps</label>
-            <input id="reps" type="number" value={reps} onChange={(e) => setReps(e.target.value)} />
-            <button type="submit">Submit</button>
+        {!showForm && <button className="bg-accent border border-border rounded-md p-2 pl-4 pr-4 hover:bg-accent-dim " onClick={() => { setShowForm(!showForm) }}>{showForm ? "X" : "Add Entry"}</button>}
+        {showForm && <form onSubmit={handleSubmit} className=" bg-surface border  border-border rounded-md p-2 mb-4 w-[80vw] md:w-[40vw]">
+            <div className="flex flex-row justify-between  mt-4 mb-4 ">
+                <p className="font-heading">Add Entry for {exerciseName}</p>
+                <button type="button" onClick={() => { setShowForm(!showForm) }} className="text-muted bg-surface-2 rounded-md p-1 pl-2 pr-2">X</button>
+            </div>
+            <div className=" flex flex-col justify-between md:flex-row ">
+            <div>
+                <label htmlFor="weight" className="text-muted">Weight</label>
+                <input id="weight" type="number" value={weight} onChange={(e) => setWeight(e.target.value)} className="bg-surface-2 border border-border max-w-[70%] rounded-md p-2 mb-4" />
+            </div>
+            <div>
+                <label htmlFor="reps" className="text-muted">Reps</label>
+                <input id="reps" type="number" value={reps} onChange={(e) => setReps(e.target.value)} className="bg-surface-2 border border-border max-w-[70%] rounded-md p-2 mb-4" />
+            </div>
+            <button type="submit" className="bg-accent border border-border rounded-md p-2 mb-4  hover:bg-accent-dim  min-w-[100px] ">Submit</button>
+            </div>
         </form>}
     </div>)
 }
