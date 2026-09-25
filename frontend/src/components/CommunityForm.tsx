@@ -12,11 +12,12 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
     const [error, setError] = useState<string | null>(null);
     const [ShowForm, setShowForm] = useState(false);
 
+    
     const [exercises, setExercises] = useState<Exercise[]>([]);
 
     const [checkedExercises, setCheckedExercises] = useState<number[]>([]);
 
-    
+
 
     useEffect(() => {
         Exerciseservice.getExercises().then((data) => {
@@ -36,15 +37,15 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
             setError("User not logged in.");
             return;
         }
-        if(name.length < 3) {
+        if (name.length < 3) {
             setError("Name must be at least 3 characters long.");
             return;
         }
-        if(name.length > 50) {
+        if (name.length > 50) {
             setError("Name cannot exceed 50 characters.");
             return;
         }
-        if(description.length > 255) {
+        if (description.length > 255) {
             setError("Description cannot exceed 255 characters.");
             return;
         }
@@ -67,68 +68,73 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
         onCommunityCreated();
         setShowForm(false);
     };
-    if(!username) {
+    if (!username) {
         return <div>Please log in to create a community.</div>;
     }
-    if(exercises.length === 0 && ShowForm) {
+    if (exercises.length === 0 && ShowForm) {
         return <div>Loading exercises... <br>
         </br><h1>Then you can create a community.</h1></div>;
     }
 
     return (
         <>
-            <button onClick={() => {if(ShowForm){setCheckedExercises([]);}setShowForm(!ShowForm)}}>{ShowForm ? "X" : "Create Community"}</button>
+            {!ShowForm && <button onClick={() => { if (ShowForm) { setCheckedExercises([]); } setShowForm(!ShowForm) }} className="bg-accent border border-border rounded-md p-2 mb-4  hover:bg-accent-dim pl-5 pr-5">{ShowForm ? "X" : "Create Community"}</button>}
             {ShowForm && (
-                <form onSubmit={handleSubmit}>
-                    {error && <p className="error">{error}</p>}
-                    <div>
-                        <label htmlFor="name">Name:</label>
-                        <input
-                            type="text"
-                            id="name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="description">Description: max 255 characters</label>
-                        <textarea
-                            id="description"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="isPrivate">Private:</label>
+
+                <form onSubmit={handleSubmit} className="bg-surface flex flex-col items-center md:w-[40vw] mx-auto">
+                    <h1 className="text-body self-start ml-5 text-lg mt-5">Create a New Community</h1>
+                    {error && <p className="text-accent">{error}</p>}
+
+                    <label htmlFor="name" className="text-muted self-start ml-[5%] mt-5">Name:</label>
+                    <input
+                        type="text"
+                        id="name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                        className="bg-surface-2 self-start ml-[5%] border border-border rounded-md p-2 mb-4 w-[90%] md:w-[90%]"
+                    />
+                    <label htmlFor="description" className="text-muted self-start ml-[5%] mt-5">Description: max 255 characters</label>
+                    <textarea
+                        id="description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        className="bg-surface-2 self-start ml-[5%] border border-border rounded-md p-2 mb-4 w-[90%] md:w-[90%]"
+                    />
+                    <p className="muted text-sm self-end mr-[5%]">Characters remaining: {255 - description.length}</p>
+                    <div className="self-start ml-[5%] mb-4 flex items-center">
                         <input
                             type="checkbox"
                             id="isPrivate"
                             checked={isPrivate}
                             onChange={(e) => setIsPrivate(e.target.checked)}
                         />
+                        <label htmlFor="isPrivate" className="text-muted ml-2">Private</label>
                     </div>
-                    <button type="submit">Create Community</button>
 
-                {exercises.length > 0 && (
-                    <div>
-                        <h2>Select Exercises for the Community</h2>
-                        {exercises.map((exercise) => (
-                            <CommunityExerciseCard
-                                key={exercise.id}
-                                exercise={exercise}
-                                checked={checkedExercises.includes(exercise.id)}
-                                onChange={(checked : boolean) => {
-                                    if (checked) {
-                                        setCheckedExercises([...checkedExercises, exercise.id]);
-                                    } else {
-                                        setCheckedExercises(checkedExercises.filter((id) => id !== exercise.id));
-                                    }
-                                }}
-                            />
-                        ))}
+                    {exercises.length > 0 && (
+                        <div className="flex flex-col items-start w-[90%]">
+                            <h2 className="text-body self-start mb-2">Select Exercises for the Community</h2>
+                            {exercises.map((exercise) => (
+                                <CommunityExerciseCard
+                                    key={exercise.id}
+                                    exercise={exercise}
+                                    checked={checkedExercises.includes(exercise.id)}
+                                    onChange={(checked: boolean) => {
+                                        if (checked) {
+                                            setCheckedExercises([...checkedExercises, exercise.id]);
+                                        } else {
+                                            setCheckedExercises(checkedExercises.filter((id) => id !== exercise.id));
+                                        }
+                                    }}
+                                />
+                            ))}
+                        </div>
+                    )}
+                    <div className="self-start ml-[5%] mb-4 flex items-center mt-5 mb-4">
+                    <button type="submit" className="bg-accent border border-border rounded-md p-2 hover:bg-accent-dim pl-5 pr-5">Create Community</button>
+                    <button onClick={() => { if (ShowForm) { setCheckedExercises([]); } setShowForm(!ShowForm) }} className="text-accent border border-accent rounded-md ml-2 p-2 hover:bg-accent-dim">Cancel</button>
                     </div>
-                )}
                 </form>
             )}
         </>
