@@ -19,6 +19,7 @@ import dev.paulbankl.gymleague.dto.ResponseDTOs.ComMemberListDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityDetailDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityOverviewDTO;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,8 +43,9 @@ public class CommunityController {
     }
 
     @PostMapping("create")
-    public boolean postMethodName(@Valid @RequestBody CommunityCreationDTO dto, Authentication authentication) {
-        return communityService.createCommunity(dto, authentication.getName());
+    public ResponseEntity<Void> postMethodName(@Valid @RequestBody CommunityCreationDTO dto, Authentication authentication) {
+        communityService.createCommunity(dto, authentication.getName());
+        return ResponseEntity.status(201).build();
     }
     @GetMapping("/all")
     public List<CommunityOverviewDTO> getAllCommunitiesForUser(Authentication authentication) {       
@@ -55,8 +57,9 @@ public class CommunityController {
         return  communityService.getCommunityDetails(id);
     }
     @PostMapping("/leave/{id}")
-    public boolean leaveCommunity(@PathVariable Long id, Authentication authentication) {
-        return communityService.leaveCommunity(id, authentication.getName());
+    public ResponseEntity<Void> leaveCommunity(@PathVariable Long id, Authentication authentication) {
+        communityService.leaveCommunity(id, authentication.getName());
+        return ResponseEntity.noContent().build();
     }
     @GetMapping("/members/{id}")
     public List<ComMemberListDTO> getAllMembersOfCommunity(@PathVariable Long id) {
@@ -67,24 +70,29 @@ public class CommunityController {
         return communityService.get10RandomCommunities(authentication.getName());
     }
     @PostMapping("/change")
-    public boolean changeCommunity(@Valid @RequestBody CommunityChangeDTO dto, Authentication authentication) {
-       return communityService.changeCommunity(dto, authentication.getName());
+    public ResponseEntity<Void> changeCommunity(@Valid @RequestBody CommunityChangeDTO dto, Authentication authentication) {
+       communityService.changeCommunity(dto, authentication.getName());
+       return ResponseEntity.noContent().build();
     }
     @PostMapping("/join")
-    public boolean joinCommunity(@Valid @RequestBody CommunityJoinDTO dto, Authentication authentication) {
-        return communityService.joinCommunity(dto, authentication.getName());
+    public ResponseEntity<Void> joinCommunity(@Valid @RequestBody CommunityJoinDTO dto, Authentication authentication) {
+        communityService.joinCommunity(dto, authentication.getName());
+        return ResponseEntity.status(201).build();
     }
     @PostMapping("/kick")
-    public boolean kickMember(@Valid @RequestBody CommunityKickDTO dto, Authentication authentication) {
-        return communityService.kickMember(dto, authentication.getName());
+    public ResponseEntity<Void> kickMember(@Valid @RequestBody CommunityKickDTO dto, Authentication authentication) {
+        communityService.kickMember(dto, authentication.getName());
+        return ResponseEntity.noContent().build();
     }
     @PostMapping("/promote")
-    public boolean promoteMember(@Valid @RequestBody RoleChangeDTO dto, Authentication authentication) {
-        return communityService.promoteMember(dto, authentication.getName());
+    public ResponseEntity<Void> promoteMember(@Valid @RequestBody RoleChangeDTO dto, Authentication authentication) {
+        communityService.promoteMember(dto, authentication.getName());
+        return ResponseEntity.noContent().build();
     }
     @PostMapping("/demote")
-    public boolean demoteMember(@Valid @RequestBody RoleChangeDTO dto, Authentication authentication) {
-        return communityService.demoteMember(dto, authentication.getName());
+    public ResponseEntity<Void> demoteMember(@Valid @RequestBody RoleChangeDTO dto, Authentication authentication) {
+        communityService.demoteMember(dto, authentication.getName());
+        return ResponseEntity.noContent().build();
     }
     
     

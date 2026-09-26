@@ -1,11 +1,8 @@
 package dev.paulbankl.gymleague.service;
 
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +14,9 @@ import dev.paulbankl.gymleague.dto.RoleChangeDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.ComMemberListDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityDetailDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityOverviewDTO;
+import dev.paulbankl.gymleague.exception.ConflictException;
+import dev.paulbankl.gymleague.exception.ForbiddenException;
+import dev.paulbankl.gymleague.exception.ResourceNotFoundException;
 import dev.paulbankl.gymleague.model.Community;
 import dev.paulbankl.gymleague.model.CommunityExercises;
 import dev.paulbankl.gymleague.model.CommunityMember;
@@ -47,14 +47,14 @@ public class CommunityService {
         this.exerciseRepository = exerciseRepository;
     }
     @Transactional
-    public boolean createCommunity(CommunityCreationDTO dto, String username) {
+    public void createCommunity(CommunityCreationDTO dto, String username) {
         if(communityRepository.existsByName(dto.name())) {
-            return false;
+            throw new ConflictException("Community with this name already exists");
         }
         User owner = userRepository.findByUsername(username).orElse(null);
 
 if (owner == null) {
-    return false;
+    throw new ResourceNotFoundException("User not found");
 }
         Community community = new Community(
         dto.name(),
@@ -65,12 +65,15 @@ if (owner == null) {
         //Community wird erschaffen und CommunityMember wird erschaffen und gespeichert
         communityRepository.save(community);
         communityMemberRepository.save(new CommunityMember(owner, community, CommunityRole.OWNER));
+        if(dto.exerciseIds() == null || dto.exerciseIds().isEmpty()) {
+            return;
+        }
         for(Long exerciseId : dto.exerciseIds()) {
-            CommunityExercises communityExercise = new CommunityExercises(community, exerciseRepository.findById(exerciseId).orElseThrow());
+            CommunityExercises communityExercise = new CommunityExercises(community, exerciseRepository.findById(exerciseId).orElseThrow(() -> new ResourceNotFoundException("Exercise not found")));
             communityExercisesRepository.save(communityExercise);
         }
-        return true;
     }
+
     public List<CommunityOverviewDTO> getAllCommunitiesForUser(String username) {
         return communityMemberRepository.findByUserUsername(username)
                 .stream()
@@ -87,10 +90,11 @@ if (owner == null) {
                 .toList();
     }
     public CommunityDetailDTO getCommunityDetails(Long id) {
+        Community community = communityRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Community not found"));
     CommunityExercises [] communityExercises = communityExercisesRepository.findByCommunityId(id).toArray(new CommunityExercises[0]);
     Exercise [] exercises = (communityExercises.length > 0) ? java.util.Arrays.stream(communityExercises).map(CommunityExercises::getExercise).toArray(Exercise[]::new) : new Exercise[0];
-    Community community = communityRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("Community not found"));
+    
     return new CommunityDetailDTO(
             community.getId(),
             community.getName(),
@@ -104,29 +108,38 @@ if (owner == null) {
 }
 
 @Transactional
-public boolean leaveCommunity(Long id, String username){
-   User user = userRepository.findByUsername(username).orElse(null);
-if (user == null) {
-    return false;
-}
+public void leaveCommunity(Long id, String username){
+   
+
 Community community = communityRepository.findById(id)
     .orElse(null);
 
 if (community == null) {
-    return false;
+    throw new ResourceNotFoundException("Community not found");
+}
+User user = userRepository.findByUsername(username).orElse(null);
+if (user == null) {
+    throw new ResourceNotFoundException("User not found");
+}
+if(!communityMemberRepository.existsByCommunityIdAndUserUsername(id, username)) {
+    throw new ConflictException("User is not a member of this community");
 }
     if(community.getOwner().getUsername().equals(username)) {
         if(communityMemberRepository.countByCommunityId(id) > 1) {
             findNewOwner(id, community);
-            return communityMemberRepository.deleteByCommunityIdAndUserUsername(id, username) > 0;
+            communityMemberRepository.deleteByCommunityIdAndUserUsername(id, username);
+            return;
         }
         
         communityExercisesRepository.deleteByCommunityId(id);
         communityMemberRepository.deleteByCommunityIdAndUserUsername(id, username);
         communityRepository.delete(community);
-        return true;
+        
     }
-    return communityMemberRepository.deleteByCommunityIdAndUserUsername(id, username) > 0;
+    else
+    {
+        communityMemberRepository.deleteByCommunityIdAndUserUsername(id, username);
+    }
 }
 private void findNewOwner(Long id, Community community){
     List<CommunityMember> members = communityMemberRepository.findByCommunityIdOrderByRoleDescJoinedAtAsc(id);
@@ -138,6 +151,9 @@ private void findNewOwner(Long id, Community community){
     community.setOwner(newOwner.getUser());
 }
 public List<ComMemberListDTO> getAllMembersOfCommunity(Long communityId) {
+    if (!communityRepository.existsById(communityId)) {
+        throw new ResourceNotFoundException("Community not found");
+    }
     return communityMemberRepository.findByCommunityIdOrderByRoleDescJoinedAtAsc(communityId)
             .stream()
             .map(member -> new ComMemberListDTO(
@@ -162,95 +178,112 @@ public List<CommunityOverviewDTO> get10RandomCommunities(String username) {
             .toList();
 }
 @Transactional 
-public boolean changeCommunity(CommunityChangeDTO dto , String username) {
+public void changeCommunity(CommunityChangeDTO dto , String username) {
     Community community = communityRepository.findByName(dto.name())
         .orElse(null);
     if (community == null) {
-        return false;
+       throw new ResourceNotFoundException("Community not found");
     }
     if(!community.getOwner().getUsername().equals(username)) {
-        return false;
+        throw new ForbiddenException("Only the owner can change the community");
     }
     community.setDescription(dto.description());
     community.setPrivate(dto.isPrivate());
     communityExercisesRepository.deleteByCommunityId(community.getId());
-    List<Exercise> exercises = exerciseRepository.findAllById(dto.exerciseIds());
-
-for (Exercise exercise : exercises) {
-    communityExercisesRepository.save(
-        new CommunityExercises(community, exercise)
-    );
+    
+if(dto.exerciseIds() == null || dto.exerciseIds().isEmpty()) {
+    return;
 }
-    return true;
+for (Long exerciseId : dto.exerciseIds()) {
+    Exercise exercise = exerciseRepository.findById(exerciseId)
+            .orElseThrow(() -> new ResourceNotFoundException("Exercise not found"));
+    CommunityExercises communityExercise = new CommunityExercises(community, exercise);
+    communityExercisesRepository.save(communityExercise);
+}
 }
 
 @Transactional
-    public boolean joinCommunity(CommunityJoinDTO dto, String username) { 
+    public void joinCommunity(CommunityJoinDTO dto, String username) { 
         User user = userRepository.findByUsername(username).orElse(null);
         Community community = communityRepository.findById(dto.communityId()).orElse(null);
-        if (user == null || community == null) {return false; // User or community not found
+        if (user == null || community == null) {throw new ResourceNotFoundException("User or community not found");
         }
         if (community.isPrivate()) {
-    return false;
+    throw new ForbiddenException("Cannot join a private community");
 }
 // Check if the user is already a member of the community
         if (communityMemberRepository.existsByCommunityIdAndUserUsername((dto.communityId()), username)) {
-            return false; // User is already a member
+            throw new ConflictException("User is already a member of the community");
         }  
         communityMemberRepository.save(new CommunityMember(user, community, CommunityRole.USER));
-        return true;
     }
 
     @Transactional 
-    public boolean kickMember(CommunityKickDTO dto, String username) {
+    public void kickMember(CommunityKickDTO dto, String username) {
+         Community community = communityRepository.findById(dto.communityId()).orElse(null);
+        if (community == null ) {
+            throw new ResourceNotFoundException("Community not found ");
+        }
+        if(!community.getOwner().getUsername().equals(username)) {
+            throw new ForbiddenException("Only the owner can kick members");
+        }
         if(username.equals(dto.kickUsername())){
-            return false; // Owner cannot kick themselves
+            throw new ConflictException("Owner cannot kick themselves");
         }
-        Community community = communityRepository.findById(dto.communityId()).orElse(null);
-        if (community == null || !community.getOwner().getUsername().equals(username)) {
-            return false; // Community not found or user is not the owner
-        }
-        return communityMemberRepository.deleteByCommunityIdAndUserUsername(dto.communityId(), dto.kickUsername()) > 0;
+        if(!communityMemberRepository.existsByCommunityIdAndUserUsername(dto.communityId(),dto.kickUsername())) {
+    throw new ResourceNotFoundException("User is not a member of this community");
+}
+        communityMemberRepository.deleteByCommunityIdAndUserUsername(dto.communityId(), dto.kickUsername());
         }
 
         @Transactional 
-        public boolean promoteMember(RoleChangeDTO dto, String username){
+        public void promoteMember(RoleChangeDTO dto, String username){
             Community community = communityRepository.findById(dto.communityId()).orElse(null);
-            if (community == null || !community.getOwner().getUsername().equals(username)) {
-                return false; // Community not found or user is not the owner
+            if (community == null) {
+                throw new ResourceNotFoundException("Community not found");
+            }
+            if (!community.getOwner().getUsername().equals(username)) {
+                throw new ForbiddenException("Only the owner can promote members");
             }
             CommunityMember member = communityMemberRepository.findByCommunityIdAndUserUsername(dto.communityId(), dto.targetUsername()).orElse(null);
-            if (member == null || member.getRole() == CommunityRole.OWNER) {
-                return false; // Member not found or already an owner
+            if (member == null ) {
+                throw new ResourceNotFoundException("Member not found");
+            }
+            if ( member.getRole() == CommunityRole.OWNER) {
+                throw new ConflictException("Can´t promote the owner");
             }
             switch (member.getRole()) {
                 case USER -> member.setRole(CommunityRole.MODERATOR);
                 case MODERATOR -> member.setRole(CommunityRole.ADMIN);
                 case ADMIN, OWNER -> {
-                    return false;
+                    throw new ConflictException("Member cannot be promoted further");
+                }
             }
-            }
-            return true;
         }
 
         @Transactional 
-        public boolean demoteMember(RoleChangeDTO dto, String username){
+        public void demoteMember(RoleChangeDTO dto, String username){
             Community community = communityRepository.findById(dto.communityId()).orElse(null);
-            if (community == null || !community.getOwner().getUsername().equals(username)) {
-                return false; // Community not found or user is not the owner
+            if (community == null ) {
+                throw new ResourceNotFoundException("Community not found");
+            }
+            if(!community.getOwner().getUsername().equals(username)) {
+                throw new ForbiddenException("Only the owner can demote members");
             }
             CommunityMember member = communityMemberRepository.findByCommunityIdAndUserUsername(dto.communityId(), dto.targetUsername()).orElse(null);
-            if (member == null || member.getRole() == CommunityRole.OWNER) {
-                return false; // Member not found or already an owner
+            if (member == null ) {
+                throw new ResourceNotFoundException("Member not found");
+            }
+            if ( member.getRole() == CommunityRole.OWNER) {
+                throw new ConflictException("Can´t demote the owner");
             }
             switch (member.getRole()) {
                 case MODERATOR -> member.setRole(CommunityRole.USER);
                 case ADMIN -> member.setRole(CommunityRole.MODERATOR);
                 case USER, OWNER -> {
-                    return false;
+                    throw new ConflictException("Member cannot be demoted further");
                 }
-            }
-            return true;}
+            }}
 }
     
     
