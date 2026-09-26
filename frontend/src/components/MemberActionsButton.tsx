@@ -46,7 +46,7 @@ export default function MemberActionsButton({ communityId, memberUsername, actio
                     }
                     break;
                 case "demote":
-                    const demoteSuccess = await CommunityService.demoteMember(communityId, memberUsername);
+                    const demoteSuccess = await CommunityService.demoteMember(communityId,  memberUsername);
                     if (demoteSuccess) {
                         onSuccess?.();
                     } else {
@@ -69,12 +69,14 @@ export default function MemberActionsButton({ communityId, memberUsername, actio
     }
     return (
         <>
-        <button onClick={() => setShowConfirmation(!showConfirmation)}>{showConfirmation ? "Cancel" : buttonText}</button>
+        {!showConfirmation && buttonText === "Demote" && <button onClick={() => setShowConfirmation(!showConfirmation)} className="border border-border p-1 rounded-md mt-2  text-muted">{buttonText}</button>}
+        {!showConfirmation && buttonText === "Promote" && <button onClick={() => setShowConfirmation(!showConfirmation)} className="border border-accent bg-accent p-1 rounded-md mt-2  text-white">{buttonText}</button>}
+        {!showConfirmation && buttonText === "Kick" && <button onClick={() => setShowConfirmation(!showConfirmation)} className="border border-red-accent p-1 rounded-md mt-2 bg-surface   text-accent">{buttonText}</button>}
         {showConfirmation && (
-            <div className="confirmation-dialog">
+            <div className="border-border-accent border p-2 rounded-md mt-2 bg-surface flex flex-col items-center gap-2">
                 <p>Are you sure you want to {buttonText.toLowerCase()} {memberUsername}?</p>
-                <button onClick={handleClick}>Yes</button>
-                <button onClick={() => setShowConfirmation(false)}>No</button>
+                <button onClick={handleClick} className="border border-accent text-accent p-1 rounded-md mt-2 bg-surface">Yes</button>
+                <button onClick={() => setShowConfirmation(false)} className="border-green-500 border text-green-500 p-1 rounded-md mt-2 bg-surface">No</button>
             </div>
         )}
            </>

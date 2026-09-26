@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import type { Community } from "../types/Community";
 import * as CommunityService from "../services/Communityservice";
 import type { Exercise } from "../types/Exercise";
-import * as Exerciseservice from "../services/Exerciseservice"; 
+import * as Exerciseservice from "../services/Exerciseservice";
 import CommunityExerciseCard from "../components/CommunityExerciseCard";
 
 type EditCommunityProps = {
@@ -21,13 +21,13 @@ export default function CommunityEdit({ community, onCommunityChange }: EditComm
 
 
     useEffect(() => {
-            Exerciseservice.getExercises().then((data) => {
-                setExercises(data);
-            }).catch((error) => {
-                console.error("Failed to fetch exercises:", error);
-            });
-            setCheckedExercises(community?.exercises.map(exercise => exercise.id) || []);
-        }, []);
+        Exerciseservice.getExercises().then((data) => {
+            setExercises(data);
+        }).catch((error) => {
+            console.error("Failed to fetch exercises:", error);
+        });
+        setCheckedExercises(community?.exercises.map(exercise => exercise.id) || []);
+    }, []);
 
 
     async function HandleChange(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -41,7 +41,7 @@ export default function CommunityEdit({ community, onCommunityChange }: EditComm
                 setError("No community data available.");
                 return;
             }
-            if(description.length > 255) {
+            if (description.length > 255) {
                 setError("Description cannot exceed 255 characters.");
                 return;
             }
@@ -60,39 +60,40 @@ export default function CommunityEdit({ community, onCommunityChange }: EditComm
             setError(null);
         }
     }
-        return (
-            <div>
-                <h1>Edit Community</h1>
-                <p>Here you can edit your community details.</p>
-                {error && <p style={{ color: "red" }}>Failed to edit community. <br></br>Please try again.</p>}
-                <div className="edit-community-form">
-                    <form>
-                        <br />
-                        <label htmlFor="description">
-                            Description:
-                            <textarea defaultValue={community?.description} onChange={(e) => setDescription(e.target.value)}></textarea>
-                        </label>
-                        <br />
-                        <label htmlFor="isPrivate">
-                            Private:
-                            <input type="checkbox" defaultChecked={community?.isPrivate} onChange={(e) => setIsPrivate(e.target.checked)} />
-                        </label>
-                        <br />
-                            {exercises.map((exercise) => (
-                                <CommunityExerciseCard
-                                    key={exercise.id}
-                                    exercise={exercise} checked={checkedExercises.includes(exercise.id)} onChange={(checked : boolean) => {
-                                    if (checked) {
-                                        setCheckedExercises([...checkedExercises, exercise.id]);
-                                    } else {
-                                        setCheckedExercises(checkedExercises.filter((id) => id !== exercise.id));
-                                    }
-                                }}                            />
-                            ))}
-                        <br />
-                        <button onClick={HandleChange}>Save Changes</button>
-                    </form>
-                </div>
+    return (
+        <div className="flex w-[80vw] flex-col items-center gap-4  md:w-[50vw]">
+            <h1 className="text-2xl font-heading">Edit Community</h1>
+            <p className="text-muted">Here you can edit your community details.</p>
+            {error && <p className="text-red-500 border border-red-500 p-2 rounded-md" >Failed to edit community. <br></br>Please try again.</p>}
+            <div className="flex flex-col w-full ">
+                <form className="flex flex-col items-center w-full">
+                    <br />
+                    <label htmlFor="description" className="text-muted block">
+                        Description:
+                    </label>
+                    <textarea defaultValue={community?.description} onChange={(e) => setDescription(e.target.value)} className="ml-[5%] bg-surface-2 self-start block w-[90%] border border-border rounded-md p-2 mb-4 "></textarea>
+
+                    <br />
+                    <label htmlFor="isPrivate" className="text-muted block">
+                        Private:
+                        <input type="checkbox" defaultChecked={community?.isPrivate} onChange={(e) => setIsPrivate(e.target.checked)} />
+                    </label>
+                    <br />
+                    {exercises.map((exercise) => (
+                        <CommunityExerciseCard
+                            key={exercise.id}
+                            exercise={exercise} checked={checkedExercises.includes(exercise.id)} onChange={(checked: boolean) => {
+                                if (checked) {
+                                    setCheckedExercises([...checkedExercises, exercise.id]);
+                                } else {
+                                    setCheckedExercises(checkedExercises.filter((id) => id !== exercise.id));
+                                }
+                            }} />
+                    ))}
+                    <br />
+                    <button onClick={HandleChange} className="bg-accent border border-border rounded-md p-2 hover:bg-accent-dim pl-5 pr-5">Save Changes</button>
+                </form>
             </div>
-        );
-    }
+        </div>
+    );
+}

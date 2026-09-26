@@ -15,7 +15,8 @@ type EntryListProps = {
 export default function EntryList({ exerciseId, refresh, onRefresh }: EntryListProps) {
     const username = sessionStorage.getItem("username");
     const [entries, setEntries] = useState<Entry[] | null>(null);
-    const [error, setError] = useState(false);
+    const [error, setError] = useState<String | null>(null);
+    const [loading, setLoading] = useState(true);
 
     const [EditFormid, setEditFormid] = useState<number | null>(null);
     const [editWeight, setEditWeight] = useState("");
@@ -24,20 +25,17 @@ export default function EntryList({ exerciseId, refresh, onRefresh }: EntryListP
     useEffect(() => {
         if (exerciseId && username) {
             Entryservice.getEntriesByExerciseIdForUser(exerciseId)
-                .then(setEntries)
+                .then(setEntries).then(() => setLoading(false))
                 .catch((error: Error) => {
                     console.error("Error fetching entries:", error);
-                    setError(true);
-                });
+                    setError(error.message);
+                })
+                
         }
     }, [exerciseId, refresh]); // Abhängigkeit von refresh und onEntryDeleted, damit die Liste aktualisiert wird, wenn ein Eintrag gelöscht wurde
 
     if (!exerciseId) {
         return <div>Invalid exercise.</div>;
-    }
-
-    if (error) {
-        return <div>Server Error</div>;
     }
 
     if (!entries) {
@@ -52,11 +50,11 @@ export default function EntryList({ exerciseId, refresh, onRefresh }: EntryListP
         const weightNumber = Number(editWeight);
         const repsNumber = Number(editReps);
         if (weightNumber <= 0 || repsNumber <= 0) {
-            alert("Weight and reps must be greater than 0.");
+            setError("Weight and reps must be greater than 0.");
             return;
         }
         if (weightNumber === entry.weight && repsNumber === entry.reps) {
-            alert("No changes made.");
+            setError("No changes made to the entry.");
             return;
         }
         try {
@@ -67,7 +65,7 @@ export default function EntryList({ exerciseId, refresh, onRefresh }: EntryListP
             onRefresh(); // Refresh the list after editing
         }
         catch (error) {
-            alert("Failed to edit entry.");
+            setError("Failed to edit entry.");
             console.error(error);
         }
     }
@@ -105,7 +103,7 @@ export default function EntryList({ exerciseId, refresh, onRefresh }: EntryListP
                     </div>
                     {EditFormid === entry.id && <h1 className="text-xl font-heading self-center mt-4">Edit-Menu:</h1>}
                     {EditFormid === entry.id && <form onSubmit={(event) => handleEditSubmit(entry, event)} className="flex flex-col items-center mt-4 md:flex-row justify-center md:gap-4">
-
+                        {error && <p className="text-red-500">{error}</p>}
                         <label htmlFor="editWeight" className="text-muted">Weight</label>
                         <input id="editWeight" type="number" value={editWeight} onChange={(e) => setEditWeight(e.target.value)} className="bg-red-950 border border-border max-w-[70%] rounded-md p-2 mb-4" />
                         <label htmlFor="editReps" className="text-muted">Reps</label>

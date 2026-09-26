@@ -38,6 +38,7 @@ export default function EntryForm({ exerciseId, exerciseName, onEntryAdded }: En
         } else {
             alert("User not logged in.");
         }
+        setShowForm(false); // Close the form after submission
     }
     return (<div>
         {!showForm && <button className="bg-accent border border-border rounded-md p-2 pl-4 pr-4 hover:bg-accent-dim " onClick={() => { setShowForm(!showForm) }}>{showForm ? "X" : "Add Entry"}</button>}

@@ -1,8 +1,10 @@
 import type { Community } from "../types/Community";
 import CommunityDetailCard from "../components/CommunityDetailCard";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import * as CommunityService from "../services/Communityservice";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
+import MemberList from "../components/MemberList";
 
 
 
@@ -15,15 +17,15 @@ export default function PublicCommunityDetailPage() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
 
-    if(!id) {
+    if (!id) {
         return <div>Invalid community ID</div>;
     }
 
-    const username = sessionStorage.getItem("username");
+    const username = useContext(AuthContext)?.username;
 
     const handleJoinCommunity = async () => {
         if (!username) {
-            console.error("No username found in session storage.");
+            console.error("Login");
             return;
         }
         try {
@@ -39,7 +41,8 @@ export default function PublicCommunityDetailPage() {
         }
     };
 
-    useEffect(() => {setCommunity(id ? null : community);
+    useEffect(() => {
+        setCommunity(id ? null : community);
         CommunityService.getCommunityDetails(Number(id)).then((data) => {
             setCommunity(data);
         }).catch((error) => {
@@ -52,7 +55,7 @@ export default function PublicCommunityDetailPage() {
         });
     }, []);
 
-    if(error) {
+    if (error) {
         return <div>Server Error</div>;
     }
 
@@ -60,16 +63,22 @@ export default function PublicCommunityDetailPage() {
         return <div>Loading community details...</div>;
     }
     return (
-        <div>
-            { <h1>{community.name}</h1> }
-            {<CommunityDetailCard community={community} members={members} /> }
-            <h1>Exercises</h1>
-            {community.exercises.length === 0 ? <p>No exercises available.</p> : null}
-            {community.exercises.map((exercise) => (<h1 key={exercise.id}>{exercise.name}</h1>))}
-            <button onClick={handleJoinCommunity}>Join Community</button>
-            <br></br>
-            <Link to="/community/all">Back to Community</Link>
-                </div>
-            );
-            
+        <div className="flex flex-col">
+            <div className="flex flex-col items-center mx-auto mt-[2vw] w-[80vw] md:w-[50vw] border border-border rounded-md p-4 bg-surface">
+                <h1 className="font-heading mt-2 text-[clamp(22px,15vw,72px)] font-black ">{community.name}</h1>
+                <p className="text-muted mb-4 ">{community.description}</p>
+                {<CommunityDetailCard community={community} />}
+                <h1>Exercises</h1>
+                {community.exercises.length === 0 ? <p className="text-muted mt-2">No exercises available.</p> : null}
+                {community.exercises.map((exercise) => (<h1 key={exercise.id} className="text-muted">{exercise.name}</h1>))}
+            </div>
+            <MemberList community={community} members={members}></MemberList>
+            <div className="flex flex-col items-center mt-10">
+                <button onClick={handleJoinCommunity} className="border border-accent text-white  rounded-md p-2 bg-accent">Join Community</button>
+                <Link to="/community/all" className="border border-border p-2 rounded-md mt-2  text-muted">Back to Community</Link>
+            </div>
+        </div>
+
+    );
+
 }

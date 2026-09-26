@@ -3,45 +3,38 @@ import MemberActionsButton from "./MemberActionsButton";
 
 type CommunityDetailCardProps = {
     community: Community;
-    members: { username: string; role: string; joinedAt: string }[];
-    refresh?: () => void;
 };
 
-export default function CommunityDetailCard({ community, members, refresh }: CommunityDetailCardProps) {
-    const username = sessionStorage.getItem("username");
+export default function CommunityDetailCard({ community}: CommunityDetailCardProps) {
+    
     return (
         <div>
-            <p>{community.description}</p>
-            <p>Owner: {community.owner}</p>
-            <p>Members: {community.memberCount}</p>
-            <p>Created: {new Date(community.createdAt).toLocaleDateString()}</p>
-            <p>Private: {community.isPrivate ? "Yes" : "No"}</p>
-            
-            <h2>Members</h2>
-            <ul>
-                {members.map((member) => (
-                    <li key={member.username} className="member-item">
-                        {member.username} - {member.role} - Joined: {new Date(member.joinedAt).toLocaleDateString()} 
-                        {community.owner === username && member.username !== username && community.id && <MemberActionsButton communityId={community.id} memberUsername={member.username} action="kick" onSuccess={refresh} />}
-                        {community.owner === username && member.username !== username && community.id && member.role !== "ADMIN" && <MemberActionsButton communityId={community.id} memberUsername={member.username} action="promote" onSuccess={refresh} />}
-                        {community.owner === username && member.username !== username && community.id && member.role !== "USER"  && <MemberActionsButton communityId={community.id} memberUsername={member.username} action="demote" onSuccess={refresh} />}
-                    </li>
-                ))}
-            </ul>
-            {community.exercises.length > 0 && (
-                <>
-                    <h2>Exercises</h2>
-                    <ul>
-                        {community.exercises.map((exercise) => (
-                            <li key={exercise.id}>{exercise.name}</li>
-                        ))}
-                    </ul>
-                </>
-            )}
-            
-            
+            <div className="flex flex-col items-start justify-between mt-2 md:flex-row">
+                <div className="flex flex-row mr-4">
+                    <p className="text-muted mr-2">Owner: </p>
+                    <p className="font-body">{community.owner}</p>
+                </div>
+
+                <div className="flex flex-row mr-4">
+                    <p className="text-muted mr-2"> Created At: </p>
+                    <p className="font-body"> {new Date(community.createdAt).toLocaleDateString()}</p>
+                </div>
+
+                <div className="flex flex-row mr-4">
+                    <p className="text-muted mr-2">Private: </p>
+                    <p className="font-body">{community.isPrivate ? "Yes" : "No"}</p>
+                </div>
+
+                <div className="flex flex-row mr-4">
+                    <p className="text-muted mr-2">Members: </p>
+                    <p className="font-body">{community.memberCount}</p>
+                </div>
             </div>
 
-            
+
+
+        </div>
+
+
     )
 }
