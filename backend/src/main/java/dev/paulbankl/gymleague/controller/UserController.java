@@ -1,6 +1,5 @@
 package dev.paulbankl.gymleague.controller;
 
-import dev.paulbankl.gymleague.repository.UserRepository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,7 +33,7 @@ import dev.paulbankl.gymleague.dto.UpdateDisplayNameDTO;
 import java.util.Map;
 
 @RestController
-@RequestMapping("api/users")
+@RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
     private final AuthService authService;
@@ -48,13 +48,9 @@ public class UserController {
     }
     @PostMapping("/register")
 public ResponseEntity<Void> registerUser(@Valid @RequestBody RegisterDTO registerDTO) {
-    boolean success = authService.tryRegisterUser(registerDTO);
+    authService.tryRegisterUser(registerDTO);
 
-    if (!success) {
-        return ResponseEntity.status(409).build();
-    }
-
-    return ResponseEntity.status(201).build();
+    return ResponseEntity.status(HttpStatus.CREATED).build();
 }
 @GetMapping("/me")
 public ResponseEntity<String> me(Authentication authentication) {
@@ -64,9 +60,6 @@ public ResponseEntity<String> me(Authentication authentication) {
 @GetMapping("/{username}")
 public Map<String, Object> userExists(@PathVariable String username) {
 
-    if (username == null || username.isEmpty()) {
-        return Map.of("exists", false);
-    }
 
     if (userService.existsByUsername(username)) {
         return Map.of(
@@ -95,8 +88,9 @@ securityContextRepository.saveContext(context, request, response);
 }
 
     @PutMapping("/updateDisplayName")
-    public boolean updateDisplayName(@Valid @RequestBody UpdateDisplayNameDTO updateDisplayNameDTO, Authentication authentication) {
-            return userService.updateDisplayName(updateDisplayNameDTO, authentication);
+    public ResponseEntity<Void> updateDisplayName(@Valid @RequestBody UpdateDisplayNameDTO updateDisplayNameDTO, Authentication authentication) {
+            userService.updateDisplayName(updateDisplayNameDTO, authentication);
+            return ResponseEntity.noContent().build();
         }
 
         @GetMapping("/csrf")

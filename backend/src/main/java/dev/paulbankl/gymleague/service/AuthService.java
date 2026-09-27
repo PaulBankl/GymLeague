@@ -27,15 +27,6 @@ public class AuthService {
         }
         userRepository.save(new User(registerDTO.username(), registerDTO.email(), passwordEncoder.encode(registerDTO.password())));
     }
-    //schaut ob user exisitert und ob das passwort stimmt
-    public boolean tryLoginUser(LoginDTO loginDTO) {
-        User user = userRepository.findByUsername(loginDTO.username())
-    .orElse(null);
-
-        if (user == null) {
-    return false;
-}
-        return passwordEncoder.matches(loginDTO.password(), user.getPasswordHash());
-    }
+   
     
 }

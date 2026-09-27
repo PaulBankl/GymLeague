@@ -3,8 +3,6 @@ package dev.paulbankl.gymleague.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.paulbankl.gymleague.service.AuthService;
-import dev.paulbankl.gymleague.service.CommunityMemberService;
 import dev.paulbankl.gymleague.service.CommunityService;
 import jakarta.validation.Valid;
 
@@ -19,6 +17,7 @@ import dev.paulbankl.gymleague.dto.ResponseDTOs.ComMemberListDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityDetailDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityOverviewDTO;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
@@ -32,29 +31,29 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("api/community")
+@RequestMapping("/api/community")
 public class CommunityController {
     private final CommunityService communityService;
-    private final CommunityMemberService communityMemberService;
+  
 
-    public CommunityController(CommunityService communityService, CommunityMemberService communityMemberService) {
+    public CommunityController(CommunityService communityService) {
         this.communityService = communityService;
-        this.communityMemberService = communityMemberService;
+
     }
 
     @PostMapping("create")
-    public ResponseEntity<Void> postMethodName(@Valid @RequestBody CommunityCreationDTO dto, Authentication authentication) {
+    public ResponseEntity<Void> createCommunity(@Valid @RequestBody CommunityCreationDTO dto, Authentication authentication) {
         communityService.createCommunity(dto, authentication.getName());
-        return ResponseEntity.status(201).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @GetMapping("/all")
-    public List<CommunityOverviewDTO> getAllCommunitiesForUser(Authentication authentication) {       
-        return communityService.getAllCommunitiesForUser(authentication.getName());     
+    public ResponseEntity<List<CommunityOverviewDTO>> getAllCommunitiesForUser(Authentication authentication) {       
+        return ResponseEntity.ok(communityService.getAllCommunitiesForUser(authentication.getName()));     
         }
 
     @GetMapping("/{id}")
-    public CommunityDetailDTO getCommunityDetails(@PathVariable Long id) {
-        return  communityService.getCommunityDetails(id);
+    public ResponseEntity<CommunityDetailDTO> getCommunityDetails(@PathVariable Long id) {
+        return ResponseEntity.ok(communityService.getCommunityDetails(id));
     }
     @PostMapping("/leave/{id}")
     public ResponseEntity<Void> leaveCommunity(@PathVariable Long id, Authentication authentication) {
@@ -62,12 +61,12 @@ public class CommunityController {
         return ResponseEntity.noContent().build();
     }
     @GetMapping("/members/{id}")
-    public List<ComMemberListDTO> getAllMembersOfCommunity(@PathVariable Long id) {
-        return communityService.getAllMembersOfCommunity(id);
+    public ResponseEntity<List<ComMemberListDTO>> getAllMembersOfCommunity(@PathVariable Long id) {
+        return ResponseEntity.ok(communityService.getAllMembersOfCommunity(id));
     }
     @GetMapping("/random")
-    public List<CommunityOverviewDTO> getrandomCommunities(Authentication authentication) {
-        return communityService.get10RandomCommunities(authentication.getName());
+    public ResponseEntity<List<CommunityOverviewDTO>> getrandomCommunities(Authentication authentication) {
+        return ResponseEntity.ok(communityService.get10RandomCommunities(authentication.getName()));
     }
     @PostMapping("/change")
     public ResponseEntity<Void> changeCommunity(@Valid @RequestBody CommunityChangeDTO dto, Authentication authentication) {
@@ -77,7 +76,7 @@ public class CommunityController {
     @PostMapping("/join")
     public ResponseEntity<Void> joinCommunity(@Valid @RequestBody CommunityJoinDTO dto, Authentication authentication) {
         communityService.joinCommunity(dto, authentication.getName());
-        return ResponseEntity.status(201).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @PostMapping("/kick")
     public ResponseEntity<Void> kickMember(@Valid @RequestBody CommunityKickDTO dto, Authentication authentication) {

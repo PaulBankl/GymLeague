@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import dev.paulbankl.gymleague.dto.ResponseDTOs.ExerciseDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.ExerciseInfoDTO;
+import dev.paulbankl.gymleague.exception.ResourceNotFoundException;
 import dev.paulbankl.gymleague.model.Entry;
 import dev.paulbankl.gymleague.model.Exercise;
 import dev.paulbankl.gymleague.repository.ExerciseRepository;
@@ -19,10 +20,7 @@ public class ExerciseService {
         this.exerciseRepository = exerciseRepository;
         this.entryService = entryService;
     }
-    public Exercise getExerciseByName(String name) {
-        return exerciseRepository.findByName(name)
-            .orElseThrow(() -> new IllegalArgumentException("Exercise with name " + name + " not found"));
-    }
+   
     public List<ExerciseDTO> getAllExercises() {
         List<Exercise> exercises = exerciseRepository.findAll();
         return exercises.stream()
@@ -31,10 +29,13 @@ public class ExerciseService {
     }
     public ExerciseDTO getExerciseById(Long id) {
         Exercise exercise = exerciseRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Exercise with id " + id + " not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Exercise with id " + id + " not found"));
         return new ExerciseDTO(exercise.getId(), exercise.getName());
     }
     public ExerciseInfoDTO getExerciseInfoById(Long id, String username) {
+        if (!exerciseRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Exercise with id " + id + " not found");
+        }
         List<Entry> entries = entryService.getEntryForUserAndExercise(id, username);
         ProgressInfo progress = getProgressOneRm(entries);
         double progressPercent = 0.0;

@@ -1,12 +1,13 @@
 package dev.paulbankl.gymleague.service;
 
-import java.util.Optional;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import dev.paulbankl.gymleague.repository.UserRepository;
 import dev.paulbankl.gymleague.dto.UpdateDisplayNameDTO;
+import dev.paulbankl.gymleague.exception.ConflictException;
+import dev.paulbankl.gymleague.exception.ResourceNotFoundException;
 import dev.paulbankl.gymleague.model.User;
 
 @Service
@@ -23,27 +24,24 @@ public class UserService {
     
     //returned den user wenn er existiert
     public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username).get();
+       User user = userRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("User with username " + username + " not found"));
+       return user;
     }
 
     //updated den displayname des users
-    public boolean updateDisplayName(UpdateDisplayNameDTO updateDisplayNameDTO, Authentication auth) {
+    public void updateDisplayName(UpdateDisplayNameDTO updateDisplayNameDTO, Authentication auth) {
         String username = auth.getName();
         String displayName = updateDisplayNameDTO.displayName();
 
         if (userRepository.existsByDisplayName(displayName)) {
-            return false;
+            throw new ConflictException("Display name already exists");
         }
-        if(!userRepository.existsByUsername(username)) {
-            return false;
-        }
-        User user = userRepository.findByUsername(username).get();
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("User with username " + username + " not found"));
         user.setDisplayName(displayName);
-         userRepository.save(user);
-         return true;
+        userRepository.save(user);
 }
     public String getDisplayNameByUsername(String username) {
-        User user = userRepository.findByUsername(username).get();
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("User with username " + username + " not found"));
         return user.getDisplayName();
     }
     public boolean existsByDisplayName(String displayName) {

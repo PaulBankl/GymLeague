@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import dev.paulbankl.gymleague.dto.EntryChangeDTO;
 import dev.paulbankl.gymleague.dto.EntryCreationDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.EntryDTO;
+import dev.paulbankl.gymleague.exception.ForbiddenException;
+import dev.paulbankl.gymleague.exception.ResourceNotFoundException;
 import dev.paulbankl.gymleague.model.Entry;
 import dev.paulbankl.gymleague.model.Exercise;
 import dev.paulbankl.gymleague.repository.EntryRepository;
@@ -35,22 +37,18 @@ public class EntryService {
         )).toList();
     }
     @Transactional
-    public boolean insertEntry(EntryCreationDTO entryDTO, String username) {
+    public void insertEntry(EntryCreationDTO entryDTO, String username) {
         Exercise exercise = exerciseRepository
             .findById(entryDTO.exerciseId())
-            .orElse(null);
+            .orElseThrow(() -> new ResourceNotFoundException("Exercise not found"));
 
-    if (exercise == null) {
-            return false;
-    }
-        Entry entry = new Entry(entryDTO.weight(), entryDTO.reps(),userService.getUserByUsername(username), exerciseRepository.findById(entryDTO.exerciseId()).orElse(null));
+        Entry entry = new Entry(entryDTO.weight(), entryDTO.reps(),userService.getUserByUsername(username), exercise);
         
         entryRepository.save(entry);
-        return true;
     }
     public EntryDTO getEntryById(Long id) {
         Entry entry = entryRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Entry with id " + id + " not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Entry with id " + id + " not found"));
         EntryDTO entryDTO = new EntryDTO(
             entry.getId(),
             entry.getWeight(),
@@ -62,24 +60,24 @@ public class EntryService {
         return entryDTO;
     }
     @Transactional
-    public boolean updateEntry(EntryChangeDTO entryChangeDTO, String username) {
+    public void updateEntry(EntryChangeDTO entryChangeDTO, String username) {
         Entry entry = entryRepository.findById(entryChangeDTO.id())
-            .orElseThrow(() -> new IllegalArgumentException("Entry with id " + entryChangeDTO.id() + " not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Entry with id " + entryChangeDTO.id() + " not found"));
         if (!entry.getUser().getUsername().equals(username)) {
-            return false;
+            throw new ForbiddenException("You are not allowed to update this entry");
         }
         entry.setWeight(entryChangeDTO.weight());
         entry.setReps(entryChangeDTO.reps());
         entryRepository.save(entry);
-        return true;
 }
 @Transactional
-public boolean deleteEntry(Long id, String username) {
-    if (!entryRepository.existsById(id) || !entryRepository.findById(id).get().getUser().getUsername().equals(username)) {
-        return false;
+public void deleteEntry(Long id, String username) {
+    Entry entry = entryRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Entry with id " + id + " not found"));
+    if ( !entry.getUser().getUsername().equals(username)) {
+        throw new ForbiddenException("You are not allowed to delete this entry");
     }
-    entryRepository.deleteById(id);
-    return true;
+    entryRepository.delete(entry);
 }
 
 //Holt alle Einträge für einen bestimmten Benutzer und eine bestimmte Übung
