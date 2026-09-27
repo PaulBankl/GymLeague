@@ -1,6 +1,7 @@
 package dev.paulbankl.gymleague.service;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +15,8 @@ import dev.paulbankl.gymleague.dto.RoleChangeDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.ComMemberListDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityDetailDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityOverviewDTO;
+import dev.paulbankl.gymleague.dto.ResponseDTOs.ExerciseRankingDTO;
+import dev.paulbankl.gymleague.dto.ResponseDTOs.UserRankingDTO;
 import dev.paulbankl.gymleague.exception.ConflictException;
 import dev.paulbankl.gymleague.exception.ForbiddenException;
 import dev.paulbankl.gymleague.exception.ResourceNotFoundException;
@@ -21,6 +24,7 @@ import dev.paulbankl.gymleague.model.Community;
 import dev.paulbankl.gymleague.model.CommunityExercises;
 import dev.paulbankl.gymleague.model.CommunityMember;
 import dev.paulbankl.gymleague.model.CommunityRole;
+import dev.paulbankl.gymleague.model.Entry;
 import dev.paulbankl.gymleague.model.Exercise;
 import dev.paulbankl.gymleague.repository.CommunityRepository;
 import dev.paulbankl.gymleague.repository.ExerciseRepository;
@@ -38,13 +42,16 @@ public class CommunityService {
     private final UserRepository userRepository;
     private final CommunityExercisesRepository communityExercisesRepository;
     private final ExerciseRepository exerciseRepository;
+    private final EntryService entryService;
+    
 
-    public CommunityService(CommunityRepository communityRepository, CommunityMemberRepository communityMemberRepository, UserRepository userRepository, CommunityExercisesRepository communityExercisesRepository, ExerciseRepository exerciseRepository) {
+    public CommunityService(CommunityRepository communityRepository, CommunityMemberRepository communityMemberRepository, UserRepository userRepository, CommunityExercisesRepository communityExercisesRepository, ExerciseRepository exerciseRepository, CommunityMemberService communityMemberService, EntryService entryService) {
         this.communityRepository = communityRepository;
         this.communityMemberRepository = communityMemberRepository;
         this.userRepository = userRepository;
         this.communityExercisesRepository = communityExercisesRepository;
         this.exerciseRepository = exerciseRepository;
+        this.entryService = entryService;
     }
     @Transactional
     public void createCommunity(CommunityCreationDTO dto, String username) {
@@ -284,6 +291,35 @@ for (Long exerciseId : dto.exerciseIds()) {
                     throw new ConflictException("Member cannot be demoted further");
                 }
             }}
-}
+
+            public List<UserRankingDTO> getCommunityRanking(Long communityid, String username){
+                if(!communityMemberRepository.existsByCommunityIdAndUserUsername(communityid, username)){
+                    throw new ForbiddenException("Only Member can see the ranking!!!");
+                }
+                List<UserRankingDTO> rankingList = new ArrayList<>();
+                
+                List<CommunityMember> members = communityMemberRepository.findAllByCommunityId(communityid);
+                List<User> users = members.stream().map(CommunityMember -> CommunityMember.getUser()).toList();
+                List<CommunityExercises> comexercises = communityExercisesRepository.findByCommunityId(communityid);
+                List<Exercise> exercises = comexercises.stream().map(CommunityExercises -> CommunityExercises.getExercise()).toList();
+                for(User user : users){
+                    List<ExerciseRankingDTO> exList = new ArrayList<>();
+                     double total = 0.0;
+                    for(Exercise exercise : exercises){
+                        Double oneRm = entryService.getBestOneRMForUserAndExercise(exercise.getId(), user.getUsername());
+                        exList.add(new ExerciseRankingDTO(exercise.getName(), exercise.getId(), oneRm));
+                         total += oneRm;
+                    }
+                   
+                   
+
+                    rankingList.add(new UserRankingDTO(user.getUsername(), exList, total));
+                    }
+                    return rankingList;
+                }
+
+            }
+
+
     
     

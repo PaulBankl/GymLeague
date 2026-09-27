@@ -117,6 +117,18 @@ public Entry getBestEntryForUserAndExercise(Long exerciseId, String username) {
 
     return bestEntry;
 }
+public Double getBestOneRMForUserAndExercise(Long exerciseId, String username) {
+    List<Entry> entries =
+        entryRepository.findByUserUsernameAndExerciseIdOrderByDateDesc(username, exerciseId);
+
+    Double bestOneRM = 0.0;
+    for(Entry entry: entries){
+        if(estimateOneRm(entry) > bestOneRM){
+            bestOneRM = estimateOneRm(entry);
+        }
+    }
+    return bestOneRM;
+}
     //Helpfunction to calculate the 1RM based on the Epley formula
     private double estimateOneRm(Entry entry) {
     return entry.getWeight() * (1 + entry.getReps() / 30.0);
