@@ -15,8 +15,13 @@ export async function register(username: string, password: string, email: string
             email
         })
     });
-    
-   return response.ok;
+
+    if(!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message ?? response.statusText ?? "Request failed");
+    }
+
+    return true;
 }
 
 export async function login(username: string, password: string) {
@@ -32,7 +37,12 @@ export async function login(username: string, password: string) {
             })
         }
     );
-   return response.ok;
+   if(!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message ?? response.statusText ?? "Request failed");
+    }
+
+    return true;
 }
 
 export async function getUser() {
@@ -55,5 +65,10 @@ export async function logout(): Promise<boolean> {
         method: "POST",
     });
 
-    return response.ok;
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message ?? response.statusText ?? "Request failed");
+    }
+
+    return true;
 }
