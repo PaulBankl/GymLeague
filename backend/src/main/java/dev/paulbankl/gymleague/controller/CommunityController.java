@@ -16,6 +16,7 @@ import dev.paulbankl.gymleague.dto.RoleChangeDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.ComMemberListDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityDetailDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityOverviewDTO;
+import dev.paulbankl.gymleague.dto.ResponseDTOs.UserRankingDTO;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -97,8 +98,9 @@ public class CommunityController {
     }
     
     @GetMapping("/ranking/{id}")
-    public String getRankingString(@PathVariable Long communityId, Authentication authentication) {
-        return "jo";
+    public ResponseEntity<List<UserRankingDTO>> getRankingString(@PathVariable Long communityId, Authentication authentication) {
+        return ResponseEntity.ok(communityService.getCommunityRanking(communityId, authentication.getName()));
+
     }
     
     
