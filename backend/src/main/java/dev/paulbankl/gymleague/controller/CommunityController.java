@@ -97,8 +97,8 @@ public class CommunityController {
         return ResponseEntity.noContent().build();
     }
     
-    @GetMapping("/ranking/{id}")
-    public ResponseEntity<List<UserRankingDTO>> getRankingString(@PathVariable Long communityId, Authentication authentication) {
+    @GetMapping("/ranking/{communityId}")
+    public ResponseEntity<List<UserRankingDTO>> getRanking(@PathVariable Long communityId, Authentication authentication) {
         return ResponseEntity.ok(communityService.getCommunityRanking(communityId, authentication.getName()));
 
     }
