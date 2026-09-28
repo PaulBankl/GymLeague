@@ -71,11 +71,14 @@ export default function CommunityDetailPage() {
                 )}
 
             </div>
-                <MemberList community={community} members={members} refresh={() => setRefresh(refresh + 1)} />
+            <MemberList community={community} members={members} refresh={() => setRefresh(refresh + 1)} />
 
             <div className="flex flex-col items-center">
+                <button onClick={() => navigate(`/community/ranking/${id}`)} className="border border-border p-2  bg-accent rounded-md  mt-4 text-white">View Ranking</button>
                 <button onClick={() => navigate("/community")} className="border border-border p-2 rounded-md mt-2  text-muted">Back to Overview</button>
+                <br></br>
                 <button onClick={buttonLeave} className="border border-accent p-2 rounded-md  mt-4 text-accent">Leave Community</button>
+
             </div>
         </>
     );

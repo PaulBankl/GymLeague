@@ -15,7 +15,9 @@ import dev.paulbankl.gymleague.dto.RoleChangeDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.ComMemberListDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityDetailDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityOverviewDTO;
+import dev.paulbankl.gymleague.dto.ResponseDTOs.ExerciseDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.ExerciseRankingDTO;
+import dev.paulbankl.gymleague.dto.ResponseDTOs.RankingDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.UserRankingDTO;
 import dev.paulbankl.gymleague.exception.ConflictException;
 import dev.paulbankl.gymleague.exception.ForbiddenException;
@@ -24,7 +26,6 @@ import dev.paulbankl.gymleague.model.Community;
 import dev.paulbankl.gymleague.model.CommunityExercises;
 import dev.paulbankl.gymleague.model.CommunityMember;
 import dev.paulbankl.gymleague.model.CommunityRole;
-import dev.paulbankl.gymleague.model.Entry;
 import dev.paulbankl.gymleague.model.Exercise;
 import dev.paulbankl.gymleague.repository.CommunityRepository;
 import dev.paulbankl.gymleague.repository.ExerciseRepository;
@@ -292,16 +293,19 @@ for (Long exerciseId : dto.exerciseIds()) {
                 }
             }}
 
-            public List<UserRankingDTO> getCommunityRanking(Long communityid, String username){
+            public RankingDTO getCommunityRanking(Long communityid, String username){
+                List<UserRankingDTO> rankingList = new ArrayList<>();
+                Community community = communityRepository.findById(communityid).orElseThrow(() -> new ResourceNotFoundException("Community not found."));
                 if(!communityMemberRepository.existsByCommunityIdAndUserUsername(communityid, username)){
                     throw new ForbiddenException("Only Member can see the ranking!!!");
                 }
-                List<UserRankingDTO> rankingList = new ArrayList<>();
-                
                 List<CommunityMember> members = communityMemberRepository.findAllByCommunityId(communityid);
                 List<User> users = members.stream().map(CommunityMember -> CommunityMember.getUser()).toList();
                 List<CommunityExercises> comexercises = communityExercisesRepository.findByCommunityId(communityid);
                 List<Exercise> exercises = comexercises.stream().map(CommunityExercises -> CommunityExercises.getExercise()).toList();
+                if (comexercises.isEmpty()) {
+                        return new RankingDTO(community.getName(), List.of(), List.of());
+                    }
                 for(User user : users){
                     List<ExerciseRankingDTO> exList = new ArrayList<>();
                      double total = 0.0;
@@ -311,14 +315,12 @@ for (Long exerciseId : dto.exerciseIds()) {
                          total += oneRm;
                     }
                    
-                   
-
                     rankingList.add(new UserRankingDTO(user.getUsername(), exList, total));
                     }
-                    return rankingList;
-                }
-
+                    return new RankingDTO(community.getName(), exercises.stream().map(exercise -> new ExerciseDTO(exercise.getId(), exercise.getName())).toList(), rankingList);
             }
+
+        }
 
 
     

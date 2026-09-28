@@ -1,3 +1,4 @@
+import type { Ranking} from "../types/Ranking";
 import { apiFetch } from "./api";
 
 export async function getAllCommunitiesForUser() {
@@ -187,4 +188,21 @@ export async function demoteMember(communityId: number, targetUsername: string) 
     if (response.status === 204) {
         return true;
     }
+
+}
+export async function getCommunityRanking(communityId: number): Promise<Ranking> {
+    const response = await apiFetch(`/api/community/ranking/${communityId}`, {
+        method: "GET",
+    })
+    if (!response.ok) {
+        let message = response.statusText || "Request failed";
+        try {
+            const error = await response.json();
+            message = error.message ?? message;
+        } catch {
+        }
+
+        throw new Error(message);
+    }
+    return await response.json();
 }

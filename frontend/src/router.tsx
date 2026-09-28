@@ -12,6 +12,7 @@ import CommunityDetailPage from './pages/CommunityDetailPage';
 import AllCommunityPage from './pages/AllCommunityPage';
 import PublicCommunityDetailPage from './pages/PublicCommunityDetailPage';
 import ProtectedRoute from './ProtectedRoute';
+import RankingPage from './pages/RankingPage';
 
 
 export const router = createBrowserRouter([
@@ -77,6 +78,12 @@ export const router = createBrowserRouter([
     path: "/community/public/:id",
     element: <ProtectedRoute>
       <PublicCommunityDetailPage />
+    </ProtectedRoute>
+  },
+  {
+    path: "/community/ranking/:id",
+    element: <ProtectedRoute>
+      <RankingPage />
     </ProtectedRoute>
   }
 ]);
