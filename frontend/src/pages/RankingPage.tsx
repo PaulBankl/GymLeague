@@ -67,8 +67,8 @@ export default function RankingPage() {
             {selectedExercise === null && <h1 className="text-3xl font-bold my-4">Ranking for: Total</h1>}
             {selectedExercise !== null && <h1 className="text-3xl font-bold my-4">Ranking for: {ranking.exercises.find(exercise => exercise.id === selectedExercise)?.name}</h1>}
             <div className="flex flex-col items-center mt-4">
-                {selectedExercise === null && userRankings.sort((a,b) => b.total - a.total).map((userRankings, index) => (<RankingCard key={userRankings.username} rank={index + 1} userName={userRankings.username} weight={userRankings.total} />))}
-                {selectedExercise !== null && userRankings.sort((a,b) =>  b.Exercises.find(exercise => exercise.exerciseId === selectedExercise)?.OneRM! -a.Exercises.find(exercise => exercise.exerciseId === selectedExercise)?.OneRM!).map((userRankings, index) => {return <RankingCard key={userRankings.username} rank={index + 1} userName={userRankings.username} weight={userRankings.Exercises.find(exercise => exercise.exerciseId === selectedExercise)?.OneRM!} />})}
+                {selectedExercise === null && [...userRankings].sort((a,b) => b.total - a.total).map((userRankings, index) => (<RankingCard key={userRankings.username} rank={index + 1} userName={userRankings.username} weight={userRankings.total} />))}
+                {selectedExercise !== null && [...userRankings].sort((a,b) =>  b.Exercises.find(exercise => exercise.exerciseId === selectedExercise)?.OneRM! -a.Exercises.find(exercise => exercise.exerciseId === selectedExercise)?.OneRM!).map((userRankings, index) => {return <RankingCard key={userRankings.username} rank={index + 1} userName={userRankings.username} weight={userRankings.Exercises.find(exercise => exercise.exerciseId === selectedExercise)?.OneRM!} />})}
             </div>
         </div>
     )
