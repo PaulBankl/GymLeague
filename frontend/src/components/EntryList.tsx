@@ -42,6 +42,15 @@ export default function EntryList({ exerciseId, refresh, onRefresh }: EntryListP
         return <div>Loading Entries...</div>;
     }
 
+    function calculateOneRM(weight: number, reps: number): string {
+        if (reps === 1) {
+            return weight.toString();
+        }
+        if(reps > 12) {
+            return "Too many reps for Calculation";
+        }
+        return (weight * (1 + reps / 30)).toString();
+    }
     if (entries.length === 0) {
         return <div className="text-muted">No entries found for this exercise.</div>;
     }
@@ -75,10 +84,11 @@ export default function EntryList({ exerciseId, refresh, onRefresh }: EntryListP
 
             {entries.map((entry) => (
                 <div key={entry.id} className="flex flex-col bg-surface rounded-md p-2 mb-4 border border-border">
-                    <div className="flex flex-col items-center  md:grid md:grid-cols-3 md:gap-4 md:place-items-center md:mx-auto md:w-[50vw]">
+                    <div className="flex flex-col items-center  md:grid md:grid-cols-4 md:gap-4 md:place-items-center md:mx-auto md:w-[50vw]">
                         <div><p className="text-muted">Weight: </p> <p className="font-heading text-sm mt-1 text-center">{entry.weight}</p></div>
                         <div><p className="text-muted">Reps: </p> <p className="font-heading text-sm mt-1 text-center ">{entry.reps}</p></div>
                         <div><p className="text-muted">Date: </p> <p className="font-heading text-sm mt-1 text-center">{new Date(entry.date).toLocaleDateString()}</p></div>
+                        <div><p className="text-muted">1RM: </p> <p className="font-heading text-sm mt-1 text-center">{calculateOneRM(entry.weight, entry.reps)}</p></div>
                     </div>
                     <div className="flex flex-row items-center self-center mt-2">
                         <button onClick={() => {

@@ -14,6 +14,7 @@ import dev.paulbankl.gymleague.dto.CommunityKickDTO;
 import dev.paulbankl.gymleague.dto.JoinCodeDTO;
 import dev.paulbankl.gymleague.dto.RoleChangeDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.ComMemberListDTO;
+import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityActivityDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityDetailDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityOverviewDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.ExerciseDTO;
@@ -23,6 +24,7 @@ import dev.paulbankl.gymleague.dto.ResponseDTOs.UserRankingDTO;
 import dev.paulbankl.gymleague.exception.ConflictException;
 import dev.paulbankl.gymleague.exception.ForbiddenException;
 import dev.paulbankl.gymleague.exception.ResourceNotFoundException;
+import dev.paulbankl.gymleague.model.ActivityTone;
 import dev.paulbankl.gymleague.model.Community;
 import dev.paulbankl.gymleague.model.CommunityExercises;
 import dev.paulbankl.gymleague.model.CommunityMember;
@@ -45,15 +47,17 @@ public class CommunityService {
     private final CommunityExercisesRepository communityExercisesRepository;
     private final ExerciseRepository exerciseRepository;
     private final EntryService entryService;
+    private final CommunityActivityService communityActivityService;
     
 
-    public CommunityService(CommunityRepository communityRepository, CommunityMemberRepository communityMemberRepository, UserRepository userRepository, CommunityExercisesRepository communityExercisesRepository, ExerciseRepository exerciseRepository, CommunityMemberService communityMemberService, EntryService entryService) {
+    public CommunityService(CommunityRepository communityRepository, CommunityMemberRepository communityMemberRepository, UserRepository userRepository, CommunityExercisesRepository communityExercisesRepository, ExerciseRepository exerciseRepository,EntryService entryService, CommunityActivityService communityActivityService) {
         this.communityRepository = communityRepository;
         this.communityMemberRepository = communityMemberRepository;
         this.userRepository = userRepository;
         this.communityExercisesRepository = communityExercisesRepository;
         this.exerciseRepository = exerciseRepository;
         this.entryService = entryService;
+        this.communityActivityService = communityActivityService;
     }
     @Transactional
     public void createCommunity(CommunityCreationDTO dto, String username) {
@@ -139,17 +143,20 @@ if(!communityMemberRepository.existsByCommunityIdAndUserUsername(id, username)) 
         if(communityMemberRepository.countByCommunityId(id) > 1) {
             findNewOwner(id, community);
             communityMemberRepository.deleteByCommunityIdAndUserUsername(id, username);
+            communityActivityService.addActivity(username, ActivityTone.NEGATIVE, username + " left the community", community);
             return;
         }
         
+        communityActivityService.deleteActivitiesByCommunityId(id);
         communityExercisesRepository.deleteByCommunityId(id);
         communityMemberRepository.deleteByCommunityIdAndUserUsername(id, username);
         communityRepository.delete(community);
-        
+
     }
     else
     {
         communityMemberRepository.deleteByCommunityIdAndUserUsername(id, username);
+        communityActivityService.addActivity( username, ActivityTone.NEGATIVE, username + " left the community", community);
     }
 }
 private void findNewOwner(Long id, Community community){
@@ -160,6 +167,7 @@ private void findNewOwner(Long id, Community community){
     CommunityMember newOwner = members.get(1);
     newOwner.setRole(CommunityRole.OWNER);
     community.setOwner(newOwner.getUser());
+    communityActivityService.addActivity( newOwner.getUser().getUsername(), ActivityTone.NEUTRAL, newOwner.getUser().getUsername() + " is the new owner of the community", community);
 }
 public List<ComMemberListDTO> getAllMembersOfCommunity(Long communityId) {
     if (!communityRepository.existsById(communityId)) {
@@ -203,15 +211,18 @@ public void changeCommunity(CommunityChangeDTO dto , String username) {
     community.setJoinCode(dto.joinCode());
     communityExercisesRepository.deleteByCommunityId(community.getId());
     
-if(dto.exerciseIds() == null || dto.exerciseIds().isEmpty()) {
-    return;
-}
-for (Long exerciseId : dto.exerciseIds()) {
+
+if(dto.exerciseIds() != null && !dto.exerciseIds().isEmpty()) {
+    for (Long exerciseId : dto.exerciseIds()) {
     Exercise exercise = exerciseRepository.findById(exerciseId)
             .orElseThrow(() -> new ResourceNotFoundException("Exercise not found"));
     CommunityExercises communityExercise = new CommunityExercises(community, exercise);
     communityExercisesRepository.save(communityExercise);
 }
+}
+
+communityActivityService.addActivity( username, ActivityTone.NEUTRAL, "Community updated by " + username, community);
+
 }
 
 @Transactional
@@ -228,6 +239,7 @@ for (Long exerciseId : dto.exerciseIds()) {
             throw new ConflictException("User is already a member of the community");
         }  
         communityMemberRepository.save(new CommunityMember(user, community, CommunityRole.USER));
+        communityActivityService.addActivity(username, ActivityTone.POSITIVE, username + " joined the community", community);
     }
 
     @Transactional 
@@ -249,6 +261,7 @@ for (Long exerciseId : dto.exerciseIds()) {
             throw new ForbiddenException("Invalid join code");
         }
         communityMemberRepository.save(new CommunityMember(user, community, CommunityRole.USER));
+        communityActivityService.addActivity(username, ActivityTone.POSITIVE, username + " joined the community", community);
 
     }
 
@@ -268,6 +281,7 @@ for (Long exerciseId : dto.exerciseIds()) {
     throw new ResourceNotFoundException("User is not a member of this community");
 }
         communityMemberRepository.deleteByCommunityIdAndUserUsername(dto.communityId(), dto.kickUsername());
+        communityActivityService.addActivity(username, ActivityTone.NEGATIVE, dto.kickUsername() + " was kicked from the community by " + username, community);
         }
 
         @Transactional 
@@ -287,8 +301,8 @@ for (Long exerciseId : dto.exerciseIds()) {
                 throw new ConflictException("Can´t promote the owner");
             }
             switch (member.getRole()) {
-                case USER -> member.setRole(CommunityRole.MODERATOR);
-                case MODERATOR -> member.setRole(CommunityRole.ADMIN);
+                case USER -> {member.setRole(CommunityRole.MODERATOR); communityActivityService.addActivity(username, ActivityTone.POSITIVE, dto.targetUsername() + " was promoted to MODERATOR by " + username, community);}
+                case MODERATOR -> {member.setRole(CommunityRole.ADMIN); communityActivityService.addActivity(username, ActivityTone.POSITIVE, dto.targetUsername() + " was promoted to ADMIN by " + username, community);}
                 case ADMIN, OWNER -> {
                     throw new ConflictException("Member cannot be promoted further");
                 }
@@ -312,8 +326,8 @@ for (Long exerciseId : dto.exerciseIds()) {
                 throw new ConflictException("Can´t demote the owner");
             }
             switch (member.getRole()) {
-                case MODERATOR -> member.setRole(CommunityRole.USER);
-                case ADMIN -> member.setRole(CommunityRole.MODERATOR);
+                case MODERATOR -> {member.setRole(CommunityRole.USER); communityActivityService.addActivity(username, ActivityTone.NEGATIVE, dto.targetUsername() + " was demoted to USER by " + username, community);}
+                case ADMIN -> {member.setRole(CommunityRole.MODERATOR); communityActivityService.addActivity(username, ActivityTone.NEGATIVE, dto.targetUsername() + " was demoted to MODERATOR by " + username, community);}
                 case USER, OWNER -> {
                     throw new ConflictException("Member cannot be demoted further");
                 }
@@ -344,6 +358,16 @@ for (Long exerciseId : dto.exerciseIds()) {
                     rankingList.add(new UserRankingDTO(user.getUsername(), exList, total));
                     }
                     return new RankingDTO(community.getName(), exercises.stream().map(exercise -> new ExerciseDTO(exercise.getId(), exercise.getName())).toList(), rankingList);
+            }
+
+            public List<CommunityActivityDTO> getRecentActivitiesByCommunityId(Long communityId, String username) {
+                if(!communityRepository.existsById(communityId)) {
+            throw new ResourceNotFoundException("Community not found");
+             }
+        if(!communityMemberRepository.existsByCommunityIdAndUserUsername(communityId, username)) {
+            throw new ForbiddenException("User is not a member of this community");
+        }
+                return communityActivityService.getRecentActivitiesByCommunityId(communityId);
             }
 
         }

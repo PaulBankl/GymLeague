@@ -3,6 +3,7 @@ package dev.paulbankl.gymleague.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.paulbankl.gymleague.service.CommunityActivityService;
 import dev.paulbankl.gymleague.service.CommunityService;
 import jakarta.validation.Valid;
 
@@ -15,10 +16,10 @@ import dev.paulbankl.gymleague.dto.CommunityKickDTO;
 import dev.paulbankl.gymleague.dto.JoinCodeDTO;
 import dev.paulbankl.gymleague.dto.RoleChangeDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.ComMemberListDTO;
+import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityActivityDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityDetailDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityOverviewDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.RankingDTO;
-import dev.paulbankl.gymleague.dto.ResponseDTOs.UserRankingDTO;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,10 +40,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/api/community")
 public class CommunityController {
     private final CommunityService communityService;
+    private final CommunityActivityService communityActivityService;
   
 
-    public CommunityController(CommunityService communityService) {
+    public CommunityController(CommunityService communityService, CommunityActivityService communityActivityService) {
         this.communityService = communityService;
+        this.communityActivityService = communityActivityService;
 
     }
 
@@ -109,6 +112,12 @@ public class CommunityController {
         communityService.joinCommunityWithCode(dto, authentication.getName());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @GetMapping("/activity/{communityId}")
+    public ResponseEntity<List<CommunityActivityDTO>> getMethodName(@PathVariable Long communityId, Authentication authentication) {
+        return ResponseEntity.status(HttpStatus.OK).body(communityService.getRecentActivitiesByCommunityId(communityId, authentication.getName()));
+    }
+    
     
     
     

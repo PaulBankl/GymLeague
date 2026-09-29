@@ -228,3 +228,17 @@ export async function joinCommunityWithCode(joinCode: string, communityName: str
     }
     return true;
 }
+
+export async function getCommunityActivities(communityId: number) {
+    const response = await apiFetch(`/api/community/activity/${communityId}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message ?? response.statusText ?? "Request failed");
+    }
+    return await response.json();
+}

@@ -7,6 +7,8 @@ import CommunityEdit from "../components/CommunityEdit";
 import CommunityDetailCard from "../components/CommunityDetailCard";
 import { AuthContext } from "../context/AuthContext";
 import MemberList from "../components/MemberList";
+import type { CommunityActivity } from "../types/CommunityActivity";
+import ActivityLogCard from "../components/ActivityLogCard";
 
 export default function CommunityDetailPage() {
     const username = useContext(AuthContext)?.username;
@@ -17,6 +19,7 @@ export default function CommunityDetailPage() {
     const [error, setError] = useState(false);
     const navigate = useNavigate();
     const [members, setMembers] = useState<{ username: string; role: string; joinedAt: string }[]>([]);
+    const [activities, setActivities] = useState<CommunityActivity[]>([]);
 
     if (!id) {
         return <div>Invalid community ID</div>;
@@ -33,7 +36,10 @@ export default function CommunityDetailPage() {
         }).catch((error) => {
             console.error("Failed to fetch community members:", error);
         });
+        Communityservice.getCommunityActivities(Number(id)).then((data) => {setActivities(data);}).catch((error) => {console.error("Failed to fetch community activities:", error);});
     }, [id, refresh]);
+
+    
 
     function buttonLeave() {
         const username = sessionStorage.getItem("username");
@@ -79,8 +85,8 @@ export default function CommunityDetailPage() {
                 <button onClick={() => navigate("/community")} className="border border-border p-2 rounded-md mt-2  text-muted">Back to Overview</button>
                 <br></br>
                 <button onClick={buttonLeave} className="border border-accent p-2 rounded-md  mt-4 text-accent">Leave Community</button>
-
             </div>
+            <ActivityLogCard activities={activities} />
         </>
     );
 }
