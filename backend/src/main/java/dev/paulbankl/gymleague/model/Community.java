@@ -21,11 +21,12 @@ import lombok.Setter;
 @Table(name = "communities")
 public class Community {
 
-    public Community(String name, String description, boolean isPrivate, User owner2) {
+    public Community(String name, String description, boolean isPrivate, User owner2, String joinCode) {
         this.name = name;
         this.description = description;
         this.isPrivate = isPrivate;
         this.owner = owner2;
+        this.joinCode = joinCode;
     }
 
     @Id
@@ -38,6 +39,10 @@ public class Community {
     @Setter
     @Column(length = 255)
     private String description;
+
+    @Setter
+    @Column(length = 10)
+    private String joinCode = "0000";
 
     @Column(nullable = false)
     private LocalDateTime createdAt;

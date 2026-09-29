@@ -1,4 +1,4 @@
-import type { Ranking} from "../types/Ranking";
+import type { Ranking } from "../types/Ranking";
 import { apiFetch } from "./api";
 
 export async function getAllCommunitiesForUser() {
@@ -16,13 +16,13 @@ export async function getAllCommunitiesForUser() {
 }
 
 
-export async function createCommunity(name: string, description: string, isPrivate: boolean, exerciseIds: number[]) {
+export async function createCommunity(name: string, description: string, isPrivate: boolean, exerciseIds: number[], joinCode: string) {
     const response = await apiFetch(`/api/community/create`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, description, isPrivate, exerciseIds }),
+        body: JSON.stringify({ name, description, isPrivate, exerciseIds, joinCode }),
     });
     if (!response.ok) {
         const error = await response.json();
@@ -103,13 +103,13 @@ export async function get10RandomCommunities() {
     return await response.json();
 }
 
-export async function editCommunity(name: string, description: string, isPrivate: boolean, exerciseIds: number[]) {
+export async function editCommunity(name: string, description: string, isPrivate: boolean, exerciseIds: number[], joinCode: string) {
     const response = await apiFetch(`/api/community/change`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, description, isPrivate, exerciseIds }),
+        body: JSON.stringify({ name, description, isPrivate, exerciseIds, joinCode }),
     })
     if (!response.ok) {
         const error = await response.json();
@@ -205,4 +205,26 @@ export async function getCommunityRanking(communityId: number): Promise<Ranking>
         throw new Error(message);
     }
     return await response.json();
+}
+
+export async function joinCommunityWithCode(joinCode: string, communityName: string) {
+    const response = await apiFetch(`/api/community/codejoin`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ joinCode, communityName }),
+    });
+    if (!response.ok) {
+        let message = response.statusText || "Request failed";
+        try {
+            const error = await response.json();
+            message = error.message ?? message;
+        } catch {
+            // response body was empty or not JSON
+        }
+
+        throw new Error(message);
+    }
+    return true;
 }

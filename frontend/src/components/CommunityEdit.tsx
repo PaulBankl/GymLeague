@@ -15,6 +15,7 @@ export default function CommunityEdit({ community, onCommunityChange }: EditComm
     const [isPrivate, setIsPrivate] = useState(community?.isPrivate || false);
     const [error, setError] = useState<string | null>(null);
     const username = sessionStorage.getItem("username");
+    const [joinCode, setJoinCode] = useState(community?.joinCode || "");
 
     const [exercises, setExercises] = useState<Exercise[]>([]);
     const [checkedExercises, setCheckedExercises] = useState<number[]>([]);
@@ -50,7 +51,7 @@ export default function CommunityEdit({ community, onCommunityChange }: EditComm
                 setError("No username found.");
                 return;
             }
-            const response = await CommunityService.editCommunity(community.name, description, isPrivate, checkedExercises);
+            const response = await CommunityService.editCommunity(community.name, description, isPrivate, checkedExercises, joinCode);
             if (!response) {
                 console.error("Failed to edit community.");
                 setError("Failed to edit community.");
@@ -72,8 +73,16 @@ export default function CommunityEdit({ community, onCommunityChange }: EditComm
                         Description:
                     </label>
                     <textarea defaultValue={community?.description} onChange={(e) => setDescription(e.target.value)} className="ml-[5%] bg-surface-2 self-start block w-[90%] border border-border rounded-md p-2 mb-4 "></textarea>
+                    <p className="muted text-sm self-end mr-[5%]">Characters remaining: {255 - description.length}</p>
 
                     <br />
+                    <label htmlFor="description" className="text-muted block">
+                        JoinCode:
+                    </label>
+                    <textarea defaultValue={community?.joinCode} onChange={(e) => setJoinCode(e.target.value)} className="ml-[5%] bg-surface-2 self-start block w-[90%] border border-border rounded-md p-2 mb-4 "></textarea>
+
+                    <br />
+
                     <label htmlFor="isPrivate" className="text-muted block">
                         Private:
                         <input type="checkbox" defaultChecked={community?.isPrivate} onChange={(e) => setIsPrivate(e.target.checked)} />

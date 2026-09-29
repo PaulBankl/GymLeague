@@ -10,5 +10,6 @@ export type Community = {
     owner: string;
     memberCount: number;
     exercises: Exercise[];
+    joinCode: string;
 };
 

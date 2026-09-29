@@ -11,6 +11,7 @@ import dev.paulbankl.gymleague.dto.CommunityChangeDTO;
 import dev.paulbankl.gymleague.dto.CommunityCreationDTO;
 import dev.paulbankl.gymleague.dto.CommunityJoinDTO;
 import dev.paulbankl.gymleague.dto.CommunityKickDTO;
+import dev.paulbankl.gymleague.dto.JoinCodeDTO;
 import dev.paulbankl.gymleague.dto.RoleChangeDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.ComMemberListDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityDetailDTO;
@@ -68,7 +69,8 @@ if (owner == null) {
         dto.name(),
         dto.description(),
         dto.isPrivate(),
-        owner
+        owner,
+        dto.joinCode()
         );
         //Community wird erschaffen und CommunityMember wird erschaffen und gespeichert
         communityRepository.save(community);
@@ -111,7 +113,8 @@ if (owner == null) {
             communityMemberRepository.countByCommunityId(community.getId()),
             community.getCreatedAt(),
             community.isPrivate(),
-            exercises
+            exercises,
+            community.getJoinCode()
     );
 }
 
@@ -197,6 +200,7 @@ public void changeCommunity(CommunityChangeDTO dto , String username) {
     }
     community.setDescription(dto.description());
     community.setPrivate(dto.isPrivate());
+    community.setJoinCode(dto.joinCode());
     communityExercisesRepository.deleteByCommunityId(community.getId());
     
 if(dto.exerciseIds() == null || dto.exerciseIds().isEmpty()) {
@@ -224,6 +228,28 @@ for (Long exerciseId : dto.exerciseIds()) {
             throw new ConflictException("User is already a member of the community");
         }  
         communityMemberRepository.save(new CommunityMember(user, community, CommunityRole.USER));
+    }
+
+    @Transactional 
+    public void joinCommunityWithCode(JoinCodeDTO dto, String username){
+        String communityName = dto.communityName().trim();
+        String joinCode = dto.joinCode().trim();
+        User user = userRepository.findByUsername(username).orElse(null);
+        Community community = communityRepository.findByName(communityName).orElse(null);
+        if(user == null){
+            throw new ResourceNotFoundException("User not found");
+        }
+        if(community == null){
+            throw new ResourceNotFoundException("Community not found");
+        }
+        if(communityMemberRepository.findByCommunityIdAndUserUsername(community.getId(), username).isPresent()){
+            throw new ConflictException("User is already a member of the community");
+        }
+        if(!community.getJoinCode().equals(joinCode)){
+            throw new ForbiddenException("Invalid join code");
+        }
+        communityMemberRepository.save(new CommunityMember(user, community, CommunityRole.USER));
+
     }
 
     @Transactional 

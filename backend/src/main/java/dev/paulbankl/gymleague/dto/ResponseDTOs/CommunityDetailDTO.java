@@ -14,5 +14,6 @@ public record CommunityDetailDTO(
     int memberCount,
     LocalDateTime createdAt,
     boolean isPrivate,
-    Exercise[] exercises
+    Exercise[] exercises,
+    String joinCode
 ) {}

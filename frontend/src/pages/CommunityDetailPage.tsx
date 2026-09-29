@@ -64,6 +64,7 @@ export default function CommunityDetailPage() {
             <div className="flex flex-col bg-surface items-center border border-border rounded-md p-4 w-[80vw] md:w-[50vw] mx-auto mt-[2vw]">
                 <h1 className="font-heading mt-2 text-[clamp(22px,15vw,72px)] font-black ">{community.name}</h1>
                 <p className="text-muted mb-4 ">{community.description}</p>
+                {username === community.owner && <p>Join Code: {community.joinCode}</p>}
                 {editMode && <CommunityEdit community={community} onCommunityChange={() => { setRefresh(refresh + 1); setEditMode(false); }} />}
                 <CommunityDetailCard community={community} />
                 {username === community.owner && (

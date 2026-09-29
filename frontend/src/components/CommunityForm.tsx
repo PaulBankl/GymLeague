@@ -11,8 +11,9 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
     const username = sessionStorage.getItem("username");
     const [error, setError] = useState<string | null>(null);
     const [ShowForm, setShowForm] = useState(false);
+    const [joinCode, setJoinCode] = useState("");
 
-    
+
     const [exercises, setExercises] = useState<Exercise[]>([]);
 
     const [checkedExercises, setCheckedExercises] = useState<number[]>([]);
@@ -49,8 +50,16 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
             setError("Description cannot exceed 255 characters.");
             return;
         }
+        if (joinCode.length < 4) {
+            setError("Join code must be at least 4 characters long.");
+            return;
+        }
+        if (joinCode.length > 10) {
+            setError("Join code cannot exceed 10 characters.");
+            return;
+        }
         try {
-            const response = await CommunityService.createCommunity(name.trim(), description.trim(), isPrivate, checkedExercises);
+            const response = await CommunityService.createCommunity(name.trim(), description.trim(), isPrivate, checkedExercises, joinCode.trim());
             if (!response) {
                 setError("Failed to create community. try a different name.");
                 return;
@@ -102,6 +111,13 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
                         className="bg-surface-2 self-start ml-[5%] border border-border rounded-md p-2 mb-4 w-[90%] md:w-[90%]"
                     />
                     <p className="muted text-sm self-end mr-[5%]">Characters remaining: {255 - description.length}</p>
+                    <label htmlFor="JoinCode" className="text-muted self-start ml-[5%] mt-5">Join Code: 4-10 characters</label>
+                    <textarea
+                        id="JoinCode"
+                        value={joinCode}
+                        onChange={(e) => setJoinCode(e.target.value)}
+                        className="bg-surface-2 self-start ml-[5%] border border-border rounded-md p-2 mb-4 w-[90%] md:w-[90%]"
+                    />
                     <div className="self-start ml-[5%] mb-4 flex items-center">
                         <input
                             type="checkbox"
@@ -111,6 +127,7 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
                         />
                         <label htmlFor="isPrivate" className="text-muted ml-2">Private</label>
                     </div>
+
 
                     {exercises.length > 0 && (
                         <div className="flex flex-col items-start w-[90%]">
@@ -132,8 +149,8 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
                         </div>
                     )}
                     <div className="self-start ml-[5%] mb-4 flex items-center mt-5 mb-4">
-                    <button type="submit" className="bg-accent border border-border rounded-md p-2 hover:bg-accent-dim pl-5 pr-5">Create Community</button>
-                    <button onClick={() => { if (ShowForm) { setCheckedExercises([]); } setShowForm(!ShowForm) }} className="text-accent border border-accent rounded-md ml-2 p-2 hover:bg-accent-dim">Cancel</button>
+                        <button type="submit" className="bg-accent border border-border rounded-md p-2 hover:bg-accent-dim pl-5 pr-5">Create Community</button>
+                        <button onClick={() => { if (ShowForm) { setCheckedExercises([]); } setShowForm(!ShowForm) }} className="text-accent border border-accent rounded-md ml-2 p-2 hover:bg-accent-dim">Cancel</button>
                     </div>
                 </form>
             )}

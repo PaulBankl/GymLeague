@@ -12,6 +12,7 @@ import dev.paulbankl.gymleague.dto.CommunityChangeDTO;
 import dev.paulbankl.gymleague.dto.CommunityCreationDTO;
 import dev.paulbankl.gymleague.dto.CommunityJoinDTO;
 import dev.paulbankl.gymleague.dto.CommunityKickDTO;
+import dev.paulbankl.gymleague.dto.JoinCodeDTO;
 import dev.paulbankl.gymleague.dto.RoleChangeDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.ComMemberListDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityDetailDTO;
@@ -103,6 +104,12 @@ public class CommunityController {
         return ResponseEntity.ok(communityService.getCommunityRanking(communityId, authentication.getName()));
 
     }
+    @PostMapping("/codejoin")
+    public ResponseEntity<Void> postMethodName(@RequestBody JoinCodeDTO dto, Authentication authentication) {
+        communityService.joinCommunityWithCode(dto, authentication.getName());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+    
     
     
     

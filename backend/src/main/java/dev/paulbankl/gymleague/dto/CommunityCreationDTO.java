@@ -16,6 +16,10 @@ public record CommunityCreationDTO (
 
     List<@NotNull(message = "Exercise IDs cannot be null")
     @Positive(message = "Exercise IDs must be positive") Long>
-     exerciseIds
+     exerciseIds,
+
+     @NotBlank 
+     @Size(min = 4, max = 10, message = "Join code must be between 4 and 10 characters")
+    String joinCode
 
 ){}
