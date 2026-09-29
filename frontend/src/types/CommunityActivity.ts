@@ -3,7 +3,7 @@ export type CommunityActivity = {
     id:number;
     username: string;
     message: string;
-    createdAt: Date;
+    createdAt: string;
     tone: ActivityTone;
 }
 

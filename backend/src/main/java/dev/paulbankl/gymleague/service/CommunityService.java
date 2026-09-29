@@ -132,16 +132,12 @@ Community community = communityRepository.findById(id)
 if (community == null) {
     throw new ResourceNotFoundException("Community not found");
 }
-User user = userRepository.findByUsername(username).orElse(null);
-if (user == null) {
-    throw new ResourceNotFoundException("User not found");
-}
 if(!communityMemberRepository.existsByCommunityIdAndUserUsername(id, username)) {
     throw new ConflictException("User is not a member of this community");
 }
     if(community.getOwner().getUsername().equals(username)) {
         if(communityMemberRepository.countByCommunityId(id) > 1) {
-            findNewOwner(id, community);
+            findNewOwner(id, community, username);
             communityMemberRepository.deleteByCommunityIdAndUserUsername(id, username);
             communityActivityService.addActivity(username, ActivityTone.NEGATIVE, username + " left the community", community);
             return;
@@ -159,12 +155,15 @@ if(!communityMemberRepository.existsByCommunityIdAndUserUsername(id, username)) 
         communityActivityService.addActivity( username, ActivityTone.NEGATIVE, username + " left the community", community);
     }
 }
-private void findNewOwner(Long id, Community community){
-    List<CommunityMember> members = communityMemberRepository.findByCommunityIdOrderByRoleDescJoinedAtAsc(id);
-    if (members.size() < 2) {
-    return;
-}
-    CommunityMember newOwner = members.get(1);
+private void findNewOwner(Long id, Community community, String leavingUsername) {
+    List<CommunityMember> members =
+            communityMemberRepository.findByCommunityIdOrderByRoleDescJoinedAtAsc(id);
+
+    CommunityMember newOwner = members.stream()
+            .filter(member -> !member.getUser().getUsername().equals(leavingUsername))
+            .findFirst()
+            .orElseThrow(() -> new ResourceNotFoundException("No member found for ownership transfer"));
+
     newOwner.setRole(CommunityRole.OWNER);
     community.setOwner(newOwner.getUser());
     communityActivityService.addActivity( newOwner.getUser().getUsername(), ActivityTone.NEUTRAL, newOwner.getUser().getUsername() + " is the new owner of the community", community);
