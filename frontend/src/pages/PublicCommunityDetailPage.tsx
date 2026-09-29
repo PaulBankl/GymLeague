@@ -47,6 +47,7 @@ export default function PublicCommunityDetailPage() {
             setCommunity(data);
         }).catch((error) => {
             setError(true);
+            console.error("Error fetching community details:", error);
         });
         CommunityService.getAllMembersOfCommunity(Number(id)).then((data) => {
             setMembers(data);

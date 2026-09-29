@@ -15,6 +15,7 @@ export default function CommunityOverviewPage() {
                 .then(setCommunities)
                 .catch((error) => {
                     setError(true);
+                    console.error("Error fetching communities:", error);
                 });
     }, [refresh]);
 

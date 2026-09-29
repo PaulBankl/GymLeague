@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import dev.paulbankl.gymleague.model.Community;
-import dev.paulbankl.gymleague.model.User;
 
 public interface CommunityRepository extends JpaRepository<Community, Long> {
     public boolean existsByName(String name);

@@ -40,6 +40,9 @@ export default function EntryList({ exerciseId, refresh, onRefresh }: EntryListP
     if (!entries) {
         return <div>Loading Entries...</div>;
     }
+    if(loading) {
+        return <div>Loading Entries...</div>;
+    }
 
     function calculateOneRM(weight: number, reps: number): string {
         if (reps === 1) {

@@ -30,6 +30,7 @@ export default function CommunityDetailPage() {
             setCommunity(data);
         }).catch((error) => {
             setError(true);
+            console.error("Error fetching community details:", error);
         });
         Communityservice.getAllMembersOfCommunity(Number(id)).then((data) => {
             setMembers(data);

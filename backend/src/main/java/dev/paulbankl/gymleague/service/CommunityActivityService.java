@@ -2,7 +2,6 @@ package dev.paulbankl.gymleague.service;
 
 import java.util.List;
 
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityActivityDTO;
@@ -11,7 +10,6 @@ import dev.paulbankl.gymleague.model.ActivityTone;
 import dev.paulbankl.gymleague.model.Community;
 import dev.paulbankl.gymleague.model.CommunityActivity;
 import dev.paulbankl.gymleague.repository.CommunityActivityRepository;
-import dev.paulbankl.gymleague.repository.CommunityMemberRepository;
 import dev.paulbankl.gymleague.repository.CommunityRepository;
 import jakarta.transaction.Transactional;
 

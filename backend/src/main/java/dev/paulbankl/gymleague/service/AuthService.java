@@ -4,7 +4,6 @@ package dev.paulbankl.gymleague.service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import dev.paulbankl.gymleague.dto.LoginDTO;
 import dev.paulbankl.gymleague.dto.RegisterDTO;
 import dev.paulbankl.gymleague.exception.ConflictException;
 

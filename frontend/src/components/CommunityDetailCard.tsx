@@ -1,5 +1,4 @@
 import type { Community } from "../types/Community";
-import MemberActionsButton from "./MemberActionsButton";
 
 type CommunityDetailCardProps = {
     community: Community;
