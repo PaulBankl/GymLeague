@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
@@ -18,7 +19,14 @@ import jakarta.persistence.GenerationType;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "entries")
+@Table(name = "entries", 
+    indexes = {
+        @Index(
+            name = "idx_entries_user_exercise_date",
+            columnList = "user_id, exercise_id, date"
+        )
+    }
+)
 public class Entry {
 
     public Entry(double weight, int reps, User user, Exercise exercise) {

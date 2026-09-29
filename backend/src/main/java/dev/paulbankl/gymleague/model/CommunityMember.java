@@ -9,6 +9,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
@@ -20,8 +21,21 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @Table(name = "community_members",uniqueConstraints = {
-    @jakarta.persistence.UniqueConstraint(columnNames = {"user_id", "community_id"})
-})
+    @jakarta.persistence.UniqueConstraint(columnNames = {"user_id", "community_id"}
+        
+    )
+},
+ indexes = {
+        @Index(
+            name = "idx_community_members_community_role_joined",
+            columnList = "community_id, role, joined_at"
+        ),
+        @Index(
+            name = "idx_community_members_user",
+            columnList = "user_id"
+        )
+    }
+)
 @Entity
 public class CommunityMember {
     public CommunityMember(User user, Community community, CommunityRole role) {

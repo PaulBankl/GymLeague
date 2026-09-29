@@ -6,7 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +14,14 @@ import lombok.Setter;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "community_exercises")
+@Table(name = "community_exercises",
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "uk_community_exercises_community_exercise",
+            columnNames = {"community_id", "exercise_id"}
+        )
+    }
+)
 public class CommunityExercises {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)

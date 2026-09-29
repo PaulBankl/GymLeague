@@ -6,7 +6,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import dev.paulbankl.gymleague.dto.ResponseDTOs.CommunityActivityDTO;
-import dev.paulbankl.gymleague.exception.ForbiddenException;
 import dev.paulbankl.gymleague.exception.ResourceNotFoundException;
 import dev.paulbankl.gymleague.model.ActivityTone;
 import dev.paulbankl.gymleague.model.Community;
@@ -21,13 +20,11 @@ public class CommunityActivityService {
     private final CommunityActivityRepository communityActivityRepository;
 
     private final CommunityRepository communityRepository;
-    private final CommunityMemberRepository communityMemberRepository;
 
-    public CommunityActivityService(CommunityActivityRepository communityActivityRepository, CommunityRepository communityRepository, CommunityMemberRepository communityMemberReposity) {
+
+    public CommunityActivityService(CommunityActivityRepository communityActivityRepository, CommunityRepository communityRepository) {
         this.communityActivityRepository = communityActivityRepository;
-        this.communityRepository = communityRepository;
-        this.communityMemberRepository = communityMemberReposity;
-    }
+        this.communityRepository = communityRepository;    }
 
     @Transactional
     public void deleteActivitiesByCommunityId(Long communityId) {
