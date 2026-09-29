@@ -5,7 +5,7 @@ import dev.paulbankl.gymleague.model.Entry;
 
 public record ExerciseInfoDTO (
     Integer entryCount,
-    Entry bestEntry,
+    EntryDTO bestEntry,
     Double progressPercent,
     Double progressOneRm
 ){}

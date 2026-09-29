@@ -41,7 +41,7 @@ export default function AllCommunityPage() {
             return;
         }
         try {
-            const response = await CommunityService.joinCommunityWithCode(communityName, joinCode);
+            const response = await CommunityService.joinCommunityWithCode(joinCode, communityName);
             if (response) {
                 navigate(`/community/`);
                 setShowJoinCodeInput(false);

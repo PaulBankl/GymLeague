@@ -36,14 +36,10 @@ public class EntryController {
 	public EntryController(EntryService entryService) {
 		this.EntryService = entryService;
 	}
-	@GetMapping()
-	public ResponseEntity<List<EntryDTO>> getEntries() {
-		return ResponseEntity.ok(EntryService.getAllEntries());
-	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<EntryDTO> getEntryById(@PathVariable Long id) {
-		EntryDTO entry = EntryService.getEntryById(id);
+	public ResponseEntity<EntryDTO> getEntryById(@PathVariable Long id, Authentication authentication) {
+		EntryDTO entry = EntryService.getEntryById(id, authentication.getName());
 		return ResponseEntity.ok(entry);
 	}
 
@@ -76,7 +72,7 @@ public class EntryController {
         return ResponseEntity.noContent().build();
     }
 
-		return ResponseEntity.ok().body(EntryService.getEntryById(best.getId()));
+		return ResponseEntity.ok().body(EntryService.getEntryById(best.getId(), authentication.getName()));
 	}
 
 }

@@ -3,7 +3,6 @@ package dev.paulbankl.gymleague.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.paulbankl.gymleague.service.CommunityActivityService;
 import dev.paulbankl.gymleague.service.CommunityService;
 import jakarta.validation.Valid;
 
@@ -36,16 +35,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 
+
+
 @RestController
 @RequestMapping("/api/community")
 public class CommunityController {
     private final CommunityService communityService;
-    private final CommunityActivityService communityActivityService;
   
 
-    public CommunityController(CommunityService communityService, CommunityActivityService communityActivityService) {
+    public CommunityController(CommunityService communityService) {
         this.communityService = communityService;
-        this.communityActivityService = communityActivityService;
 
     }
 
@@ -60,14 +59,18 @@ public class CommunityController {
         }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommunityDetailDTO> getCommunityDetails(@PathVariable Long id) {
-        return ResponseEntity.ok(communityService.getCommunityDetails(id));
+    public ResponseEntity<CommunityDetailDTO> getCommunityDetailsforOwner(@PathVariable Long id, Authentication authentication) {
+        return ResponseEntity.ok(communityService.getCommunityDetails(id, authentication.getName()));
     }
+
+    
     @PostMapping("/leave/{id}")
     public ResponseEntity<Void> leaveCommunity(@PathVariable Long id, Authentication authentication) {
         communityService.leaveCommunity(id, authentication.getName());
         return ResponseEntity.noContent().build();
     }
+
+    //member darf jeder sehen
     @GetMapping("/members/{id}")
     public ResponseEntity<List<ComMemberListDTO>> getAllMembersOfCommunity(@PathVariable Long id) {
         return ResponseEntity.ok(communityService.getAllMembersOfCommunity(id));
@@ -108,7 +111,7 @@ public class CommunityController {
 
     }
     @PostMapping("/codejoin")
-    public ResponseEntity<Void> postMethodName(@RequestBody JoinCodeDTO dto, Authentication authentication) {
+    public ResponseEntity<Void> joinbyCode(@Valid @RequestBody JoinCodeDTO dto, Authentication authentication) {
         communityService.joinCommunityWithCode(dto, authentication.getName());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

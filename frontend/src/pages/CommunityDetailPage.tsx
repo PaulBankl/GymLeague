@@ -42,7 +42,6 @@ export default function CommunityDetailPage() {
     
 
     function buttonLeave() {
-        const username = sessionStorage.getItem("username");
         if (!username) {
             console.error("No username found in session storage.");
             return;

@@ -46,9 +46,12 @@ public class EntryService {
         
         entryRepository.save(entry);
     }
-    public EntryDTO getEntryById(Long id) {
+    public EntryDTO getEntryById(Long id, String username) {
         Entry entry = entryRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Entry with id " + id + " not found"));
+        if (!entry.getUser().getUsername().equals(username)) {
+            throw new ForbiddenException("You are not allowed to view this entry");
+        }
         EntryDTO entryDTO = new EntryDTO(
             entry.getId(),
             entry.getWeight(),

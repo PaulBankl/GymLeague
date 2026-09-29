@@ -2,7 +2,6 @@ package dev.paulbankl.gymleague.dto.ResponseDTOs;
 
 import java.time.LocalDateTime;
 
-import dev.paulbankl.gymleague.model.Exercise;
 
 
 
@@ -14,6 +13,6 @@ public record CommunityDetailDTO(
     int memberCount,
     LocalDateTime createdAt,
     boolean isPrivate,
-    Exercise[] exercises,
+    ExerciseDTO[] exercises,
     String joinCode
 ) {}

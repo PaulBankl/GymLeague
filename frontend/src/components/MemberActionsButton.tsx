@@ -1,6 +1,6 @@
 import { useState } from "react";
 import * as CommunityService from "../services/Communityservice";
-import type { Community } from "../types/Community";
+
 
 type MemberActionsButtonProps = {
     communityId: number;
@@ -17,12 +17,8 @@ export default function MemberActionsButton({ communityId, memberUsername, actio
         promote: "Promote",
         demote: "Demote"
     }[action];
-    async function handleClick() {
-        const username = sessionStorage.getItem("username");
-        if (!username) {
-            console.error("No username found in session storage.");
-            return;
-        }
+    async function handleClick() {        
+
         if (communityId === undefined || memberUsername === undefined) {
             console.error("Community ID or member username is undefined.");
             return;

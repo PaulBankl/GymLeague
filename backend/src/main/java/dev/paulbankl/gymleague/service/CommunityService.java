@@ -103,13 +103,16 @@ if (owner == null) {
                 ))
                 .toList();
     }
-    public CommunityDetailDTO getCommunityDetails(Long id) {
+    public CommunityDetailDTO getCommunityDetails(Long id, String username) {
         Community community = communityRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("Community not found"));
+        
+        
     CommunityExercises [] communityExercises = communityExercisesRepository.findByCommunityId(id).toArray(new CommunityExercises[0]);
     Exercise [] exercises = (communityExercises.length > 0) ? java.util.Arrays.stream(communityExercises).map(CommunityExercises::getExercise).toArray(Exercise[]::new) : new Exercise[0];
     
-    return new CommunityDetailDTO(
+    if(community.getOwner().getUsername().equals(username)) {
+            return new CommunityDetailDTO(
             community.getId(),
             community.getName(),
             community.getDescription(),
@@ -117,9 +120,23 @@ if (owner == null) {
             communityMemberRepository.countByCommunityId(community.getId()),
             community.getCreatedAt(),
             community.isPrivate(),
-            exercises,
+            exercises.length > 0 ? java.util.Arrays.stream(exercises).map(exercise -> new ExerciseDTO(exercise.getId(), exercise.getName())).toArray(ExerciseDTO[]::new) : new ExerciseDTO[0],
             community.getJoinCode()
     );
+        }
+        else{
+            return new CommunityDetailDTO(
+            community.getId(),
+            community.getName(),
+            community.getDescription(),
+            community.getOwner().getUsername(),
+            communityMemberRepository.countByCommunityId(community.getId()),
+            community.getCreatedAt(),
+            community.isPrivate(),
+            exercises.length > 0 ? java.util.Arrays.stream(exercises).map(exercise -> new ExerciseDTO(exercise.getId(), exercise.getName())).toArray(ExerciseDTO[]::new) : new ExerciseDTO[0],
+            "0000"
+    );
+        }
 }
 
 @Transactional
@@ -209,6 +226,7 @@ public void changeCommunity(CommunityChangeDTO dto , String username) {
     community.setPrivate(dto.isPrivate());
     community.setJoinCode(dto.joinCode());
     communityExercisesRepository.deleteByCommunityId(community.getId());
+    communityExercisesRepository.flush();
     
 
 if(dto.exerciseIds() != null && !dto.exerciseIds().isEmpty()) {

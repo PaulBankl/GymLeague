@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import dev.paulbankl.gymleague.dto.ResponseDTOs.EntryDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.ExerciseDTO;
 import dev.paulbankl.gymleague.dto.ResponseDTOs.ExerciseInfoDTO;
 import dev.paulbankl.gymleague.exception.ResourceNotFoundException;
@@ -45,7 +46,14 @@ public class ExerciseService {
         Entry bestEntry = getBestEntry(entries);
         return new ExerciseInfoDTO(
             entries.size(),
-            bestEntry,
+            bestEntry != null ? new EntryDTO(
+                bestEntry.getId(),
+                bestEntry.getWeight(),
+                bestEntry.getReps(),
+                bestEntry.getUser().getUsername(),
+                bestEntry.getExercise().getName(),
+                bestEntry.getDate().toString()
+            ) : null,
             progressPercent,
             progress.difference()
         );
