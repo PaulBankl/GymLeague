@@ -8,7 +8,6 @@ type EntryFormProps = {
 };
 
 export default function EntryForm({ exerciseId, exerciseName, onEntryAdded }: EntryFormProps) {
-    const username = sessionStorage.getItem("username");
     const [weight, setWeight] = useState("");
     const [reps, setReps] = useState("");
     const [showForm, setShowForm] = useState(false);
@@ -21,7 +20,7 @@ export default function EntryForm({ exerciseId, exerciseName, onEntryAdded }: En
             alert("Weight and reps must be greater than 0.");
             return;
         }
-        if (username) {
+       
             try {
                 const success = await Entryservice.addEntryForUser(Number(exerciseId), weightNumber, repsNumber);
                 if (success) {
@@ -35,9 +34,6 @@ export default function EntryForm({ exerciseId, exerciseName, onEntryAdded }: En
                 alert("Failed to add entry.");
                 console.error(error);
             }
-        } else {
-            alert("User not logged in.");
-        }
         setShowForm(false); // Close the form after submission
     }
     return (<div>

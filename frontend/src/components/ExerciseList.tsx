@@ -1,5 +1,4 @@
 import type { Community } from "../types/Community";
-import type { Exercise } from "../types/Exercise";
 
 type ExerciseListProps = {
     community: Community;

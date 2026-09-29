@@ -10,14 +10,12 @@ export default function CommunityOverviewPage() {
     const [error, setError] = useState(false);
     const [refresh, setRefresh] = useState(0);
     useEffect(() => {
-        const username = sessionStorage.getItem("username");
-        if (username) {
+        
             CommunityService.getAllCommunitiesForUser()
                 .then(setCommunities)
                 .catch((error) => {
                     setError(true);
                 });
-        }
     }, [refresh]);
 
     if (error) {

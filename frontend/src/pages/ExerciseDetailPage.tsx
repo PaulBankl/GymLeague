@@ -14,7 +14,6 @@ import ExerciseInfoCard from "../components/ExerciseInfoCard";
 
 export default function ExerciseDetailPage({ }) {
     const { id } = useParams();
-    const username = sessionStorage.getItem("username");
     const [exercise, setExercise] = useState<Exercise | null>(null);
     const [entries, setEntries] = useState<Entry[] | null>(null);
     const [error, setError] = useState(false);
@@ -31,7 +30,7 @@ export default function ExerciseDetailPage({ }) {
                     setError(true);
                 });
         }
-        if (id && username) {
+        if (id) {
             Entryservice.getEntriesByExerciseIdForUser(id)
                 .then(setEntries)
                 .catch((error: Error) => {

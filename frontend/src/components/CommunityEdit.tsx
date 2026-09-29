@@ -14,7 +14,6 @@ export default function CommunityEdit({ community, onCommunityChange }: EditComm
     const [description, setDescription] = useState(community?.description || "");
     const [isPrivate, setIsPrivate] = useState(community?.isPrivate || false);
     const [error, setError] = useState<string | null>(null);
-    const username = sessionStorage.getItem("username");
     const [joinCode, setJoinCode] = useState(community?.joinCode || "");
 
     const [exercises, setExercises] = useState<Exercise[]>([]);
@@ -44,11 +43,6 @@ export default function CommunityEdit({ community, onCommunityChange }: EditComm
             }
             if (description.length > 255) {
                 setError("Description cannot exceed 255 characters.");
-                return;
-            }
-            if (!username) {
-                console.error("No username found");
-                setError("No username found.");
                 return;
             }
             const response = await CommunityService.editCommunity(community.name, description, isPrivate, checkedExercises, joinCode);

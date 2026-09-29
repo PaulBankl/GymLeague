@@ -5,11 +5,7 @@ import type { Entry } from "../types/Entry";
 import { useEffect, useState } from "react";
 
 export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
-    const username = sessionStorage.getItem("username");
     const [bestEntry, setBestEntry] = useState<Entry | null>(null);
-    if (!username) {
-        return <div>Please log in to view exercises.</div>;
-    }
 
     function calculateOneRepMax(weight: number, reps: number): number {
         if (reps === 1) {
@@ -21,7 +17,7 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
         Entryservice.getBestEntryForExercise(exercise.id).then((entry) => {
             setBestEntry(entry);
         });
-    }, [exercise.id, username]);
+    }, [exercise.id]);
 
     return (<>
         <div className="bg-surface-2 border border-border rounded-md p-4 mb-4 w-[80vw] md:w-[50vw] items-center flex flex-col">

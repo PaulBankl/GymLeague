@@ -8,7 +8,6 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [isPrivate, setIsPrivate] = useState(false);
-    const username = sessionStorage.getItem("username");
     const [error, setError] = useState<string | null>(null);
     const [ShowForm, setShowForm] = useState(false);
     const [joinCode, setJoinCode] = useState("");
@@ -32,10 +31,6 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
         e.preventDefault();
         if (name.trim() === "") {
             setError("Name cannot be empty.");
-            return;
-        }
-        if (!username) {
-            setError("User not logged in.");
             return;
         }
         if (name.length < 3) {
@@ -77,9 +72,6 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
         onCommunityCreated();
         setShowForm(false);
     };
-    if (!username) {
-        return <div>Please log in to create a community.</div>;
-    }
     if (exercises.length === 0 && ShowForm) {
         return <div>Loading exercises... <br>
         </br><h1>Then you can create a community.</h1></div>;

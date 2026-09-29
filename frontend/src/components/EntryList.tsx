@@ -13,7 +13,6 @@ type EntryListProps = {
 
 
 export default function EntryList({ exerciseId, refresh, onRefresh }: EntryListProps) {
-    const username = sessionStorage.getItem("username");
     const [entries, setEntries] = useState<Entry[] | null>(null);
     const [error, setError] = useState<String | null>(null);
     const [loading, setLoading] = useState(true);
@@ -23,7 +22,7 @@ export default function EntryList({ exerciseId, refresh, onRefresh }: EntryListP
     const [editReps, setEditReps] = useState("");
 
     useEffect(() => {
-        if (exerciseId && username) {
+        if (exerciseId) {
             Entryservice.getEntriesByExerciseIdForUser(exerciseId)
                 .then(setEntries).then(() => setLoading(false))
                 .catch((error: Error) => {
