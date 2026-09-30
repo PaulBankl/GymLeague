@@ -18,7 +18,7 @@ export default function CommunityDetailPage() {
     const [community, setCommunity] = useState<Community | null>(null);
     const [error, setError] = useState(false);
     const navigate = useNavigate();
-    const [members, setMembers] = useState<{ username: string; role: string; joinedAt: string }[]>([]);
+    const [members, setMembers] = useState<{ username: string; displayName: string; role: string; joinedAt: string }[]>([]);
     const [activities, setActivities] = useState<CommunityActivity[]>([]);
 
     if (!id) {

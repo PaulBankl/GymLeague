@@ -72,3 +72,33 @@ export async function logout(): Promise<boolean> {
 
     return true;
 }
+
+export async function checkHealth(): Promise<boolean> {
+    const response = await apiFetch("/api/users/health", {
+        method: "GET",
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message ?? response.statusText ?? "Request failed");
+    }
+
+    return true;
+}
+
+export async function changeDisplayName(displayName: string): Promise<boolean> {
+    const response = await apiFetch("/api/users/updateDisplayName" , {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            displayName
+        })
+    });
+    if(!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message ?? response.statusText ?? "Request failed");
+    }
+    return response.ok;
+}

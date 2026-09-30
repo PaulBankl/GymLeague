@@ -5,6 +5,7 @@ import dev.paulbankl.gymleague.model.CommunityRole;
 
 public record ComMemberListDTO(
     String username,
+    String displayName,
     CommunityRole role,
     String joinedAt
 ) {}

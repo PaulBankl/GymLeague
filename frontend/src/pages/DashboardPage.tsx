@@ -16,6 +16,8 @@ export default function DashboardPage() {
             </Link>
             <br />
             <Link to="/community" className="font-heading md:text-[clamp(24px,5vw,36px)]">Go to Communities</Link>
+            <br></br>
+            <Link to="/settings" className="font-heading md:text-[clamp(24px,5vw,36px)]">Go to Settings</Link>
             <br>
             </br>
             <LogoutButton />

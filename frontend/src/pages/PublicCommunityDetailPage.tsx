@@ -12,7 +12,7 @@ import MemberList from "../components/MemberList";
 export default function PublicCommunityDetailPage() {
 
     const [community, setCommunity] = useState<Community | null>(null);
-    const [members, setMembers] = useState<{ username: string; role: string; joinedAt: string }[]>([]);
+    const [members, setMembers] = useState<{ username: string; displayName: string; role: string; joinedAt: string }[]>([]);
     const [error, setError] = useState(false);
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();

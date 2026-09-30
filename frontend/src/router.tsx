@@ -1,5 +1,5 @@
-import React from 'react'
-import { createBrowserRouter, Link, } from "react-router-dom";
+
+import { createBrowserRouter} from "react-router-dom";
 
 import HomePage from "./pages/HomePage";
 import RegisterPage from "./pages/RegisterPage";
@@ -13,15 +13,14 @@ import AllCommunityPage from './pages/AllCommunityPage';
 import PublicCommunityDetailPage from './pages/PublicCommunityDetailPage';
 import ProtectedRoute from './ProtectedRoute';
 import RankingPage from './pages/RankingPage';
+import SettingsPage from './pages/SettingsPage';
 
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element:
-    <ProtectedRoute>
      <HomePage />
-     </ProtectedRoute>
   },
   {
     path: "/register",
@@ -37,6 +36,13 @@ export const router = createBrowserRouter([
     element:
      <ProtectedRoute>
        <DashboardPage />
+     </ProtectedRoute>
+  },
+  {
+    path: "/settings",
+    element:
+     <ProtectedRoute>
+       <SettingsPage />
      </ProtectedRoute>
   },
   {

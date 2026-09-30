@@ -32,6 +32,7 @@ import dev.paulbankl.gymleague.dto.UpdateDisplayNameDTO;
 
 import java.util.Map;
 
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -97,6 +98,12 @@ securityContextRepository.saveContext(context, request, response);
     public CsrfToken csrf(CsrfToken csrfToken) {
         return csrfToken;
     }
+
+    @GetMapping("/health")
+    public ResponseEntity<Boolean> checkHealth() {
+        return ResponseEntity.ok(true);
+    }
+    
     
     
 }

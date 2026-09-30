@@ -192,6 +192,7 @@ public List<ComMemberListDTO> getAllMembersOfCommunity(Long communityId) {
     return communityMemberRepository.findByCommunityIdOrderByRoleDescJoinedAtAsc(communityId)
             .stream()
             .map(member -> new ComMemberListDTO(
+                member.getUser().getUsername(),
                     member.getUser().getDisplayName(),
                     member.getRole(),
                     member.getJoinedAt().toString()
