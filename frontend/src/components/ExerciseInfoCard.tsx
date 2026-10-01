@@ -17,7 +17,7 @@ export default function ExerciseInfoCard({ id, refresh }: { id: string, refresh:
                 console.error("Error fetching exercise info:", error);
                 setError(error.message);
             });
-    }, [id,  refresh]);
+    }, [id, refresh]);
     if (error) {
         return (<div>Error Loading stats</div>);
     }

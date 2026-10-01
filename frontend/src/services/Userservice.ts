@@ -78,12 +78,11 @@ export async function checkHealth(): Promise<boolean> {
         method: "GET",
     });
 
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message ?? response.statusText ?? "Request failed");
-    }
+   if(await response.json()){
+        return true;
+   }
 
-    return true;
+    return false;
 }
 
 export async function changeDisplayName(displayName: string): Promise<boolean> {

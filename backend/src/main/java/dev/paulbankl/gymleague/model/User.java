@@ -34,7 +34,7 @@ public class User {
     private String username;
 
     @Setter
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String displayName;
 
     @Column(nullable = false, unique = true)

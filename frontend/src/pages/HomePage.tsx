@@ -16,7 +16,7 @@ export default function HomePage() {
             }
         }
         checkServerHealth();
-    })
+    }, []);
 
     if(serverError) {
         return (

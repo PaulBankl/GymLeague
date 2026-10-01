@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import dev.paulbankl.gymleague.repository.UserRepository;
 import dev.paulbankl.gymleague.dto.UpdateDisplayNameDTO;
 import dev.paulbankl.gymleague.exception.ConflictException;
-import dev.paulbankl.gymleague.exception.ForbiddenException;
 import dev.paulbankl.gymleague.exception.ResourceNotFoundException;
 import dev.paulbankl.gymleague.model.User;
 

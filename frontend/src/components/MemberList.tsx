@@ -19,7 +19,7 @@ export default function MemberList({ community, members, refresh }: MemberListPr
             {members.map((member) => (
                 <li key={member.displayName} className="flex flex-col  md:flex-row w-[80vw] md:w-[50vw] border border-border bg-surface p-2 rounded-md items-center justify-between mb-2">
                     <div className="flex flex-row items-center gap-2">
-                        <p className="self-start ml -4">* {member.displayName}</p>
+                        <p className="self-start ml -4 flex flex-row">* {member.displayName} <p className="text-muted">[{member.username}]</p></p>
                         {member.role === "OWNER" && <p className="text-accent font-heading self-end  border-accent border rounded-md p-1 bg-surface">OWNER</p>}
                         {member.role === "ADMIN" && <p className="text-blue-500 font-heading self-end border-blue-500 border rounded-md p-1 bg-surface">ADMIN</p>}
                         {member.role === "MODERATOR" && <p className="text-green-500 font-heading self-end border-green-500  border rounded-md p-1 bg-surface">Moderator</p>}
