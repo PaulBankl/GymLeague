@@ -32,7 +32,6 @@ public class UserService {
     //updated den displayname des users
     @Transactional
     public void updateDisplayName(UpdateDisplayNameDTO updateDisplayNameDTO, Authentication auth) {
-        System.out.println("AUTH NAME: " + auth.getName());
         String username = auth.getName();
         String displayName = updateDisplayNameDTO.displayName();
 

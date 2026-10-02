@@ -17,7 +17,7 @@ export default function CommunityEdit({ community, onCommunityChange }: EditComm
     const [joinCode, setJoinCode] = useState(community?.joinCode || "");
 
     const [exercises, setExercises] = useState<Exercise[]>([]);
-    const [checkedExercises, setCheckedExercises] = useState<number[]>([]);
+    const [checkedExercises, setCheckedExercises] = useState<number[]>(community?.exercises.map(exercise => exercise.id) || []);
 
 
     useEffect(() => {
@@ -26,16 +26,15 @@ export default function CommunityEdit({ community, onCommunityChange }: EditComm
         }).catch((error) => {
             console.error("Failed to fetch exercises:", error);
         });
-        setCheckedExercises(community?.exercises.map(exercise => exercise.id) || []);
     }, []);
 
 
     async function HandleChange(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-        if (description == community?.description && isPrivate == community?.isPrivate && checkedExercises.length === community?.exercises.length && checkedExercises.every(id => community?.exercises.some(exercise => exercise.id === id))) {
+        e.preventDefault();
+        if (description == community?.description && isPrivate == community?.isPrivate && checkedExercises.length === community?.exercises.length && checkedExercises.every(id => community?.exercises.some(exercise => exercise.id === id)) && joinCode == community?.joinCode) {
             setError("No changes made.");
             return;
         } {
-            e.preventDefault();
             if (!community) {
                 console.error("No community data available.");
                 setError("No community data available.");
@@ -45,14 +44,20 @@ export default function CommunityEdit({ community, onCommunityChange }: EditComm
                 setError("Description cannot exceed 255 characters.");
                 return;
             }
-            const response = await CommunityService.editCommunity(community.name, description, isPrivate, checkedExercises, joinCode);
-            if (!response) {
-                console.error("Failed to edit community.");
-                setError("Failed to edit community.");
+            try {
+                const response = await CommunityService.editCommunity(community.name, description, isPrivate, checkedExercises, joinCode);
+                if (!response) {
+                    console.error("Failed to edit community.");
+                    setError("Failed to edit community.");
+                    return;
+                }
+                onCommunityChange();
+                setError(null); 
+            } catch (error) {
+                console.error("Error editing community:", error);
+                setError("Error editing community.");
                 return;
             }
-            onCommunityChange();
-            setError(null);
         }
     }
     return (

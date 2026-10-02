@@ -17,7 +17,7 @@ export default function MemberActionsButton({ communityId, memberUsername, actio
         promote: "Promote",
         demote: "Demote"
     }[action];
-    async function handleClick() {        
+    async function handleClick() {
 
         if (communityId === undefined || memberUsername === undefined) {
             console.error("Community ID or member username is undefined.");
@@ -25,7 +25,7 @@ export default function MemberActionsButton({ communityId, memberUsername, actio
         }
         try {
             switch (action) {
-                case "kick":
+                case "kick": {
                     const success = await CommunityService.kickMember(communityId, memberUsername);
                     if (success) {
                         onSuccess?.();
@@ -33,23 +33,29 @@ export default function MemberActionsButton({ communityId, memberUsername, actio
                         console.error("Failed to kick member.");
                     }
                     break;
+                }
                 case "promote":
-                    const promoteSuccess = await CommunityService.promoteMember(communityId,  memberUsername);
-                    if (promoteSuccess) {
-                        onSuccess?.();
-                    } else {
-                        console.error("Failed to promote member.");
+                    {
+                        const promoteSuccess = await CommunityService.promoteMember(communityId, memberUsername);
+                        if (promoteSuccess) {
+                            onSuccess?.();
+                        } else {
+                            console.error("Failed to promote member.");
+                        }
+                        break;
                     }
-                    break;
+
                 case "demote":
-                    const demoteSuccess = await CommunityService.demoteMember(communityId,  memberUsername);
-                    if (demoteSuccess) {
-                        onSuccess?.();
-                    } else {
-                        console.error("Failed to demote member.");
+                    {
+                        const demoteSuccess = await CommunityService.demoteMember(communityId, memberUsername);
+                        if (demoteSuccess) {
+                            onSuccess?.();
+                        } else {
+                            console.error("Failed to demote member.");
+                        }
+                        break;
                     }
-                    break;
-                
+
             }
 
         } catch (error) {
@@ -65,16 +71,16 @@ export default function MemberActionsButton({ communityId, memberUsername, actio
     }
     return (
         <>
-        {!showConfirmation && buttonText === "Demote" && <button onClick={() => setShowConfirmation(!showConfirmation)} className="border border-border p-1 rounded-md mt-2  text-muted">{buttonText}</button>}
-        {!showConfirmation && buttonText === "Promote" && <button onClick={() => setShowConfirmation(!showConfirmation)} className="border border-accent bg-accent p-1 rounded-md mt-2  text-white">{buttonText}</button>}
-        {!showConfirmation && buttonText === "Kick" && <button onClick={() => setShowConfirmation(!showConfirmation)} className="border border-red-accent p-1 rounded-md mt-2 bg-surface   text-accent">{buttonText}</button>}
-        {showConfirmation && (
-            <div className="border-border-accent border p-2 rounded-md mt-2 bg-surface flex flex-col items-center gap-2">
-                <p>Are you sure you want to {buttonText.toLowerCase()} {memberUsername}?</p>
-                <button onClick={handleClick} className="border border-accent text-accent p-1 rounded-md mt-2 bg-surface">Yes</button>
-                <button onClick={() => setShowConfirmation(false)} className="border-green-500 border text-green-500 p-1 rounded-md mt-2 bg-surface">No</button>
-            </div>
-        )}
-           </>
+            {!showConfirmation && buttonText === "Demote" && <button onClick={() => setShowConfirmation(!showConfirmation)} className="border border-border p-1 rounded-md mt-2  text-muted">{buttonText}</button>}
+            {!showConfirmation && buttonText === "Promote" && <button onClick={() => setShowConfirmation(!showConfirmation)} className="border border-accent bg-accent p-1 rounded-md mt-2  text-white">{buttonText}</button>}
+            {!showConfirmation && buttonText === "Kick" && <button onClick={() => setShowConfirmation(!showConfirmation)} className="border border-red-accent p-1 rounded-md mt-2 bg-surface   text-accent">{buttonText}</button>}
+            {showConfirmation && (
+                <div className="border-border-accent border p-2 rounded-md mt-2 bg-surface flex flex-col items-center gap-2">
+                    <p>Are you sure you want to {buttonText.toLowerCase()} {memberUsername}?</p>
+                    <button onClick={handleClick} className="border border-accent text-accent p-1 rounded-md mt-2 bg-surface">Yes</button>
+                    <button onClick={() => setShowConfirmation(false)} className="border-green-500 border text-green-500 p-1 rounded-md mt-2 bg-surface">No</button>
+                </div>
+            )}
+        </>
     );
 }

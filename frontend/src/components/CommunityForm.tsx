@@ -69,6 +69,8 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
         setName("");
         setDescription("");
         setIsPrivate(false);
+        setCheckedExercises([]);
+        setJoinCode("");
         onCommunityCreated();
         setShowForm(false);
     };
@@ -80,7 +82,7 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
     return (
         <>
             {!ShowForm && <button onClick={() => { if (ShowForm) { setCheckedExercises([]); } setShowForm(!ShowForm) }} className="bg-accent border border-border rounded-md p-2 mb-4  hover:bg-accent-dim pl-5 pr-5">{ShowForm ? "X" : "Create Community"}</button>}
-            {ShowForm && (
+            {ShowForm && (<div>
 
                 <form onSubmit={handleSubmit} className="bg-surface flex flex-col items-center md:w-[40vw] mx-auto">
                     <h1 className="text-body self-start ml-5 text-lg mt-5">Create a New Community</h1>
@@ -142,9 +144,10 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
                     )}
                     <div className="self-start ml-[5%] mb-4 flex items-center mt-5 mb-4">
                         <button type="submit" className="bg-accent border border-border rounded-md p-2 hover:bg-accent-dim pl-5 pr-5">Create Community</button>
-                        <button onClick={() => { if (ShowForm) { setCheckedExercises([]); } setShowForm(!ShowForm) }} className="text-accent border border-accent rounded-md ml-2 p-2 hover:bg-accent-dim">Cancel</button>
                     </div>
                 </form>
+                <button onClick={() => { if (ShowForm) { setCheckedExercises([]); } setShowForm(!ShowForm) }} className="text-accent border border-accent rounded-md ml-2 p-2 hover:bg-accent-dim">Cancel</button>
+            </div>
             )}
         </>
     );

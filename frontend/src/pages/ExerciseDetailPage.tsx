@@ -12,7 +12,7 @@ import ExerciseInfoCard from "../components/ExerciseInfoCard";
 
 
 
-export default function ExerciseDetailPage({ }) {
+export default function ExerciseDetailPage() {
     const { id } = useParams();
     const [exercise, setExercise] = useState<Exercise | null>(null);
     const [entries, setEntries] = useState<Entry[] | null>(null);
@@ -38,7 +38,7 @@ export default function ExerciseDetailPage({ }) {
                     setError(true);
                 });
         }
-    }, []);
+    }, [id]);
     if (!id) {
         return <div>Invalid exercise.</div>;
     }

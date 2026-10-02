@@ -1,4 +1,4 @@
-import {apiFetch} from "./api";
+import { apiFetch, clearCsrfToken } from "./api";
 
 
 
@@ -38,10 +38,10 @@ export async function login(username: string, password: string) {
         }
     );
    if(!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message ?? response.statusText ?? "Request failed");
+        throw new Error( "Request failed");
     }
 
+     clearCsrfToken();
     return true;
 }
 
@@ -70,6 +70,7 @@ export async function logout(): Promise<boolean> {
         throw new Error(error.message ?? response.statusText ?? "Request failed");
     }
 
+     clearCsrfToken();
     return true;
 }
 

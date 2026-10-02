@@ -17,7 +17,6 @@ export default function RankingPage() {
 
     useEffect(() => {
         if (!id) {
-            setError("Invalid community ID");
             return;
         }
         const fetchRanking = async () => {
@@ -33,7 +32,7 @@ export default function RankingPage() {
         }
         fetchRanking();
 
-    }, []);
+    }, [id]);
     if (error) {
         return <div className="flex flex-col items-center"><p className="text-accent mt-[20vh] text-3xl">Error: {error}</p>
             <button onClick={() => navigate(`/community/${id}`)} className="border border-border p-2 rounded-md mt-2 text-3xl text-muted">Back</button>
@@ -57,6 +56,10 @@ export default function RankingPage() {
         </div>
 
     }
+    const getOneRm = (user: UserRanking) =>
+    user.Exercises.find(
+        exercise => exercise.exerciseId === selectedExercise
+    )?.OneRM ?? 0;
     return (
         <div className="flex flex-col items-center mt-[5vh] h-screen">
             <h1 className="font-heading text-[clamp(22px,10vw,72px)] text-center font-black tracking-[-2px]">Community Ranking <p className="text-accent">"{ranking?.communityName}"</p></h1>
@@ -68,7 +71,7 @@ export default function RankingPage() {
             {selectedExercise !== null && <h1 className="text-3xl font-bold my-4">Ranking for: {ranking.exercises.find(exercise => exercise.id === selectedExercise)?.name}</h1>}
             <div className="flex flex-col items-center mt-4">
                 {selectedExercise === null && [...userRankings].sort((a, b) => b.total - a.total).map((userRankings, index) => (<RankingCard key={userRankings.username} rank={index + 1} userName={userRankings.username} weight={userRankings.total} />))}
-                {selectedExercise !== null && [...userRankings].sort((a, b) => b.Exercises.find(exercise => exercise.exerciseId === selectedExercise)?.OneRM! - a.Exercises.find(exercise => exercise.exerciseId === selectedExercise)?.OneRM!).map((userRankings, index) => { return <RankingCard key={userRankings.username} rank={index + 1} userName={userRankings.username} weight={userRankings.Exercises.find(exercise => exercise.exerciseId === selectedExercise)?.OneRM!} /> })}
+                {selectedExercise !== null && [...userRankings].sort((a, b) => getOneRm(b) - getOneRm(a)).map((userRankings, index) => { return <RankingCard key={userRankings.username} rank={index + 1} userName={userRankings.username} weight={getOneRm(userRankings)} /> })}
             </div>
             <button onClick={() => navigate(`/community/${id}`)} className="border border-border p-2 rounded-md mt-2 text-3xl text-muted">Back</button>
         </div >

@@ -1,19 +1,24 @@
 import { useContext, useEffect, useState } from "react";
-import {Link, useNavigate} from "react-router-dom";
+import {Link, Navigate} from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import * as Userservice from "../services/Userservice";
 
 export default function HomePage() {
   const { username} = useContext(AuthContext);
-    const navigate = useNavigate();
     const [serverError, setServerError] = useState(false);
     
     useEffect(() => {
         async function checkServerHealth() {
+          try{
             const response = await Userservice.checkHealth();
             if (!response) {
                 setServerError(true);
             }
+          }
+          catch (error) {
+            console.error("Error checking server health:", error);
+            setServerError(true);
+          }
         }
         checkServerHealth();
     }, []);
@@ -29,7 +34,7 @@ export default function HomePage() {
 
 
     if (username && username.length > 0) {
-        navigate("/app");
+        return <Navigate to="/app" />;
         
     }
   return (

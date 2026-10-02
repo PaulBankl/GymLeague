@@ -1,20 +1,14 @@
 package dev.paulbankl.gymleague.dto.ResponseDTOs;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class CommunityOverviewDTO{
-    private Long id;
-    private String name;
-    private String description;
-    private boolean isPrivate;
-    private String createdAt;
-    private String owner;
-    private int memberCount;
+
+public record CommunityOverviewDTO(
+    Long id,
+    String name,
+    String description,
+    boolean isPrivate,
+    String createdAt,
+    String owner,
+    int memberCount
+) {
 }

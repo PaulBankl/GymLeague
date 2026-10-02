@@ -14,7 +14,8 @@ type EntryListProps = {
 
 export default function EntryList({ exerciseId, refresh, onRefresh }: EntryListProps) {
     const [entries, setEntries] = useState<Entry[] | null>(null);
-    const [error, setError] = useState<String | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [loadingError, setLoadingError] = useState<boolean>(false);
     const [loading, setLoading] = useState(true);
 
     const [EditFormid, setEditFormid] = useState<number | null>(null);
@@ -27,15 +28,21 @@ export default function EntryList({ exerciseId, refresh, onRefresh }: EntryListP
                 .then(setEntries).then(() => setLoading(false))
                 .catch((error: Error) => {
                     console.error("Error fetching entries:", error);
-                    setError(error.message);
+                    setLoading(false);
+                    setLoadingError(true);
                 })
                 
         }
     }, [exerciseId, refresh]); // Abhängigkeit von refresh und onEntryDeleted, damit die Liste aktualisiert wird, wenn ein Eintrag gelöscht wurde
 
+    if(loadingError) {
+        return <div className="text-red-500">Error fetching entries.</div>;
+    }
+
     if (!exerciseId) {
         return <div>Invalid exercise.</div>;
     }
+
 
     if (!entries) {
         return <div>Loading Entries...</div>;

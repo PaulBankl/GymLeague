@@ -200,6 +200,8 @@ export async function getCommunityRanking(communityId: number): Promise<Ranking>
             const error = await response.json();
             message = error.message ?? message;
         } catch {
+            // response body was empty or not JSON
+            message = "Response body is empty or not valid JSON";
         }
 
         throw new Error(message);

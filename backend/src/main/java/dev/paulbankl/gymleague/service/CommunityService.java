@@ -178,8 +178,23 @@ private void findNewOwner(Long id, Community community, String leavingUsername) 
 
     CommunityMember newOwner = members.stream()
             .filter(member -> !member.getUser().getUsername().equals(leavingUsername))
+            .filter(member -> member.getRole() == CommunityRole.ADMIN)
             .findFirst()
-            .orElseThrow(() -> new ResourceNotFoundException("No member found for ownership transfer"));
+            .orElse(null);
+
+            if(newOwner == null) {
+                newOwner = members.stream()
+                .filter(member -> !member.getUser().getUsername().equals(leavingUsername))
+                .filter(member -> member.getRole() == CommunityRole.MODERATOR)
+                .findFirst()
+                .orElse(null);
+            }
+            if(newOwner == null) {
+                newOwner = members.stream()
+                .filter(member -> !member.getUser().getUsername().equals(leavingUsername))
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException("No other members found to promote to owner"));
+            }
 
     newOwner.setRole(CommunityRole.OWNER);
     community.setOwner(newOwner.getUser());

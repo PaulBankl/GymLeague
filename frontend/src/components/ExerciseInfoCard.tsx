@@ -7,10 +7,10 @@ export default function ExerciseInfoCard({ id, refresh }: { id: string, refresh:
     const [info, setInfo] = useState<{ entryCount: number; bestEntry: Entry | null; progressPercent: number; progressOneRm: number } | null>(null);
 
 
-    if (!id) {
-        return (<div>Invalid exercise.</div>);
-    }
     useEffect(() => {
+        if(!id) {
+            return;
+        }
         Exerciseservice.getExerciseInfoById(id)
             .then(setInfo)
             .catch((error: Error) => {

@@ -17,9 +17,7 @@ export default function PublicCommunityDetailPage() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
 
-    if (!id) {
-        return <div>Invalid community ID</div>;
-    }
+    
 
     const username = useContext(AuthContext)?.username;
 
@@ -42,7 +40,10 @@ export default function PublicCommunityDetailPage() {
     };
 
     useEffect(() => {
-        setCommunity(id ? null : community);
+        if(!id){
+            return;
+        }
+        setCommunity(null);
         CommunityService.getCommunityDetails(Number(id)).then((data) => {
             setCommunity(data);
         }).catch((error) => {
@@ -54,8 +55,11 @@ export default function PublicCommunityDetailPage() {
         }).catch((error) => {
             console.error("Failed to fetch community members:", error);
         });
-    }, []);
+    }, [id]);
 
+    if (!id) {
+        return <div>Invalid community ID</div>;
+    }
     if (error) {
         return <div>Server Error</div>;
     }

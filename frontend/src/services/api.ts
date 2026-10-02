@@ -1,62 +1,57 @@
-const API_BASE_URL = "http://localhost:8080";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-function getCookie(name: string): string | null {
-    const cookies = document.cookie.split("; ");
-
-    const cookie = cookies.find((row) => row.startsWith(`${name}=`));
-
-    if (!cookie) {
-        return null;
-    }
-
-    return decodeURIComponent(cookie.split("=")[1]);
+if (!API_BASE_URL) {
+  throw new Error("VITE_API_BASE_URL is not configured");
 }
 
-export async function refreshCsrfToken(): Promise<void> {
-    const response = await fetch(`${API_BASE_URL}/api/users/csrf`, {
-        method: "GET",
-        credentials: "include",
-    });
-
-    if (!response.ok) {
-        throw new Error("Failed to fetch CSRF token");
-    }
-}
+let csrfToken: string | null = null;
 
 async function getCsrfToken(): Promise<string> {
-    let token = getCookie("XSRF-TOKEN");
+  if (csrfToken) {
+    return csrfToken;
+  }
 
-    if (!token) {
-        await refreshCsrfToken();
-        token = getCookie("XSRF-TOKEN");
-    }
+  const response = await fetch(`${API_BASE_URL}/api/users/csrf`, {
+    method: "GET",
+    credentials: "include",
+  });
 
-    if (!token) {
-        throw new Error("CSRF token cookie not found");
-    }
+  if (!response.ok) {
+    throw new Error("Failed to fetch CSRF token");
+  }
 
-    return token;
+  const data = await response.json();
+
+  csrfToken = data.token;
+
+  if (!csrfToken) {
+    throw new Error("CSRF token missing in response");
+  }
+
+  return csrfToken;
+}
+
+export function clearCsrfToken(): void {
+  csrfToken = null;
 }
 
 export async function apiFetch(
-    path: string,
-    options: RequestInit = {}
+  path: string,
+  options: RequestInit = {}
 ): Promise<Response> {
-    const method = options.method?.toUpperCase() ?? "GET";
-    const needsCsrf = !["GET", "HEAD", "OPTIONS"].includes(method);
+  const method = options.method?.toUpperCase() ?? "GET";
+  const needsCsrf = !["GET", "HEAD", "OPTIONS"].includes(method);
 
-    const headers = new Headers(options.headers);
+  const headers = new Headers(options.headers);
 
-    if (needsCsrf) {
-        const token = await getCsrfToken();
-        headers.set("X-XSRF-TOKEN", token);
-    }
+  if (needsCsrf) {
+    const token = await getCsrfToken();
+    headers.set("X-XSRF-TOKEN", token);
+  }
 
-    return fetch(`${API_BASE_URL}${path}`, {
-        ...options,
-        headers,
-        credentials: "include",
-    });
-
-    
+  return fetch(`${API_BASE_URL}${path}`, {
+    ...options,
+    headers,
+    credentials: "include",
+  });
 }
