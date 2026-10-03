@@ -168,9 +168,9 @@ This repository contains the application source code and supporting development 
 
 ![Add Entry](frontend/screenshots/AddEntry.png)
 
-### Community Overview
+### Community Detail
 
-![Community Overview](frontend/screenshots/CommunityOverview.png)
+![Community Overview](frontend/screenshots/CommunityDetail.png)
 
 ### Ranking
 
