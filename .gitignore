@@ -72,3 +72,18 @@ Thumbs.db
 # Keep examples
 !.env.example
 !**/.env.example
+!.env.server.example
+
+# Local credentials and certificates
+secrets/
+certs/
+.pgpass
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.crt
+*.cer
+*.backup
