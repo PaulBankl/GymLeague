@@ -75,9 +75,9 @@ public class CommunityController {
     public ResponseEntity<List<ComMemberListDTO>> getAllMembersOfCommunity(@PathVariable Long id) {
         return ResponseEntity.ok(communityService.getAllMembersOfCommunity(id));
     }
-    @GetMapping("/random")
-    public ResponseEntity<List<CommunityOverviewDTO>> getrandomCommunities(Authentication authentication) {
-        return ResponseEntity.ok(communityService.get10RandomCommunities(authentication.getName()));
+    @GetMapping("/newest")
+    public ResponseEntity<List<CommunityOverviewDTO>> getNewestCommunities(Authentication authentication) {
+        return ResponseEntity.ok(communityService.get10NewestCommunities(authentication.getName()));
     }
     @PostMapping("/change")
     public ResponseEntity<Void> changeCommunity(@Valid @RequestBody CommunityChangeDTO dto, Authentication authentication) {

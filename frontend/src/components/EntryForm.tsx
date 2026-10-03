@@ -20,20 +20,20 @@ export default function EntryForm({ exerciseId, exerciseName, onEntryAdded }: En
             alert("Weight and reps must be greater than 0.");
             return;
         }
-       
-            try {
-                const success = await Entryservice.addEntryForUser(Number(exerciseId), weightNumber, repsNumber);
-                if (success) {
-                    setWeight("");
-                    setReps("");
-                    onEntryAdded(); // Call the callback to refresh the entry list
-                } else {
-                    alert("Failed to add entry.");
-                }
-            } catch (error) {
+
+        try {
+            const success = await Entryservice.addEntryForUser(Number(exerciseId), weightNumber, repsNumber);
+            if (success) {
+                setWeight("");
+                setReps("");
+                onEntryAdded(); // Call the callback to refresh the entry list
+            } else {
                 alert("Failed to add entry.");
-                console.error(error);
             }
+        } catch (error) {
+            alert("Failed to add entry.");
+            console.error(error);
+        }
         setShowForm(false); // Close the form after submission
     }
     return (<div>
@@ -44,15 +44,15 @@ export default function EntryForm({ exerciseId, exerciseName, onEntryAdded }: En
                 <button type="button" onClick={() => { setShowForm(!showForm) }} className="text-muted bg-surface-2 rounded-md p-1 pl-2 pr-2">X</button>
             </div>
             <div className=" flex flex-col justify-between md:flex-row ">
-            <div>
-                <label htmlFor="weight" className="text-muted">Weight</label>
-                <input id="weight" type="number" value={weight} onChange={(e) => setWeight(e.target.value)} className="bg-surface-2 border border-border max-w-[70%] rounded-md p-2 mb-4" />
-            </div>
-            <div>
-                <label htmlFor="reps" className="text-muted">Reps</label>
-                <input id="reps" type="number" value={reps} onChange={(e) => setReps(e.target.value)} className="bg-surface-2 border border-border max-w-[70%] rounded-md p-2 mb-4" />
-            </div>
-            <button type="submit" className="bg-accent border border-border rounded-md p-2 mb-4  hover:bg-accent-dim  min-w-[100px] ">Submit</button>
+                <div>
+                    <label htmlFor="weight" className="text-muted">Weight</label>
+                    <input id="weight" type="number" min="0.1" step="0.1" value={weight} onChange={(e) => setWeight(e.target.value)} className="bg-surface-2 border border-border max-w-[70%] rounded-md p-2 mb-4" />
+                </div>
+                <div>
+                    <label htmlFor="reps" className="text-muted">Reps</label>
+                    <input id="reps" type="number" value={reps} onChange={(e) => setReps(e.target.value)} className="bg-surface-2 border border-border max-w-[70%] rounded-md p-2 mb-4" />
+                </div>
+                <button type="submit" className="bg-accent border border-border rounded-md p-2 mb-4  hover:bg-accent-dim  min-w-[100px] ">Submit</button>
             </div>
         </form>}
     </div>)

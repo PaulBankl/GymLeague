@@ -74,7 +74,7 @@ if (owner == null) {
         dto.description(),
         dto.isPrivate(),
         owner,
-        dto.joinCode()
+        dto.joinCode().trim()
         );
         //Community wird erschaffen und CommunityMember wird erschaffen und gespeichert
         communityRepository.save(community);
@@ -134,7 +134,7 @@ if (owner == null) {
             community.getCreatedAt(),
             community.isPrivate(),
             exercises.length > 0 ? java.util.Arrays.stream(exercises).map(exercise -> new ExerciseDTO(exercise.getId(), exercise.getName())).toArray(ExerciseDTO[]::new) : new ExerciseDTO[0],
-            "0000"
+            ""
     );
         }
 }
@@ -214,7 +214,7 @@ public List<ComMemberListDTO> getAllMembersOfCommunity(Long communityId) {
             ))
             .toList();
 }
-public List<CommunityOverviewDTO> get10RandomCommunities(String username) {
+public List<CommunityOverviewDTO> get10NewestCommunities(String username) {
     List<Community> communities = communityRepository.findDiscoverCommunities(username, PageRequest.of(0, 10));
     return communities.stream()
             .map(community -> new CommunityOverviewDTO(
@@ -240,7 +240,7 @@ public void changeCommunity(CommunityChangeDTO dto , String username) {
     }
     community.setDescription(dto.description());
     community.setPrivate(dto.isPrivate());
-    community.setJoinCode(dto.joinCode());
+    community.setJoinCode(dto.joinCode().trim());
     communityExercisesRepository.deleteByCommunityId(community.getId());
     communityExercisesRepository.flush();
     

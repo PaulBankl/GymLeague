@@ -31,11 +31,11 @@ export default function EntryList({ exerciseId, refresh, onRefresh }: EntryListP
                     setLoading(false);
                     setLoadingError(true);
                 })
-                
+
         }
     }, [exerciseId, refresh]); // Abhängigkeit von refresh und onEntryDeleted, damit die Liste aktualisiert wird, wenn ein Eintrag gelöscht wurde
 
-    if(loadingError) {
+    if (loadingError) {
         return <div className="text-red-500">Error fetching entries.</div>;
     }
 
@@ -47,7 +47,7 @@ export default function EntryList({ exerciseId, refresh, onRefresh }: EntryListP
     if (!entries) {
         return <div>Loading Entries...</div>;
     }
-    if(loading) {
+    if (loading) {
         return <div>Loading Entries...</div>;
     }
 
@@ -55,7 +55,7 @@ export default function EntryList({ exerciseId, refresh, onRefresh }: EntryListP
         if (reps === 1) {
             return weight.toString();
         }
-        if(reps > 12) {
+        if (reps > 12) {
             return "Too many reps for Calculation";
         }
         return (weight * (1 + reps / 30)).toString();
@@ -124,7 +124,7 @@ export default function EntryList({ exerciseId, refresh, onRefresh }: EntryListP
                     {EditFormid === entry.id && <form onSubmit={(event) => handleEditSubmit(entry, event)} className="flex flex-col items-center mt-4 md:flex-row justify-center md:gap-4">
                         {error && <p className="text-red-500">{error}</p>}
                         <label htmlFor="editWeight" className="text-muted">Weight</label>
-                        <input id="editWeight" type="number" value={editWeight} onChange={(e) => setEditWeight(e.target.value)} className="bg-red-950 border border-border max-w-[70%] rounded-md p-2 mb-4" />
+                        <input id="editWeight" type="number" min="0.1" step="0.1" value={editWeight} onChange={(e) => setEditWeight(e.target.value)} className="bg-red-950 border border-border max-w-[70%] rounded-md p-2 mb-4" />
                         <label htmlFor="editReps" className="text-muted">Reps</label>
                         <input id="editReps" type="number" value={editReps} onChange={(e) => setEditReps(e.target.value)} className="bg-red-950 border border-border max-w-[70%] rounded-md p-2 mb-4" />
                         <button type="submit" className="bg-accent border border-border rounded-md p-2 mb-4  hover:bg-accent-dim  min-w-[100px] ">Confirm</button>

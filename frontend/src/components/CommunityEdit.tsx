@@ -64,7 +64,7 @@ export default function CommunityEdit({ community, onCommunityChange }: EditComm
         <div className="flex w-[80vw] flex-col items-center gap-4  md:w-[50vw]">
             <h1 className="text-2xl font-heading">Edit Community</h1>
             <p className="text-muted">Here you can edit your community details.</p>
-            {error && <p className="text-red-500 border border-red-500 p-2 rounded-md" >Failed to edit community. <br></br>Please try again.</p>}
+            {error && <p className="text-red-500 border border-red-500 p-2 rounded-md" >{error} <br></br>Please try again.</p>}
             <div className="flex flex-col w-full ">
                 <form className="flex flex-col items-center w-full">
                     <br />

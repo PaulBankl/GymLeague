@@ -125,6 +125,7 @@ public Double getBestOneRMForUserAndExercise(Long exerciseId, String username) {
 }
     //Helpfunction to calculate the 1RM based on the Epley formula
     private double estimateOneRm(Entry entry) {
+        if(entry.getReps() < 12) return 0;
     return entry.getWeight() * (1 + entry.getReps() / 30.0);
 }
 public Integer getEntryCount(Long exerciseId, String username) {
