@@ -41,7 +41,7 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
     private final SecurityContextRepository securityContextRepository =
         new HttpSessionSecurityContextRepository();
-    
+
 
     public UserController(UserService userService, AuthService authService, AuthenticationManager authenticationManager) {
         this.userService = userService;
@@ -107,7 +107,7 @@ securityContextRepository.saveContext(context, request, response);
     public ResponseEntity<Boolean> checkHealth() {
         return ResponseEntity.ok(true);
     }
-    
-    
-    
+
+
+
 }

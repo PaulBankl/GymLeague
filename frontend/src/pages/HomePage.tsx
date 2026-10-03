@@ -25,8 +25,9 @@ export default function HomePage() {
 
     if(serverError) {
         return (
-            <div>
-              <h1 className="text-2xl font-bold">Server is currently offline</h1>
+            <div className="flex flex-col items-center mt-[5vh] h-screen">
+              <h1 className="text-2xl font-bold ">Server is currently offline</h1>
+
             </div>
         );
     }
