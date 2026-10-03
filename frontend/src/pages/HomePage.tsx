@@ -13,6 +13,7 @@ export default function HomePage() {
             const response = await Userservice.checkHealth();
             if (!response) {
                 setServerError(true);
+                console.error("Server health check failed: No response from server.");
             }
           }
           catch (error) {
