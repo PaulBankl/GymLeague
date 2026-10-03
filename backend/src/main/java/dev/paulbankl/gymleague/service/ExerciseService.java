@@ -83,17 +83,23 @@ public class ExerciseService {
     }
 
     private ProgressInfo getProgressOneRm(List<Entry> entries) {
-        if (entries.size() < 2) {
-            return new ProgressInfo(0.0, 0.0);
-        }
-            Entry newest = entries.get(0);
-            Entry oldest = entries.get(entries.size() - 1);
+        List<Entry> validEntries = entries.stream()
+    .filter(entry -> entry.getReps() <= 12)
+    .toList();
+
+if (validEntries.size() < 2) {
+    return new ProgressInfo(0.0, 0.0);
+}
+            Entry newest = validEntries.get(0);
+            Entry oldest = validEntries.get(validEntries.size() - 1);
             double newestOneRm = estimateOneRm(newest);
             double oldestOneRm = estimateOneRm(oldest);
             return new ProgressInfo(newestOneRm - oldestOneRm, oldestOneRm);
     }
 
     private static double estimateOneRm(Entry entry) {
+        if(entry.getReps() > 12) return 0;
+        if(entry.getReps() == 1) return entry.getWeight();  
     return entry.getWeight() * (1 + entry.getReps() / 30.0);
 }
 }

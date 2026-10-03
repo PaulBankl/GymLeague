@@ -87,8 +87,9 @@ export async function getAllMembersOfCommunity(id: number) {
     return members;
 }
 
-export async function get10RandomCommunities() {
-    const response = await apiFetch(`/api/community/random`,
+
+export async function get10NewestCommunities() {
+    const response = await apiFetch(`/api/community/newest`,
         {
             method: "GET",
             headers: {

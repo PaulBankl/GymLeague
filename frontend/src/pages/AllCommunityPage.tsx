@@ -14,7 +14,7 @@ export default function AllCommunityPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        CommunityService.get10RandomCommunities().then(setCommunities).catch((error) => {
+        CommunityService.get10NewestCommunities().then(setCommunities).catch((error) => {
             console.error("Error fetching communities:", error);
             setError(true);
         });
@@ -51,7 +51,7 @@ export default function AllCommunityPage() {
         <div className="flex flex-col items-center w-[80vw] md:w-[50vw] mx-auto h-screen mt-[2vw]">
             <Link to="/community" className="text-accent underline underline-offset-4 self-start">Back to Community</Link>
             <h1 className="font-heading text-[clamp(22px,10vw,72px)] text-center font-black tracking-[-2px]">All Communities</h1>
-            <p className="text-muted text-center">Here you can find 10 random communities, if you look for something specific a search function will be implemented in the future!</p>
+            <p className="text-muted text-center">Here you can find 10 new communities, if you are looking for another one, you can join it with name + join code.</p>
             <button onClick={() => setShowJoinCodeInput(!showJoinCodeInput)} className="border border-accent text-white  rounded-md p-2 bg-accent mt-4">Join Community with Code</button>
             {showJoinCodeInput && (<p className="text-red-500">{joinError}</p>)}
             {showJoinCodeInput && (

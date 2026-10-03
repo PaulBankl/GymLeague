@@ -71,14 +71,14 @@ export default function CommunityEdit({ community, onCommunityChange }: EditComm
                     <label htmlFor="description" className="text-muted block">
                         Description:
                     </label>
-                    <textarea defaultValue={community?.description} onChange={(e) => setDescription(e.target.value)} className="ml-[5%] bg-surface-2 self-start block w-[90%] border border-border rounded-md p-2 mb-4 "></textarea>
+                    <input type="text" defaultValue={community?.description} onChange={(e) => setDescription(e.target.value)} className="ml-[5%] bg-surface-2 self-start block w-[90%] border border-border rounded-md p-2 mb-4 "></input>
                     <p className="muted text-sm self-end mr-[5%]">Characters remaining: {255 - description.length}</p>
 
                     <br />
                     <label htmlFor="description" className="text-muted block">
                         JoinCode:
                     </label>
-                    <textarea defaultValue={community?.joinCode} onChange={(e) => setJoinCode(e.target.value)} className="ml-[5%] bg-surface-2 self-start block w-[90%] border border-border rounded-md p-2 mb-4 "></textarea>
+                    <input type="text" defaultValue={community?.joinCode} onChange={(e) => setJoinCode(e.target.value)} className="ml-[5%] bg-surface-2 self-start block w-[90%] border border-border rounded-md p-2 mb-4 "></input>
 
                     <br />
 

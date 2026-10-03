@@ -98,7 +98,7 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
                         className="bg-surface-2 self-start ml-[5%] border border-border rounded-md p-2 mb-4 w-[90%] md:w-[90%]"
                     />
                     <label htmlFor="description" className="text-muted self-start ml-[5%] mt-5">Description: max 255 characters</label>
-                    <textarea
+                    <input type="text"
                         id="description"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
@@ -106,8 +106,9 @@ export default function CommunityForm({ onCommunityCreated }: { onCommunityCreat
                     />
                     <p className="muted text-sm self-end mr-[5%]">Characters remaining: {255 - description.length}</p>
                     <label htmlFor="JoinCode" className="text-muted self-start ml-[5%] mt-5">Join Code: 4-10 characters</label>
-                    <textarea
+                    <input
                         id="JoinCode"
+                        type="text"
                         value={joinCode}
                         onChange={(e) => setJoinCode(e.target.value)}
                         className="bg-surface-2 self-start ml-[5%] border border-border rounded-md p-2 mb-4 w-[90%] md:w-[90%]"
