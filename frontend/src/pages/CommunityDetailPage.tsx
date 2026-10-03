@@ -21,12 +21,11 @@ export default function CommunityDetailPage() {
     const [members, setMembers] = useState<{ username: string; displayName: string; role: string; joinedAt: string }[]>([]);
     const [activities, setActivities] = useState<CommunityActivity[]>([]);
 
-    
+
     useEffect(() => {
-        if(!id){
+        if (!id) {
             return;
         }
-        setCommunity(null);
         Communityservice.getCommunityDetails(Number(id)).then((data) => {
             setCommunity(data);
         }).catch((error) => {
@@ -38,13 +37,13 @@ export default function CommunityDetailPage() {
         }).catch((error) => {
             console.error("Failed to fetch community members:", error);
         });
-        Communityservice.getCommunityActivities(Number(id)).then((data) => {setActivities(data);}).catch((error) => {console.error("Failed to fetch community activities:", error);});
+        Communityservice.getCommunityActivities(Number(id)).then((data) => { setActivities(data); }).catch((error) => { console.error("Failed to fetch community activities:", error); });
     }, [id, refresh]);
 
     if (!id) {
         return <div>Invalid community ID</div>;
     }
-    
+
 
     function buttonLeave() {
         if (!username) {
@@ -66,7 +65,7 @@ export default function CommunityDetailPage() {
         return <div>Server Error</div>;
     }
 
-    if (!community) {
+    if (!community || community.id !== Number(id)) {
         return <div>Loading community details...</div>;
     }
     return (

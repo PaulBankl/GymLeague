@@ -17,7 +17,7 @@ export default function PublicCommunityDetailPage() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
 
-    
+
 
     const username = useContext(AuthContext)?.username;
 
@@ -40,7 +40,7 @@ export default function PublicCommunityDetailPage() {
     };
 
     useEffect(() => {
-        if(!id){
+        if (!id) {
             return;
         }
         setCommunity(null);
@@ -64,7 +64,7 @@ export default function PublicCommunityDetailPage() {
         return <div>Server Error</div>;
     }
 
-    if (!community) {
+    if (!community || community.id !== Number(id)) {
         return <div>Loading community details...</div>;
     }
     return (
