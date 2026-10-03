@@ -26,16 +26,7 @@ public class EntryService {
         this.userService = userService;
         this.exerciseRepository = exerciseRepository;
     }
-    public List<EntryDTO> getAllEntries() {
-        return entryRepository.findAll().stream().map(entry -> new EntryDTO(
-            entry.getId(),
-            entry.getWeight(),
-            entry.getReps(),
-            entry.getUser().getUsername(),
-            entry.getExercise().getName(),
-            entry.getDate().toString()
-        )).toList();
-    }
+    
     @Transactional
     public void insertEntry(EntryCreationDTO entryDTO, String username) {
         Exercise exercise = exerciseRepository

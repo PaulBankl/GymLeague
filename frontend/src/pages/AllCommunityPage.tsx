@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import type { Community } from "../types/Community";
-import { useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import * as CommunityService from "../services/Communityservice";
 
 export default function AllCommunityPage() {
@@ -25,9 +25,6 @@ export default function AllCommunityPage() {
         return (<><p>Server Error</p><br></br><Link to="/community">Back to Community</Link></>);
     }
 
-    if (communities.length === 0) {
-        return (<><div>No communities found.</div><Link to="/community">Back to Community</Link></>);
-    }
 
     async function handleJoinCode() {
         if (!joinCode.trim() || !communityName.trim()) {
@@ -84,6 +81,7 @@ export default function AllCommunityPage() {
                     </form>
                 </div>
             )}
+            {communities.length === 0 && (<><div>No communities found.</div><Link to="/community">Back to Community</Link></>)}
             {communities.map(community => (
                 <div key={community.id} className="w-full items-center flex flex-col">
                     <div className="flex flex-col items-center bg-surface rounded-md border border-border p-4 mb-4 w-[90%] md:w-[80%] mt-5" >

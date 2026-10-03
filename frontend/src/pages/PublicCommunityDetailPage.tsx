@@ -43,7 +43,6 @@ export default function PublicCommunityDetailPage() {
         if (!id) {
             return;
         }
-        setCommunity(null);
         CommunityService.getCommunityDetails(Number(id)).then((data) => {
             setCommunity(data);
         }).catch((error) => {
