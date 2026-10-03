@@ -41,6 +41,7 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
     private final SecurityContextRepository securityContextRepository =
         new HttpSessionSecurityContextRepository();
+    
 
     public UserController(UserService userService, AuthService authService, AuthenticationManager authenticationManager) {
         this.userService = userService;
@@ -81,6 +82,9 @@ public ResponseEntity<Void> login(@Valid @RequestBody LoginDTO loginDTO, HttpSer
             )
     );
 
+    if (request.getSession(false) != null) {
+        request.changeSessionId();
+    }
     SecurityContext context = SecurityContextHolder.createEmptyContext();
 context.setAuthentication(authentication);
 SecurityContextHolder.setContext(context);

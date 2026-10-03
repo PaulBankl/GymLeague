@@ -28,7 +28,9 @@ logs/
 # Database
 postgres-data/
 *.sql
+!backend/src/main/resources/reference-data.sql
 *.dump
+
 
 # OS
 .DS_Store
