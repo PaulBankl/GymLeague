@@ -40,6 +40,9 @@ services:
     expose:
       - "8080"
 
+    labels:
+      - caddy_0.tls=/data/certs/api-gymleague.pem /data/certs/api-gymleague.key
+
 
 volumes:
   postgres-data:
