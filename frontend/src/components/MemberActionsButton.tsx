@@ -55,7 +55,6 @@ export default function MemberActionsButton({ communityId, memberUsername, actio
                         }
                         break;
                     }
-
             }
 
         } catch (error) {
@@ -68,6 +67,7 @@ export default function MemberActionsButton({ communityId, memberUsername, actio
             }
             console.error(error);
         }
+        setShowConfirmation(false);
     }
     return (
         <>

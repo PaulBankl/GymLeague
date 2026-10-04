@@ -15,6 +15,6 @@ export default function RankingCard({ rank, userName, weight }: RankingCardProps
         {rank >= 4 && <p className="text-muted">{rank}</p>}
         <p className="mx-4 text-muted">|</p>
         <p>{userName}</p>
-        <p className="text-muted">One Rep Max: <span className="text-green-500">{weight.toFixed(2)}</span></p>
+        <p className="text-muted">Best Lifts: <span className="text-green-500">{weight.toFixed(2)}</span></p>
     </div>)
 }
